@@ -1,5 +1,7 @@
 # ParcelBuddy
 
+## Description
+
 Developed a Delivery Management System for the logging and tracking of parcel deliveries and deliverers for a small delivery company.
 - Structured the codebase using the MVC design pattern and OOP principles, facilitating enhanced scalability and robust maintainable code.
 - Utilized the Singleton design pattern to ensure a singular accessible Database instance for resource management optimization across the application.
@@ -11,3 +13,16 @@ Developed a Delivery Management System for the logging and tracking of parcel de
 - Provided manager users with CRUD functionalities to manage parcel entries and assign deliveries to specific delivery users.
 - Designed and tested the system's ability to handle significant data volumes (1000s parcel records, 1000s of delivery users) to ensure performance.
 - Implemented security measures to prevent SQL injection attacks, ensuring robust data security across the application.
+
+## Installation
+
+N/A
+
+## Usage
+
+![alt text]()
+
+## Credits
+
+N/A
+
