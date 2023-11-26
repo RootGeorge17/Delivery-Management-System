@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="dimensions container-fluid px-4 py-6">
+        <a class="navbar-brand text-white" href="/">ParcelPal</a>
+        <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-white" aria-current="page" href="/">Deliveries</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/">Deliveries</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                <?php if(isset($_SESSION['user']['username'])) : ?>)
+                    <a class="text-white" href="/signout">
+                        <button type="button" class="btn btn-primary px-3 me-2">
+                            Sign out
+                        </button>
+                    </a>
+                <?php else : ?>
+                    <a class="text-white" href="/login">
+                        <button type="button" class="btn btn-primary px-3 me-2">
+                            Log in
+                        </button>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,42 @@
+.bg-custom-color {
+    background-color: #DEDEDE;
+}
+
+.nav-custom-color {
+    background-color: #333333;
+}
+
+.dimensions {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.pagination .page-link {
+    color: #333333;
+    border-color: #000000;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #333333;
+    border-color: #333333;
+}
+
+.pagination .page-item:not(.active) .page-link {
+    background-color: #DEDEDE;
+    border-color: #000000;
+}
+
+/* Style for search box and button */
+.search-form {
+    display: flex;
+    align-items: center;
+    width: 400px;
+}
+
+.search-input {
+    flex: 1;
+}
+
+.search-button {
+    margin-left: 10px;
+}
