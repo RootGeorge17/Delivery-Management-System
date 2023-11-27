@@ -23,7 +23,8 @@ function login($id, $username, $usertypeid, $usertypename)
         'username' => $username,
         'usertypeid' => $usertypeid,
         'usertypename' => $usertypename,
-        'loggedIn' => $loggedIn
+        'loggedIn' => $loggedIn,
+        'currentTable' => null
     ];
 
     session_regenerate_id(true);

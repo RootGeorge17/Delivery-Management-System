@@ -17,7 +17,6 @@ $rowsPerPage = 5;
 $view->deliveryPointDataSet = $deliveryPointDataSet->fetchAllDeliveryPoints();
 $view->deliveryUserDataSet = $deliveryUserDataSet->fetchAllDeliveryUsers();
 
-$view->deliveryPointDataSet = $deliveryPointDataSet->fetchAllDeliveryPoints($_SESSION['user']['id']);
 $view->totalRows = count($view->deliveryPointDataSet);
 $view->totalPages = ceil($view->totalRows / $rowsPerPage);
 $view->currentPage = $_GET['page'] ?? 1;
