@@ -15,11 +15,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
     // Check if the account exists and match credentials
     $match = $deliveryUserDataSet->credentialsMatch($user['username'], $user['password']);
-    $user['id'] = $deliveryUserDataSet->getUserID($user['username']);
 
     if($match)
     {
-        login($user['username'], $user['id']);
+        $matchUser = $deliveryUserDataSet->getUserDetails($user['username']);
+
+        login(
+            $matchUser['id'],
+            $matchUser['username'],
+            $matchUser['usertypeid'],
+            $matchUser['usertypename']
+        );
 
         header('Location: /');
         exit();
