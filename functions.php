@@ -14,11 +14,16 @@ function isCurrentUrl($value) {
     return $_SERVER['REQUEST_URI'] === $value;
 }
 
-function login($username, $id)
+function login($id, $username, $usertypeid, $usertypename)
 {
+    $loggedIn = true;
+
     $_SESSION['user'] = [
+        'id' => $id,
         'username' => $username,
-        'id' => $id
+        'usertypeid' => $usertypeid,
+        'usertypename' => $usertypename,
+        'loggedIn' => $loggedIn
     ];
 
     session_regenerate_id(true);
@@ -31,5 +36,15 @@ function logout()
 
     $params = session_get_cookie_params();
     setcookie("PHPSESSID", '', time() - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+}
+
+function authenticated()
+{
+    if (isset($_SESSION['user']['username']))
+    {
+        return true;
+    } else {
+        return false;
+    }
 }
 

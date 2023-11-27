@@ -25,10 +25,12 @@ class DeliveryUserDataSet
         return $dataSet;
     }
 
-    public function getUserID($username)
+    public function getUserDetails($username)
     {
-        $sqlQuery = 'SELECT id FROM delivery_users
-                     WHERE username = :username';
+        $sqlQuery = 'SELECT u.id, u.username, ut.id as usertypeid, ut.usertypename
+                 FROM delivery_users u
+                 INNER JOIN delivery_usertype ut ON u.usertype = ut.id
+                 WHERE u.username = :username';
 
         $statement = $this->dbHandle->prepare($sqlQuery);
         $statement->execute([
@@ -38,10 +40,10 @@ class DeliveryUserDataSet
         $result = $statement->fetch(PDO::FETCH_ASSOC); // Fetch as an associative array
 
         if ($result && isset($result['id'])) {
-            return $result['id']; // Return the 'id' value
+            return $result; // Return the user details directly
         }
 
-        return null; // Or handle the case where 'id' is not found
+        return null; // Or handle the case where user details are not found
     }
 
     public function credentialsMatch($username, $password)
