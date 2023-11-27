@@ -2,204 +2,227 @@
 <?php require('Views/partials/nav.phtml') ?>
 <?php require('Views/partials/header.phtml') ?>
 
+<?php if ($_SESSION['user']['usertypename'] == "Deliverer"): ?>
 <div id="main-content">
     <div class="mt-2 m-4">
         <h1><?= $_SESSION['user']['username'] ?>'s Deliveries</h1>
 
         <div>
-            <!-- Search form -->
-            <form class="form-inline search-box" action="/deliveries" method="POST">
-                <label for="form-check-input">Search Parcel by:</label>
+            <?php require_once('Views/partials/searchForm.phtml') ?>
+            <?php require_once('Views/partials/filterAndOrder.phtml') ?>
 
-                <input class="form-check-input" type="radio" name="flexRadioDefault" value="" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
-                    By ID
-                </label>
-
-                <input class="form-check-input" type="radio" name="flexRadioDefault" value="" id="flexRadioDefault2">
-                <label class="form-check-label" for="flexRadioDefault2">
-                    By Name
-                </label>
-
-                <input class="form-check-input" type="radio" name="flexRadioDefault" value="" id="flexRadioDefault3">
-                <label class="form-check-label" for="flexRadioDefault3">
-                    By Address
-                </label>
-
-                <input class="form-check-input" type="radio" name="flexRadioDefault" value="" id="flexRadioDefault4">
-                <label class="form-check-label" for="flexRadioDefault4">
-                    By Postcode
-                </label>
-
-                <div class="search-form mb-2">
-                    <div class="form-group search-input">
-                        <input type="text" class="form-control" id="searchInput" name="search"
-                               placeholder="Search Parcel">
-                    </div>
-                    <button type="submit" class="btn btn-primary search-button">Search</button>
-                    <button type="reset" class="btn btn-dark search-button">Reset</button>
-                </div>
-            </form>
-
-
-            <!-- Flex Filter and Order -->
-            <div class="d-flex bd-highlight mb-2">
-                <div class="bd-highlight me-2">
-                    <!-- Order Dropdown -->
-                    <div class="dropdown">
-                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            Order Table By...
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Order by ID - Ascending</a></li>
-                            <li><a class="dropdown-item" href="#">Order by ID - Descending</a></li>
-                            <li><a class="dropdown-item" href="#">Order by Status - Ascending</a></li>
-                            <li><a class="dropdown-item" href="#">Order by Status - Descending</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- Filter Dropdown -->
-                <div class="dropdown">
-                    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        Filter Table By...
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">Only Pending Deliveries</a></li>
-                        <li><a class="dropdown-item" href="#">Only Shipped Deliveries</a></li>
-                        <li><a class="dropdown-item" href="#">Only Out for Delivery Deliveries</a></li>
-                        <li><a class="dropdown-item" href="#">Only Delivered Deliveries</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Table -->
-        <div class="table table-responsive">
-            <table class="table border-dark table-bordered table-grey table-striped">
-                <thead class="table-dark">
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Address1</th>
-                    <th scope="col">Address2</th>
-                    <th scope="col">Postcode</th>
-                    <th scope="col">
-                        Status
-                        <i class="bi bi-info-circle"></i>
-                    </th>
-                    <?php if ($_SESSION['user']['usertypename'] == 'Manager'): ?>
-                    <th scope="col">Actions</th>
-                    <?php endif; ?>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($currentItems as $deliveryPointData) : ?>
+            <!-- Table -->
+            <div class="table table-responsive">
+                <table class="table border-dark table-bordered table-grey table-striped">
+                    <thead class="table-dark">
                     <tr>
-                        <th scope="row"><?= $deliveryPointData->getPointId(); ?></th>
-                        <td><?= $deliveryPointData->getPointName(); ?></td>
-                        <td><?= $deliveryPointData->getPointAddress1(); ?></td>
-                        <td><?= $deliveryPointData->getPointAddress2(); ?></td>
-                        <td><?= $deliveryPointData->getPointPostcode(); ?></td>
-                        <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    <?php
-                                    if ($deliveryPointData->getPointStatus() == '1') {
-                                        echo 'Pending';
-                                    } else if ($deliveryPointData->getPointStatus() == '2') {
-                                        echo 'Shipped';
-                                    } else if ($deliveryPointData->getPointStatus() == '3') {
-                                        echo 'Out for delivery';
-                                    } else if ($deliveryPointData->getPointStatus() == '4') {
-                                        echo 'Delivered';
-                                    }
-                                    ?>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <?php if ($deliveryPointData->getPointStatus() == '1'): ?>
-                                        <li><a class="dropdown-item dropdown-menu-dark disabled" href="#">Pending
-                                                parcels status can't be changed by a deliverer!</a></li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li><a class="dropdown-item disabled border-bottom" href="#">Mark as: Shipped</a></li>
-                                        <li><a class="dropdown-item disabled border-bottom" href="#">Mark as: Out for
-                                                delivery</a></li>
-                                        <li><a class="dropdown-item disabled" href="#">Mark as: Delivered</a></li>
-                                    <?php else: ?>
-                                        <li><a class="dropdown-item border-bottom" href="#">Mark as: Shipped</a></li>
-                                        <li><a class="dropdown-item border-bottom" href="#">Mark as: Out for
-                                                delivery</a></li>
-                                        <li><a class="dropdown-item" href="#">Mark as: Delivered</a></li>
-                                    <?php endif; ?>
-                                </ul>
-                            </div>
-                        </td>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address1</th>
+                        <th scope="col">Address2</th>
+                        <th scope="col">Postcode</th>
+                        <th scope="col">
+                            Status
+                            <i class="bi bi-info-circle"></i>
+                        </th>
                         <?php if ($_SESSION['user']['usertypename'] == 'Manager'): ?>
-                        <td>
-                            <!-- Example single danger button -->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    Edit Parcel:
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item border-bottom" href="#">Mark as: Pending</a></li>
-                                    <li><a class="dropdown-item border-bottom" href="#">Mark as: Shipped</a></li>
-                                    <li><a class="dropdown-item border-bottom" href="#">Mark as: Out for
-                                            delivery</a></li>
-                                    <li><a class="dropdown-item" href="#">Mark as: Delivered</a></li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Assign Deliverer</a></li>
-                                    <li><a class="dropdown-item border" href="#">Edit Delivery Item</a></li>
-                                    <li><a class="dropdown-item" href="#">Delete Delivery Item</a></li>
-                                </ul>
-                            </div>
-                        </td>
+                            <th scope="col">Actions</th>
                         <?php endif; ?>
                     </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($currentItems as $deliveryPointData) : ?>
+                        <tr>
+                            <th scope="row"><?= $deliveryPointData->getPointId(); ?></th>
+                            <td><?= $deliveryPointData->getPointName(); ?></td>
+                            <td><?= $deliveryPointData->getPointAddress1(); ?></td>
+                            <td><?= $deliveryPointData->getPointAddress2(); ?></td>
+                            <td><?= $deliveryPointData->getPointPostcode(); ?></td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        <?php
+                                        if ($deliveryPointData->getPointStatus() == '1') {
+                                            echo 'Pending';
+                                        } else if ($deliveryPointData->getPointStatus() == '2') {
+                                            echo 'Shipped';
+                                        } else if ($deliveryPointData->getPointStatus() == '3') {
+                                            echo 'Out for delivery';
+                                        } else if ($deliveryPointData->getPointStatus() == '4') {
+                                            echo 'Delivered';
+                                        }
+                                        ?>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <?php if ($deliveryPointData->getPointStatus() == '1'): ?>
+                                            <li><a class="dropdown-item dropdown-menu-dark disabled" href="#">Pending
+                                                    parcels status can't be changed by a deliverer!</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item disabled border-bottom" href="#">Mark as:
+                                                    Shipped</a></li>
+                                            <li><a class="dropdown-item disabled border-bottom" href="#">Mark as: Out
+                                                    for
+                                                    delivery</a></li>
+                                            <li><a class="dropdown-item disabled" href="#">Mark as: Delivered</a></li>
+                                        <?php else: ?>
+                                            <li><a class="dropdown-item border-bottom" href="#">Mark as: Shipped</a>
+                                            </li>
+                                            <li><a class="dropdown-item border-bottom" href="#">Mark as: Out for
+                                                    delivery</a></li>
+                                            <li><a class="dropdown-item" href="#">Mark as: Delivered</a></li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
 
-
-        <!-- Pagination -->
-        <div>
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <?php if ($view->currentPage > 1): ?>
-                        <li class="page-item">
-                            <a class="page-link" href="?page=<?php echo $view->currentPage - 1; ?>"
-                               aria-label="Previous">
-                                <span aria-hidden="true">&laquo; Previous</span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-
-                    <?php for ($i = 1; $i <= $view->totalPages; $i++): ?>
-                        <li class="page-item <?php echo ($i == $view->currentPage) ? 'active' : ''; ?>">
-                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                        </li>
-                    <?php endfor; ?>
-
-                    <?php if ($view->currentPage < $view->totalPages): ?>
-                        <li class="page-item">
-                            <a class="page-link" href="?page=<?php echo $view->currentPage + 1; ?>" aria-label="Next">
-                                <span aria-hidden="true">Next &raquo;</span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
+            <?php require_once('Views/partials/pagination.phtml') ?>
         </div>
     </div>
-</div>
+    <?php endif; ?>
+
+    <?php if ($_SESSION['user']['usertypename'] == "Manager"): ?>
+    <div id="main-content">
+        <div class="mt-2 m-4">
+            <h2>Admin Panel</h2>
+            <h4>Statistics:</h4>
+
+            <section class="table table-responsive">
+                <form method="POST" action="/">
+                    <input type="hidden" name="_currentItems" value="<?= $currentItems ?>">
+                    <table class="table border-dark table-bordered table-grey table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Total Deliveries</span>
+                                    <button type="submit" name="show_deliveries" value="show"
+                                            class="btn btn-sm btn-danger">
+                                        Show All Deliveries
+                                    </button>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Total Deliverers</span>
+                                    <button type="submit" name="show_deliverers" value="show"
+                                            class="btn btn-sm btn-danger">
+                                        Show All Deliverers
+                                    </button>
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><?= count($view->deliveryPointDataSet) ?></td>
+                            <td><?= count($view->deliveryUserDataSet) ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
 
 
-<?php require('Views/partials/footer.phtml') ?>
+                <table class="table border-dark table-bordered table-grey table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Total "Pending" Deliveries</th>
+                        <th scope="col">Total "Shipped" Deliveries</th>
+                        <th scope="col">Total "Out For Delivery" Deliveries</th>
+                        <th scope="col">Total "Delivered" Deliveries</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>5</td>
+                        <td>5</td>
+                        <td>5</td>
+                        <td>5</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Table -->
+            <div class="table table-responsive">
+                <table class="table border-dark table-bordered table-grey table-striped">
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address1</th>
+                        <th scope="col">Address2</th>
+                        <th scope="col">Postcode</th>
+                        <th scope="col">
+                            Status
+                            <i class="bi bi-info-circle"></i>
+                        </th>
+                        <?php if ($_SESSION['user']['usertypename'] == 'Manager'): ?>
+                            <th scope="col">Actions</th>
+                        <?php endif; ?>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($currentItems as $deliveryPointData) : ?>
+                        <tr>
+                            <th scope="row"><?= $deliveryPointData->getPointId(); ?></th>
+                            <td><?= $deliveryPointData->getPointName(); ?></td>
+                            <td><?= $deliveryPointData->getPointAddress1(); ?></td>
+                            <td><?= $deliveryPointData->getPointAddress2(); ?></td>
+                            <td><?= $deliveryPointData->getPointPostcode(); ?></td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                        <?php
+                                        if ($deliveryPointData->getPointStatus() == '1') {
+                                            echo 'Pending';
+                                        } else if ($deliveryPointData->getPointStatus() == '2') {
+                                            echo 'Shipped';
+                                        } else if ($deliveryPointData->getPointStatus() == '3') {
+                                            echo 'Out for delivery';
+                                        } else if ($deliveryPointData->getPointStatus() == '4') {
+                                            echo 'Delivered';
+                                        }
+                                        ?>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <?php if ($deliveryPointData->getPointStatus() == '1'): ?>
+                                            <li><a class="dropdown-item dropdown-menu-dark disabled" href="#">Pending
+                                                    parcels status can't be changed by a deliverer!</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item disabled border-bottom" href="#">Mark as:
+                                                    Shipped</a></li>
+                                            <li><a class="dropdown-item disabled border-bottom" href="#">Mark as: Out
+                                                    for
+                                                    delivery</a></li>
+                                            <li><a class="dropdown-item disabled" href="#">Mark as: Delivered</a></li>
+                                        <?php else: ?>
+                                            <li><a class="dropdown-item border-bottom" href="#">Mark as: Shipped</a>
+                                            </li>
+                                            <li><a class="dropdown-item border-bottom" href="#">Mark as: Out for
+                                                    delivery</a></li>
+                                            <li><a class="dropdown-item" href="#">Mark as: Delivered</a></li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php endif; ?>
+
+            <?php require('Views/partials/footer.phtml') ?>
