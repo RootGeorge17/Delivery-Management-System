@@ -1,8 +1,7 @@
 <?php
+$router->get('/', 'Controllers/Deliveries/index.php');
 
-// Return an array that maps URL paths to their corresponding controller files
-return [
-    '/' => 'Controllers/Deliveries/index.php',
-    '/login' => 'Controllers/Authentication/login.php',
-    '/signout' => 'Controllers/Authentication/signout.php'
-];
+$router->get('/login', 'Controllers/Authentication/login.php');
+$router->post('/login', 'Controllers/Authentication/store.php');
+
+$router->get('/signout', 'Controllers/Authentication/signout.php');
