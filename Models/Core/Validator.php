@@ -1,6 +1,6 @@
 <?php
 
-namespace Infrastructure;
+namespace Core;
 class Validator
 {
     public static function validateString($value, $min = 1, $max = INF)

@@ -1,4 +1,5 @@
 <?php
+
 class Database
 {
     protected static $dbInstance = null;
