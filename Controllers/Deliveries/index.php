@@ -6,6 +6,7 @@ $view->pageTitle = 'Dashboard';
 
 if (!authenticated()) {
     require_once("Views/Authentication/login.phtml");
+    exit();
 }
 
 $rowsPerPage = 10;

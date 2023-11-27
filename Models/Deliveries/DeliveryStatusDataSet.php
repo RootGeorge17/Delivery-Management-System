@@ -1,6 +1,6 @@
 <?php
 
-require_once('Models/Infrastructure/Database.php');
+require_once('Models/Core/Database.php');
 require_once('Models/Deliveries/DeliveryStatusData.php');
 
 class DeliveryStatusDataSet
