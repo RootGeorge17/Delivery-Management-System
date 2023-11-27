@@ -7,18 +7,12 @@ $view->pageTitle = 'Dashboard';
 $rowsPerPage = 20;
 
 if (isset($_POST['show_deliveries'])) {
-    $deliveryPointDataSet = new DeliveryPointDataSet();
-    $deliveryUserDataSet = new DeliveryUserDataSet();
-
-    $view->deliveryPointDataSet = $deliveryPointDataSet->fetchAllDeliveryPoints();
-    $view->currentItems = $_POST['currentItems'];
-
-    $view->deliveryPointDataSet = $deliveryPointDataSet->fetchAllDeliveryPoints();
-    $view->deliveryUserDataSet = $deliveryUserDataSet->fetchAllDeliveryUsers();
-
 
 } elseif (isset($_POST['show_deliverers'])) {
 
+} elseif (isset($_POST['search'])) {
+    $view->deliveryPointDataSet = $deliveryPointDataSet->searchDeliveryPoints($_POST['search'], $_SESSION['user']['id']);
+    $currentItems = array_slice($view->deliveryPointDataSet, $start, $rowsPerPage);
 }
 
 require_once("Views/Deliveries/index.phtml");

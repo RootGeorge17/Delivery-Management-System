@@ -1,35 +1,31 @@
 <?php
-require_once('Models/Deliveries/DeliveryPointDataSet.php');
-require_once('Models/Users/DeliveryUserDataSet.php');
-
 $view = new stdClass();
 $view->pageTitle = 'Dashboard';
-$rowsPerPage = 20;
-$deliveryPointDataSet = new DeliveryPointDataSet();
-$view->deliveryPointDataSet = $deliveryPointDataSet->fetchDeliverersDeliveryPoints($_SESSION['user']['id']);
-$view->totalRows = count($view->deliveryPointDataSet);
-$view->totalPages = ceil($view->totalRows / $rowsPerPage);
-$view->currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-$start = ($view->currentPage - 1) * $rowsPerPage;
-$currentItems = array_slice($view->deliveryPointDataSet, $start, $rowsPerPage);
 
 if (!authenticated()) {
     require_once("Views/Authentication/login.phtml");
     exit();
 }
 
-if($_SESSION['user']['usertypename'] == "Deliverer")
-{
+require_once('Models/Deliveries/DeliveryPointDataSet.php');
+require_once('Models/Users/DeliveryUserDataSet.php');
 
-} else {
-    $deliveryUserDataSet = new DeliveryUserDataSet();
+$deliveryPointDataSet = new DeliveryPointDataSet();
+$deliveryUserDataSet = new DeliveryUserDataSet();
+$rowsPerPage = 5;
 
-    $view->deliveryPointDataSet = $deliveryPointDataSet->fetchAllDeliveryPoints();
-    $view->deliveryUserDataSet = $deliveryUserDataSet->fetchAllDeliveryUsers();
-}
+$view->deliveryPointDataSet = $deliveryPointDataSet->fetchAllDeliveryPoints();
+$view->deliveryUserDataSet = $deliveryUserDataSet->fetchAllDeliveryUsers();
+
+$view->deliveryPointDataSet = $deliveryPointDataSet->fetchAllDeliveryPoints($_SESSION['user']['id']);
+$view->totalRows = count($view->deliveryPointDataSet);
+$view->totalPages = ceil($view->totalRows / $rowsPerPage);
+$view->currentPage = $_GET['page'] ?? 1;
+$start = ($view->currentPage - 1) * $rowsPerPage;
+$currentItems = array_slice($view->deliveryPointDataSet, $start, $rowsPerPage);
 
 require_once("Views/Deliveries/index.phtml");
-exit();
+
 
 
 
