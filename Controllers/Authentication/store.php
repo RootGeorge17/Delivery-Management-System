@@ -8,30 +8,27 @@ $user = [];
 $errors = [];
 $deliveryUserDataSet = new DeliveryUserDataSet();
 
-if($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-    $user['username'] = $_POST['username'];
-    $user['password'] = $_POST['password'];
+$user['username'] = $_POST['username'];
+$user['password'] = $_POST['password'];
 
-    // Check if the account exists and match credentials
-    $match = $deliveryUserDataSet->credentialsMatch($user['username'], $user['password']);
+// Check if the account exists and match credentials
+$match = $deliveryUserDataSet->credentialsMatch($user['username'], $user['password']);
 
-    if($match)
-    {
-        $matchUser = $deliveryUserDataSet->getUserDetails($user['username']);
+if ($match) {
+    $matchUser = $deliveryUserDataSet->getUserDetails($user['username']);
 
-        login(
-            $matchUser['id'],
-            $matchUser['username'],
-            $matchUser['usertypeid'],
-            $matchUser['usertypename']
-        );
+    login(
+        $matchUser['id'],
+        $matchUser['username'],
+        $matchUser['usertypeid'],
+        $matchUser['usertypename']
+    );
 
-        header('Location: /');
-        exit();
+    header('Location: /');
+    exit();
 
-    } else {
-        $errors['NoAccount'] = "Account doesn't exist!";
-        return require_once("Views/Authentication/login.phtml");
-    }
+} else {
+    $errors['NoAccount'] = "Account doesn't exist!";
+    return require_once("Views/Authentication/login.phtml");
 }
+

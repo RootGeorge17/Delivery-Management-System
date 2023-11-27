@@ -12,7 +12,7 @@ class DeliveryPointDataSet
         $this->dbHandle = $this->dbInstance->getDBConnection();
     }
 
-    public function fetchAllDeliveryPoints($delivererID) {
+    public function fetchDeliverersDeliveryPoints($delivererID) {
         $sqlQuery = 'SELECT * FROM delivery_point
                      WHERE deliverer = :delivererID';
 
@@ -20,6 +20,19 @@ class DeliveryPointDataSet
         $statement->execute([
             ':delivererID' => $delivererID
         ]); // execute the PDO statement
+
+        $dataSet = [];
+        while ($row = $statement->fetch()) {
+            $dataSet[] = new DeliveryPointData($row);
+        }
+        return $dataSet;
+    }
+
+    public function fetchAllDeliveryPoints() {
+        $sqlQuery = 'SELECT * FROM delivery_point';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute(); // execute the PDO statement
 
         $dataSet = [];
         while ($row = $statement->fetch()) {
