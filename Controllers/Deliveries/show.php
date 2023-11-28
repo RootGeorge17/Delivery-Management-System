@@ -6,7 +6,7 @@ require_once("Models/Core/Dashboard.php");
 $view = new stdClass();
 $view->pageTitle = 'Dashboard';
 $dashboard = new Dashboard();
-$view->totalDeliveries = $dashboard->fetchDeliveryStatistics();
+$view->totalDeliveries = $dashboard->fetchAllDeliveries();
 $view->totalDeliverers = $dashboard->fetchAllUsers();
 
 $rowsPerPage = 10;

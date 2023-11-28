@@ -13,7 +13,7 @@ class Dashboard
         $this->deliveryUserDataSet = new DeliveryUserDataSet();
     }
 
-    public function fetchDeliveryStatistics(): array
+    public function fetchAllDeliveries(): array
     {
         return $this->deliveryPointDataSet->fetchAllDeliveryPoints();
     }
