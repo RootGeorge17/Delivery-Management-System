@@ -26,13 +26,13 @@
                             Status
                             <i class="bi bi-info-circle"></i>
                         </th>
-                        <?php if ($_SESSION['user']['usertypename'] == "Manager"): ?>
+                        <?php if ($_SESSION['user']['usertypename'] == "Dashboard"): ?>
                             <th scope="col">Actions</th>
                         <?php endif; ?>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($currentItems as $deliveryPointData) : ?>
+                    <?php foreach ($view->deliveriesTable as $deliveryPointData) : ?>
                         <tr>
                             <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
                             <td><?= $deliveryPointData->getPointName() ?></td>
@@ -97,8 +97,8 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td><?= count($view->deliveryPointDataSet) ?></td>
-                                <td><?= count($view->deliveryUserDataSet) ?></td>
+                                <td><?= count($view->totalDeliveries) ?></td>
+                                <td><?= count($view->totalDeliverers) ?></td>
                             </tr>
                             </tbody>
                         </table>
@@ -145,7 +145,7 @@
                             <!-- Status -->
                             </thead>
                             <tbody>
-                            <?php foreach ($currentItems as $deliveryPointData) : ?>
+                            <?php foreach ($view->deliveriesTable as $deliveryPointData) : ?>
                                 <tr>
                                     <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
                                     <td><?= $deliveryPointData->getPointName() ?></td>
@@ -227,14 +227,14 @@
                             <!-- Status -->
                             </thead>
                             <tbody>
-                            <?php foreach ($currentItems as $deliveryUserData) : ?>
+                            <?php foreach ($view->deliveriesTable as $deliveryUserData) : ?>
                                 <tr>
                                     <th scope="row"><?= $deliveryUserData->getUserID() ?></th>
                                     <td><?= $deliveryUserData->getUserUsername() ?></td>
                                     <td>
                                         <?php
                                         if ($deliveryUserData->getUserUserType() == 1) {
-                                            echo 'Manager';
+                                            echo 'Dashboard';
                                         } else if ($deliveryUserData->getUserUserType() == 2) {
                                             echo 'Deliverer';
                                         }
