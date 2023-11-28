@@ -2,66 +2,6 @@
 <?php require('Views/partials/nav.phtml') ?>
 <?php require('Views/partials/header.phtml') ?>
 
-<!-- Deliverer View -->
-<?php if ($_SESSION['user']['usertypename'] == "Deliverer"): ?>
-<div id="main-content">
-    <div class="mt-2 m-4">
-        <h1><?= $_SESSION['user']['username'] ?>'s Deliveries</h1>
-
-        <div>
-            <?php require_once('Views/partials/searchForm.phtml') ?>
-            <?php require_once('Views/partials/filterAndOrder.phtml') ?>
-
-            <!-- Deliverers Table -->
-            <div class="table table-responsive">
-                <table class="table border-dark table-bordered table-grey table-striped">
-                    <thead class="table-dark">
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Address1</th>
-                        <th scope="col">Address2</th>
-                        <th scope="col">Postcode</th>
-                        <th scope="col">
-                            Status
-                            <i class="bi bi-info-circle"></i>
-                        </th>
-                        <?php if ($_SESSION['user']['usertypename'] == "Dashboard"): ?>
-                            <th scope="col">Actions</th>
-                        <?php endif; ?>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($view->deliveriesTable as $deliveryPointData) : ?>
-                        <tr>
-                            <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
-                            <td><?= $deliveryPointData->getPointName() ?></td>
-                            <td><?= $deliveryPointData->getPointAddress1() ?></td>
-                            <td><?= $deliveryPointData->getPointAddress2() ?></td>
-                            <td><?= $deliveryPointData->getPointPostcode() ?></td>
-                            <td>
-                                <?php
-                                if ($deliveryPointData->getPointStatus() == '1') {
-                                    echo 'Pending';
-                                } else if ($deliveryPointData->getPointStatus() == '2') {
-                                    echo 'Shipped';
-                                } else if ($deliveryPointData->getPointStatus() == '3') {
-                                    echo 'Out for delivery';
-                                } else if ($deliveryPointData->getPointStatus() == '4') {
-                                    echo 'Delivered';
-                                }
-                                ?></td>
-                        </tr>
-                        <?php require_once('Views/partials/pagination.phtml') ?>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
-
-
     <!-- Manager View -->
     <?php if ($_SESSION['user']['usertypename'] == "Manager"): ?>
     <div id="main-content">
@@ -145,7 +85,7 @@
                             <!-- Status -->
                             </thead>
                             <tbody>
-                            <?php foreach ($view->deliveriesTable as $deliveryPointData) : ?>
+                            <?php foreach ($view->totalDeliveries as $deliveryPointData) : ?>
                                 <tr>
                                     <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
                                     <td><?= $deliveryPointData->getPointName() ?></td>
@@ -235,7 +175,7 @@
                                     <td>
                                         <?php
                                         if ($deliveryUserData->getUserUserType() == 1) {
-                                            echo 'Dashboard';
+                                            echo 'Table';
                                         } else if ($deliveryUserData->getUserUserType() == 2) {
                                             echo 'Deliverer';
                                         }

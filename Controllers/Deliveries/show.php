@@ -1,33 +1,36 @@
 <?php
 require_once('Models/Deliveries/DeliveryPointDataSet.php');
 require_once('Models/Users/DeliveryUserDataSet.php');
-require_once("Models/Core/Dashboard.php");
+require_once("Models/Core/Table.php");
 
 $view = new stdClass();
 $view->pageTitle = 'Dashboard';
-$dashboard = new Dashboard();
-$view->totalDeliveries = $dashboard->fetchAllDeliveries();
-$view->totalDeliverers = $dashboard->fetchAllUsers();
 
-$rowsPerPage = 10;
+$serializedTable = $_SESSION['user']['tableData'] ?? null;
+$table = unserialize($serializedTable);
 
-if (isset($_POST['show_deliveries'])) {
-    $currentPage = $_GET['page'] ?? 1;
-    $tableData = $dashboard->displayData($view->totalDeliveries, $currentPage, $rowsPerPage, 'Deliveries');
-} elseif (isset($_POST['show_deliverers'])) {
-    $currentPage = $_GET['page'] ?? 1;
-    $tableData = $dashboard->displayData($view->totalDeliverers, $currentPage, $rowsPerPage, 'Deliverers');
-} elseif (isset($_POST['search'])) {
+if($table instanceof Table)
+{
+    $view->totalDeliveries = $table->getTotalDeliveries();
+    $view->totalDeliverers = $table ->getTotalDeliverers();
 
+    if (isset($_POST['show_deliveries'])) {
+        $_SESSION['user']['currentTable'] = "Deliveries";
+        $view->currentPage = $table->getCurrentPage();
+        $view->totalPages = $table->getTotalPages();
+        require_once("Views/Deliveries/manager-index.phtml");
+        exit();
+
+    } elseif (isset($_POST['show_deliverers'])) {
+
+
+    } elseif (isset($_POST['search'])) {
+
+    }
 }
 
-$view->deliveriesTable = $tableData['currentItems'];
-$view->currentPage = $tableData['currentPage'];
-$view->totalPages = $tableData['totalPages'];
-$view->totalRows = $tableData['totalRows'];
-$_SESSION['user']['currentTable'] = $tableData['currentTable'];
 
-require_once("Views/Deliveries/index.phtml");
-exit();
+
+
 
 
