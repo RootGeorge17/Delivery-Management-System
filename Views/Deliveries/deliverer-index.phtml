@@ -1,0 +1,121 @@
+<?php require('Views/partials/head.phtml') ?>
+<?php require('Views/partials/nav.phtml') ?>
+<?php require('Views/partials/header.phtml') ?>
+
+<!-- Deliverer View -->
+<?php if ($_SESSION['user']['usertypename'] == "Deliverer"): ?>
+<div id="main-content">
+    <div class="mt-2 m-4">
+        <h1><?= $_SESSION['user']['username'] ?>'s Deliveries</h1>
+        <h4>Statistics:</h4>
+
+        <div>
+            <!-- Statistics Section -->
+            <section class="table table-responsive">
+                <form method="POST" action="/">
+                    <table class="table border-dark table-bordered table-grey table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Total Deliveries</span>
+                                    <button type="submit" name="show_deliveries" value="show"
+                                            class="btn btn-sm btn-danger">
+                                        Show All Deliveries
+                                    </button>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Total Deliverers</span>
+                                    <button type="submit" name="show_deliverers" value="show"
+                                            class="btn btn-sm btn-danger">
+                                        Show All Deliverers
+                                    </button>
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><?= count($view->totalDeliveries) ?></td>
+                            <td><?= count($view->totalDeliverers) ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+                <table class="table border-dark table-bordered table-grey table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Total "Pending" Deliveries</th>
+                        <th scope="col">Total "Shipped" Deliveries</th>
+                        <th scope="col">Total "Out For Delivery" Deliveries</th>
+                        <th scope="col">Total "Delivered" Deliveries</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>5</td>
+                        <td>5</td>
+                        <td>5</td>
+                        <td>5</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <?php if ($_SESSION['user']['currentTable'] == 'Deliveries'): ?>
+            <div>
+                <?php require_once('Views/partials/searchForm.phtml') ?>
+                <?php require_once('Views/partials/filterAndOrder.phtml') ?>
+
+                <!-- Deliverers Table -->
+                <div class="table table-responsive">
+                    <table class="table border-dark table-bordered table-grey table-striped">
+                        <thead class="table-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Address1</th>
+                            <th scope="col">Address2</th>
+                            <th scope="col">Postcode</th>
+                            <th scope="col">
+                                Status
+                                <i class="bi bi-info-circle"></i>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($view->deliveriesTable as $deliveryPointData) : ?>
+                            <tr>
+                                <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
+                                <td><?= $deliveryPointData->getPointName() ?></td>
+                                <td><?= $deliveryPointData->getPointAddress1() ?></td>
+                                <td><?= $deliveryPointData->getPointAddress2() ?></td>
+                                <td><?= $deliveryPointData->getPointPostcode() ?></td>
+                                <td>
+                                    <?php
+                                    if ($deliveryPointData->getPointStatus() == '1') {
+                                        echo 'Pending';
+                                    } else if ($deliveryPointData->getPointStatus() == '2') {
+                                        echo 'Shipped';
+                                    } else if ($deliveryPointData->getPointStatus() == '3') {
+                                        echo 'Out for delivery';
+                                    } else if ($deliveryPointData->getPointStatus() == '4') {
+                                        echo 'Delivered';
+                                    }
+                                    ?></td>
+                            </tr>
+                            <?php require_once('Views/partials/pagination.phtml') ?>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+    <?php endif; ?>
+
+
+    <?php require('Views/partials/footer.phtml') ?>

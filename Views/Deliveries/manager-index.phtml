@@ -2,66 +2,6 @@
 <?php require('Views/partials/nav.phtml') ?>
 <?php require('Views/partials/header.phtml') ?>
 
-<!-- Deliverer View -->
-<?php if ($_SESSION['user']['usertypename'] == "Deliverer"): ?>
-<div id="main-content">
-    <div class="mt-2 m-4">
-        <h1><?= $_SESSION['user']['username'] ?>'s Deliveries</h1>
-
-        <div>
-            <?php require_once('Views/partials/searchForm.phtml') ?>
-            <?php require_once('Views/partials/filterAndOrder.phtml') ?>
-
-            <!-- Deliverers Table -->
-            <div class="table table-responsive">
-                <table class="table border-dark table-bordered table-grey table-striped">
-                    <thead class="table-dark">
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Address1</th>
-                        <th scope="col">Address2</th>
-                        <th scope="col">Postcode</th>
-                        <th scope="col">
-                            Status
-                            <i class="bi bi-info-circle"></i>
-                        </th>
-                        <?php if ($_SESSION['user']['usertypename'] == "Dashboard"): ?>
-                            <th scope="col">Actions</th>
-                        <?php endif; ?>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($view->deliveriesTable as $deliveryPointData) : ?>
-                        <tr>
-                            <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
-                            <td><?= $deliveryPointData->getPointName() ?></td>
-                            <td><?= $deliveryPointData->getPointAddress1() ?></td>
-                            <td><?= $deliveryPointData->getPointAddress2() ?></td>
-                            <td><?= $deliveryPointData->getPointPostcode() ?></td>
-                            <td>
-                                <?php
-                                if ($deliveryPointData->getPointStatus() == '1') {
-                                    echo 'Pending';
-                                } else if ($deliveryPointData->getPointStatus() == '2') {
-                                    echo 'Shipped';
-                                } else if ($deliveryPointData->getPointStatus() == '3') {
-                                    echo 'Out for delivery';
-                                } else if ($deliveryPointData->getPointStatus() == '4') {
-                                    echo 'Delivered';
-                                }
-                                ?></td>
-                        </tr>
-                        <?php require_once('Views/partials/pagination.phtml') ?>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
-
-
     <!-- Manager View -->
     <?php if ($_SESSION['user']['usertypename'] == "Manager"): ?>
     <div id="main-content">
@@ -69,29 +9,32 @@
             <h2>Admin Panel</h2>
             <h4>Statistics:</h4>
             <div>
+
                 <!-- Statistics Section -->
                 <section class="table table-responsive">
-                    <form method="POST" action="/">
+                    <form method="POST" action="/deliveries">
                         <table class="table border-dark table-bordered table-grey table-striped">
                             <thead>
                             <tr>
                                 <th scope="col">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Total Deliveries</span>
-                                        <button type="submit" name="show_deliveries" value="show"
-                                                class="btn btn-sm btn-danger">
-                                            Show All Deliveries
-                                        </button>
-                                    </div>
+                                    <form method="POST" action="/deliveries">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Total Deliveries</span>
+                                            <button type="submit" name="show_deliveries" value="show" class="btn btn-sm btn-danger">
+                                                Show All Deliveries
+                                            </button>
+                                        </div>
+                                    </form>
                                 </th>
                                 <th scope="col">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Total Deliverers</span>
-                                        <button type="submit" name="show_deliverers" value="show"
-                                                class="btn btn-sm btn-danger">
-                                            Show All Deliverers
-                                        </button>
-                                    </div>
+                                    <form method="POST" action="/deliverers">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Total Deliverers</span>
+                                            <button type="submit" name="show_deliverers" value="show" class="btn btn-sm btn-danger">
+                                                Show All Deliverers
+                                            </button>
+                                        </div>
+                                    </form>
                                 </th>
                             </tr>
                             </thead>
@@ -103,6 +46,7 @@
                             </tbody>
                         </table>
                     </form>
+
                     <table class="table border-dark table-bordered table-grey table-striped">
                         <thead>
                         <tr>
@@ -123,8 +67,10 @@
                     </table>
                 </section>
 
+
+
                 <!-- Deliveries Table -->
-                <?php if ($_SESSION['user']['currentTable'] == 'Deliveries'): ?>
+                <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
                     <?php require_once('Views/partials/searchForm.phtml') ?>
                     <?php require_once('Views/partials/filterAndOrder.phtml') ?>
                     <div class="table table-responsive">
@@ -145,7 +91,7 @@
                             <!-- Status -->
                             </thead>
                             <tbody>
-                            <?php foreach ($view->deliveriesTable as $deliveryPointData) : ?>
+                            <?php foreach ($view->currentItems as $deliveryPointData) : ?>
                                 <tr>
                                     <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
                                     <td><?= $deliveryPointData->getPointName() ?></td>
@@ -213,7 +159,7 @@
                     </div>
 
                     <!-- Deliverers Table -->
-                <?php elseif ($_SESSION['user']['currentTable'] == 'Deliverers'): ?>
+                <?php elseif ($_SESSION['user']['currentTable'] == "Users"): ?>
                     <?php require_once('Views/partials/searchForm.phtml') ?>
                     <?php require_once('Views/partials/filterAndOrder.phtml') ?>
                     <div class="table table-responsive">
@@ -228,14 +174,14 @@
                             <!-- Status -->
                             </thead>
                             <tbody>
-                            <?php foreach ($view->deliveriesTable as $deliveryUserData) : ?>
+                            <?php foreach ($view->currentItems as $deliveryUserData) : ?>
                                 <tr>
                                     <th scope="row"><?= $deliveryUserData->getUserID() ?></th>
                                     <td><?= $deliveryUserData->getUserUsername() ?></td>
                                     <td>
                                         <?php
                                         if ($deliveryUserData->getUserUserType() == 1) {
-                                            echo 'Dashboard';
+                                            echo 'TableData';
                                         } else if ($deliveryUserData->getUserUserType() == 2) {
                                             echo 'Deliverer';
                                         }

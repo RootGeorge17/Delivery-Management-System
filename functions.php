@@ -11,7 +11,8 @@ function dd($value)
 
 // This function checks if the current request's URL matches the provided $value.
 function isCurrentUrl($value) {
-    return $_SERVER['REQUEST_URI'] === $value;
+    $requestedPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    return $requestedPath === $value;
 }
 
 function login($id, $username, $usertypeid, $usertypename)

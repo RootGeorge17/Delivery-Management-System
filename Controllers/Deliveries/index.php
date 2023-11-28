@@ -1,4 +1,7 @@
 <?php
+require_once('Models/Deliveries/DeliveryPointDataSet.php');
+require_once('Models/Users/DeliveryUserDataSet.php');
+require_once("Models/Core/TableData.php");
 
 $view = new stdClass();
 $view->pageTitle = 'Dashboard';
@@ -8,22 +11,39 @@ if (!authenticated()) {
     exit();
 }
 
-require_once("Models/Core/Dashboard.php");
+$table = new TableData;
 
-$dashboard = new Dashboard();
-$view->totalDeliveries = $dashboard->fetchAllDeliveries();
-$view->totalDeliverers = $dashboard->fetchAllUsers();
+if ($_SESSION['user']['usertypename'] == "Manager")
+{
+    if(isCurrentUrl("/") || isCurrentUrl("/deliveries"))
+    {
+        $_SESSION['user']['currentTable'] = "Deliveries";
+        $currentPage = $_GET['page'] ?? 1;
+        $table->setData($currentPage, "Deliveries");
+        $view->totalDeliveries = $table->getTotalDeliveries();
+        $view->totalDeliverers = $table->getTotalDeliverers();
 
-$rowsPerPage = 10;
+        $view->currentItems = $table->getCurrentItems();
+        $view->currentPage = $table->getCurrentPage();
+        $view->totalPages = $table->getTotalPages();
+    } elseif (isCurrentUrl("/deliverers"))
+    {
+        $_SESSION['user']['currentTable'] = "Deliveries";
+        $currentPage = $_GET['page'] ?? 1;
+        $table->setData($currentPage, "Deliveries");
+        $view->totalDeliveries = $table->getTotalDeliveries();
+        $view->totalDeliverers = $table->getTotalDeliverers();
 
-$currentPage = $_GET['page'] ?? 1;
-$tableData = $dashboard->displayData($view->totalDeliveries, $currentPage, $rowsPerPage, 'Deliveries');
-$view->deliveriesTable = $tableData['currentItems'];
-$view->currentPage = $tableData['currentPage'];
-$view->totalPages = $tableData['totalPages'];
-$view->totalRows = $tableData['totalRows'];
-$_SESSION['user']['currentTable'] = $tableData['currentTable'];
+        $view->currentItems = $table->getCurrentItems();
+        $view->currentPage = $table->getCurrentPage();
+        $view->totalPages = $table->getTotalPages();
+    }
 
-require_once("Views/Deliveries/index.phtml");
+
+    $_SESSION['user']['tableData'] = serialize($table);
+    require_once("Views/Deliveries/manager-index.phtml");
+}
+
+
 
 
