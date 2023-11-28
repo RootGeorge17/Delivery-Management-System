@@ -7,7 +7,7 @@ class TableData
     protected $currentItems, $totalPages, $currentPage;
     protected $rowsPerPage = 10;
     protected $totalDeliveries;
-    protected $totalDeliverers;
+    protected $totalUsers;
 
     public function setData($currentPage, $tableName = "null")
     {
@@ -47,7 +47,7 @@ class TableData
         return $this->totalDeliveries;
     }
 
-    public function getTotalDeliverers()
+    public function getTotalUsers()
     {
         return $this->totalDeliverers;
     }
