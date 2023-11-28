@@ -1,4 +1,5 @@
 <?php
+
 $view = new stdClass();
 $view->pageTitle = 'Dashboard';
 
@@ -7,24 +8,21 @@ if (!authenticated()) {
     exit();
 }
 
-require_once('Models/Deliveries/DeliveryPointDataSet.php');
-require_once('Models/Users/DeliveryUserDataSet.php');
+require_once("Models/Core/Dashboard.php");
 
-$deliveryPointDataSet = new DeliveryPointDataSet();
-$deliveryUserDataSet = new DeliveryUserDataSet();
-$rowsPerPage = 5;
+$dashboard = new Dashboard();
+$view->totalDeliveries = $dashboard->fetchDeliveryStatistics();
+$view->totalDeliverers = $dashboard->fetchAllUsers();
 
-$view->deliveryPointDataSet = $deliveryPointDataSet->fetchAllDeliveryPoints();
-$view->deliveryUserDataSet = $deliveryUserDataSet->fetchAllDeliveryUsers();
+$rowsPerPage = 10;
 
-$view->totalRows = count($view->deliveryPointDataSet);
-$view->totalPages = ceil($view->totalRows / $rowsPerPage);
-$view->currentPage = $_GET['page'] ?? 1;
-$start = ($view->currentPage - 1) * $rowsPerPage;
-$currentItems = array_slice($view->deliveryPointDataSet, $start, $rowsPerPage);
+$currentPage = $_GET['page'] ?? 1;
+$tableData = $dashboard->displayData($view->totalDeliveries, $currentPage, $rowsPerPage, 'Deliveries');
+$view->deliveriesTable = $tableData['currentItems'];
+$view->currentPage = $tableData['currentPage'];
+$view->totalPages = $tableData['totalPages'];
+$view->totalRows = $tableData['totalRows'];
 
 require_once("Views/Deliveries/index.phtml");
-
-
 
 
