@@ -9,29 +9,32 @@
             <h2>Admin Panel</h2>
             <h4>Statistics:</h4>
             <div>
+
                 <!-- Statistics Section -->
                 <section class="table table-responsive">
-                    <form method="POST" action="/">
+                    <form method="POST" action="/deliveries">
                         <table class="table border-dark table-bordered table-grey table-striped">
                             <thead>
                             <tr>
                                 <th scope="col">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Total Deliveries</span>
-                                        <button type="submit" name="show_deliveries" value="show"
-                                                class="btn btn-sm btn-danger">
-                                            Show All Deliveries
-                                        </button>
-                                    </div>
+                                    <form method="POST" action="/deliveries">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Total Deliveries</span>
+                                            <button type="submit" name="show_deliveries" value="show" class="btn btn-sm btn-danger">
+                                                Show All Deliveries
+                                            </button>
+                                        </div>
+                                    </form>
                                 </th>
                                 <th scope="col">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Total Deliverers</span>
-                                        <button type="submit" name="show_deliverers" value="show"
-                                                class="btn btn-sm btn-danger">
-                                            Show All Deliverers
-                                        </button>
-                                    </div>
+                                    <form method="POST" action="/deliverers">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Total Deliverers</span>
+                                            <button type="submit" name="show_deliverers" value="show" class="btn btn-sm btn-danger">
+                                                Show All Deliverers
+                                            </button>
+                                        </div>
+                                    </form>
                                 </th>
                             </tr>
                             </thead>
@@ -43,6 +46,7 @@
                             </tbody>
                         </table>
                     </form>
+
                     <table class="table border-dark table-bordered table-grey table-striped">
                         <thead>
                         <tr>
@@ -63,8 +67,10 @@
                     </table>
                 </section>
 
+
+
                 <!-- Deliveries Table -->
-                <?php if ($_SESSION['user']['currentTable'] == 'Deliveries'): ?>
+                <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
                     <?php require_once('Views/partials/searchForm.phtml') ?>
                     <?php require_once('Views/partials/filterAndOrder.phtml') ?>
                     <div class="table table-responsive">
@@ -85,7 +91,7 @@
                             <!-- Status -->
                             </thead>
                             <tbody>
-                            <?php foreach ($view->totalDeliveries as $deliveryPointData) : ?>
+                            <?php foreach ($view->currentItems as $deliveryPointData) : ?>
                                 <tr>
                                     <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
                                     <td><?= $deliveryPointData->getPointName() ?></td>
@@ -153,7 +159,7 @@
                     </div>
 
                     <!-- Deliverers Table -->
-                <?php elseif ($_SESSION['user']['currentTable'] == 'Deliverers'): ?>
+                <?php elseif ($_SESSION['user']['currentTable'] == "Users"): ?>
                     <?php require_once('Views/partials/searchForm.phtml') ?>
                     <?php require_once('Views/partials/filterAndOrder.phtml') ?>
                     <div class="table table-responsive">
@@ -168,14 +174,14 @@
                             <!-- Status -->
                             </thead>
                             <tbody>
-                            <?php foreach ($view->deliveriesTable as $deliveryUserData) : ?>
+                            <?php foreach ($view->currentItems as $deliveryUserData) : ?>
                                 <tr>
                                     <th scope="row"><?= $deliveryUserData->getUserID() ?></th>
                                     <td><?= $deliveryUserData->getUserUsername() ?></td>
                                     <td>
                                         <?php
                                         if ($deliveryUserData->getUserUserType() == 1) {
-                                            echo 'Table';
+                                            echo 'TableData';
                                         } else if ($deliveryUserData->getUserUserType() == 2) {
                                             echo 'Deliverer';
                                         }

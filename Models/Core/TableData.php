@@ -1,13 +1,11 @@
 <?php
-
 require_once('Models/Deliveries/DeliveryPointDataSet.php');
 require_once('Models/Users/DeliveryUserDataSet.php');
 
-class Table
+class TableData
 {
     protected $currentItems, $totalPages, $currentPage;
     protected $rowsPerPage = 10;
-
     protected $totalDeliveries;
     protected $totalDeliverers;
 

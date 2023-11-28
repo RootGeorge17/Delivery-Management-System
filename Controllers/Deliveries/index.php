@@ -1,7 +1,7 @@
 <?php
 require_once('Models/Deliveries/DeliveryPointDataSet.php');
 require_once('Models/Users/DeliveryUserDataSet.php');
-require_once("Models/Core/Table.php");
+require_once("Models/Core/TableData.php");
 
 $view = new stdClass();
 $view->pageTitle = 'Dashboard';
@@ -11,17 +11,34 @@ if (!authenticated()) {
     exit();
 }
 
-$table = new Table;
+$table = new TableData;
 
 if ($_SESSION['user']['usertypename'] == "Manager")
 {
-    $currentPage = $_GET['page'] ?? 1;
-    $table->setData($currentPage, "Deliveries");
-    $view->totalDeliveries = $table->getTotalDeliveries();
-    $view->totalDeliverers = $table->getTotalDeliverers();
+    if(isCurrentUrl("/") || isCurrentUrl("/deliveries"))
+    {
+        $_SESSION['user']['currentTable'] = "Deliveries";
+        $currentPage = $_GET['page'] ?? 1;
+        $table->setData($currentPage, "Deliveries");
+        $view->totalDeliveries = $table->getTotalDeliveries();
+        $view->totalDeliverers = $table->getTotalDeliverers();
 
-    $view->currentPage = $table->getCurrentPage();
-    $view->totalPages = $table->getTotalPages();
+        $view->currentItems = $table->getCurrentItems();
+        $view->currentPage = $table->getCurrentPage();
+        $view->totalPages = $table->getTotalPages();
+    } elseif (isCurrentUrl("/deliverers"))
+    {
+        $_SESSION['user']['currentTable'] = "Deliveries";
+        $currentPage = $_GET['page'] ?? 1;
+        $table->setData($currentPage, "Deliveries");
+        $view->totalDeliveries = $table->getTotalDeliveries();
+        $view->totalDeliverers = $table->getTotalDeliverers();
+
+        $view->currentItems = $table->getCurrentItems();
+        $view->currentPage = $table->getCurrentPage();
+        $view->totalPages = $table->getTotalPages();
+    }
+
 
     $_SESSION['user']['tableData'] = serialize($table);
     require_once("Views/Deliveries/manager-index.phtml");
