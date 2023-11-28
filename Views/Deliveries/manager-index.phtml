@@ -158,7 +158,7 @@
                         </table>
                     </div>
 
-                    <!-- Deliverers Table -->
+                    <!-- Users Table -->
                 <?php elseif ($_SESSION['user']['currentTable'] == "Users"): ?>
                     <?php require_once('Views/partials/searchForm.phtml') ?>
                     <?php require_once('Views/partials/filterAndOrder.phtml') ?>
@@ -181,7 +181,7 @@
                                     <td>
                                         <?php
                                         if ($deliveryUserData->getUserUserType() == 1) {
-                                            echo 'TableData';
+                                            echo 'Manager';
                                         } else if ($deliveryUserData->getUserUserType() == 2) {
                                             echo 'Deliverer';
                                         }
