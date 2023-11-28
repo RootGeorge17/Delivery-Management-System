@@ -3,7 +3,7 @@
 <?php require('Views/partials/header.phtml') ?>
 
 <!-- Deliverer View -->
-<?php if ($_SESSION['user']['usertypename'] == "Deliverer"): ?>
+<?php if ($_SESSION['user']['usertypename'] == "User"): ?>
 <div id="main-content">
     <div class="mt-2 m-4">
         <h1><?= $_SESSION['user']['username'] ?>'s Deliveries</h1>
@@ -39,7 +39,7 @@
                         <tbody>
                         <tr>
                             <td><?= count($view->totalDeliveries) ?></td>
-                            <td><?= count($view->totalDeliverers) ?></td>
+                            <td><?= count($view->totalUsers) ?></td>
                         </tr>
                         </tbody>
                     </table>

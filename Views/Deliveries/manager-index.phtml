@@ -27,7 +27,7 @@
                                     </form>
                                 </th>
                                 <th scope="col">
-                                    <form method="POST" action="/deliverers">
+                                    <form method="POST" action="/users">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <span>Total Deliverers</span>
                                             <button type="submit" name="show_deliverers" value="show" class="btn btn-sm btn-danger">
@@ -41,7 +41,7 @@
                             <tbody>
                             <tr>
                                 <td><?= count($view->totalDeliveries) ?></td>
-                                <td><?= count($view->totalDeliverers) ?></td>
+                                <td><?= count($view->totalUsers) ?></td>
                             </tr>
                             </tbody>
                         </table>

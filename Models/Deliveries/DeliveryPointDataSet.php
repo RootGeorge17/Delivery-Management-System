@@ -12,7 +12,7 @@ class DeliveryPointDataSet
         $this->dbHandle = $this->dbInstance->getDBConnection();
     }
 
-    public function fetchDeliverersDeliveryPoints($delivererID) {
+    public function fetchUserDeliveryPoints($delivererID) {
         $sqlQuery = 'SELECT * FROM delivery_point
                      WHERE deliverer = :delivererID';
 

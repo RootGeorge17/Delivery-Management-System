@@ -21,25 +21,23 @@ if ($_SESSION['user']['usertypename'] == "Manager")
         $currentPage = $_GET['page'] ?? 1;
         $table->setData($currentPage, "Deliveries");
         $view->totalDeliveries = $table->getTotalDeliveries();
-        $view->totalDeliverers = $table->getTotalDeliverers();
+        $view->totalUsers = $table->getTotalUsers();
 
         $view->currentItems = $table->getCurrentItems();
         $view->currentPage = $table->getCurrentPage();
         $view->totalPages = $table->getTotalPages();
-    } elseif (isCurrentUrl("/deliverers"))
+    } elseif (isCurrentUrl("/users"))
     {
-        $_SESSION['user']['currentTable'] = "Deliveries";
+        $_SESSION['user']['currentTable'] = "Users";
         $currentPage = $_GET['page'] ?? 1;
-        $table->setData($currentPage, "Deliveries");
+        $table->setData($currentPage, "Users");
         $view->totalDeliveries = $table->getTotalDeliveries();
-        $view->totalDeliverers = $table->getTotalDeliverers();
+        $view->totalUsers = $table->getTotalUsers();
 
         $view->currentItems = $table->getCurrentItems();
         $view->currentPage = $table->getCurrentPage();
         $view->totalPages = $table->getTotalPages();
     }
-
-
     $_SESSION['user']['tableData'] = serialize($table);
     require_once("Views/Deliveries/manager-index.phtml");
 }

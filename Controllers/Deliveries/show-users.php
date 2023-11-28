@@ -7,7 +7,7 @@ $view->pageTitle = 'Dashboard';
 $serializedTable = $_SESSION['user']['tableData'] ?? null;
 $table = unserialize($serializedTable);
 $view->totalDeliveries = $table->getTotalDeliveries();
-$view->totalDeliverers = $table ->getTotalDeliverers();
+$view->totalUsers = $table ->getTotalUsers();
 
 if($table instanceof TableData)
 {
