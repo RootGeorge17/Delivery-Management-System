@@ -2,77 +2,71 @@
 <?php require('Views/partials/nav.phtml') ?>
 <?php require('Views/partials/header.phtml') ?>
 
-    <!-- Manager View -->
-    <?php if ($_SESSION['user']['usertypename'] == "Manager"): ?>
-    <div id="main-content">
-        <div class="mt-2 m-4">
+<div id="main-content">
+    <div class="mt-2 m-4">
+        <!-- Manager View -->
+        <?php if ($_SESSION['user']['usertypename'] == "Manager"): ?>
             <h2>Admin Panel</h2>
-            <h4>Statistics:</h4>
-            <div>
 
-                <!-- Statistics Section -->
-                <section class="table table-responsive">
-                    <form method="POST" action="/deliveries">
-                        <table class="table border-dark table-bordered table-grey table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">
-                                    <form method="POST" action="/deliveries">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span>Total Deliveries</span>
-                                            <button type="submit" name="show_deliveries" value="show" class="btn btn-sm btn-danger">
-                                                Show All Deliveries
-                                            </button>
-                                        </div>
-                                    </form>
-                                </th>
-                                <th scope="col">
-                                    <form method="POST" action="/users">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span>Total Deliverers</span>
-                                            <button type="submit" name="show_deliverers" value="show" class="btn btn-sm btn-danger">
-                                                Show All Deliverers
-                                            </button>
-                                        </div>
-                                    </form>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td><?= count($view->totalDeliveries) ?></td>
-                                <td><?= count($view->totalUsers) ?></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </form>
+            <!-- Statistics Section -->
+            <section id="statistics-section" class="table table-responsive">
+                <h4>Statistics:</h4>
+                <table class="table border-dark table-bordered table-grey table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">
+                            <form method="POST" action="/deliveries">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Total Deliveries</span>
+                                    <div>
+                                        <button type="submit" name="show_deliveries" value="show"
+                                                class="btn btn-sm btn-danger">
+                                            Show All Deliveries
+                                        </button>
+                                        <button type="submit" name="create_delivery" value="show"
+                                                class="btn btn-sm btn-primary">
+                                            Create Parcel
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </th>
+                        <th scope="col">
+                            <form method="POST" action="/users">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Total Users</span>
+                                    <div>
+                                        <button type="submit" name="show_deliverers" value="show"
+                                                class="btn btn-sm btn-danger">
+                                            Show All Deliveries
+                                        </button>
+                                        <button type="submit" name="create_user" value="show"
+                                                class="btn btn-sm btn-primary">
+                                            Create User
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><?= count($view->totalDeliveries) ?></td>
+                        <td><?= count($view->totalUsers) ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
 
-                    <table class="table border-dark table-bordered table-grey table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">Total "Pending" Deliveries</th>
-                            <th scope="col">Total "Shipped" Deliveries</th>
-                            <th scope="col">Total "Out For Delivery" Deliveries</th>
-                            <th scope="col">Total "Delivered" Deliveries</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>5</td>
-                            <td>5</td>
-                            <td>5</td>
-                            <td>5</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-
-
+            <!-- Table Section -->
+            <section id="table-section">
                 <!-- Deliveries Table -->
                 <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
                     <?php require_once('Views/partials/searchForm.phtml') ?>
                     <?php require_once('Views/partials/filterAndOrder.phtml') ?>
+                    <?php require_once('Views/partials/pagination.phtml') ?>
+                    <?php require_once('Views/partials/statusModal.phtml') ?>
                     <div class="table table-responsive">
                         <table class="table border-dark table-bordered table-grey table-striped">
                             <thead class="table-dark">
@@ -116,15 +110,19 @@
                                                 ?>
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item border-bottom" href="#">Mark as:
-                                                        "Pending"</a>
+                                                <li><a class="dropdown-item border-bottom" href="#"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#pendingModal">Mark as: Pending</a></li>
+                                                <li><a class="dropdown-item border-bottom" href="#"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#shippedModal">Mark as: Shipped</a></li>
+                                                <li><a class="dropdown-item border-bottom" href="#"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#outForDeliveryModal">Mark as: Out for
+                                                        delivery</a>
                                                 </li>
-                                                <li><a class="dropdown-item border-bottom" href="#">Mark as:
-                                                        "Shipped"</a>
-                                                </li>
-                                                <li><a class="dropdown-item border-bottom" href="#">Mark as: "Out for
-                                                        delivery"</a></li>
-                                                <li><a class="dropdown-item" href="#">Mark as: "Delivered"</a></li>
+                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                       data-bs-target="#deliveredModal">Mark as: Delivered</a></li>
                                             </ul>
                                         </div>
                                     </td>
@@ -137,31 +135,25 @@
                                                 Edit Parcel:
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item border-bottom" href="#">Mark as: Pending</a>
-                                                </li>
-                                                <li><a class="dropdown-item border-bottom" href="#">Mark as: Shipped</a>
-                                                </li>
-                                                <li><a class="dropdown-item border-bottom" href="#">Mark as: Out for
-                                                        delivery</a></li>
-                                                <li><a class="dropdown-item" href="#">Mark as: Delivered</a></li>
-                                                <hr class="dropdown-divider">
-                                                <li><a class="dropdown-item" href="#">Assign Deliverer</a></li>
+                                                <li><a class="dropdown-item" href="#">Assign / Change Deliverer</a></li>
                                                 <li><a class="dropdown-item border" href="#">Edit Delivery Item</a></li>
                                                 <li><a class="dropdown-item" href="#">Delete Delivery Item</a></li>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
-                                <?php require_once('Views/partials/pagination.phtml') ?>
                             <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
 
+
                     <!-- Users Table -->
                 <?php elseif ($_SESSION['user']['currentTable'] == "Users"): ?>
                     <?php require_once('Views/partials/searchForm.phtml') ?>
                     <?php require_once('Views/partials/filterAndOrder.phtml') ?>
+                    <?php require_once('Views/partials/pagination.phtml') ?>
+                    <?php require_once('Views/partials/statusModal.phtml') ?>
                     <div class="table table-responsive">
                         <table class="table border-dark table-bordered table-grey table-striped">
                             <thead class="table-dark">
@@ -196,28 +188,24 @@
                                                 Edit User:
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item border-bottom" href="#">Mark as: Pending</a>
+                                                <li><a class="dropdown-item border-bottom" href="#"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#assignDelivererModal">Edit User Information</a>
                                                 </li>
-                                                <li><a class="dropdown-item border-bottom" href="#">Mark as: Shipped</a>
-                                                </li>
-                                                <li><a class="dropdown-item border-bottom" href="#">Mark as: Out for
-                                                        delivery</a></li>
-                                                <li><a class="dropdown-item" href="#">Mark as: Delivered</a></li>
-                                                <hr class="dropdown-divider">
-                                                <li><a class="dropdown-item" href="#">Assign Deliverer</a></li>
-                                                <li><a class="dropdown-item border" href="#">Edit Delivery Item</a></li>
-                                                <li><a class="dropdown-item" href="#">Delete Delivery Item</a></li>
+                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                       data-bs-target="#editDeliveryItemModal">Delete User</a></li>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
-                                <?php require_once('Views/partials/pagination.phtml') ?>
                             <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
                 <?php endif; ?>
-                <?php endif; ?>
-            </div>
+            </section>
+        <?php endif; ?>
+    </div>
+</div>
 
-            <?php require('Views/partials/footer.phtml') ?>
+<?php require('Views/partials/footer.phtml') ?>

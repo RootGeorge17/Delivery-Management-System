@@ -39,7 +39,7 @@ if ($_SESSION['user']['usertypename'] == "Manager")
         $view->totalPages = $table->getTotalPages();
     }
     $_SESSION['user']['tableData'] = serialize($table);
-    require_once("Views/Deliveries/manager-index.phtml");
+    require_once("Views/Managers/index.phtml");
 }
 
 

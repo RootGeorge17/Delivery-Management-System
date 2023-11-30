@@ -18,7 +18,7 @@ if($table instanceof TableData)
         $view->currentItems = $table->getCurrentItems();
         $view->currentPage = $table->getCurrentPage();
         $view->totalPages = $table->getTotalPages();
-        require_once("Views/Deliveries/manager-index.phtml");
+        require_once("Views/Managers/index.phtml");
         exit();
 
     }
