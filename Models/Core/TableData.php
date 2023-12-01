@@ -9,13 +9,13 @@ class TableData
     protected $totalDeliveries;
     protected $totalUsers;
 
-    public function setData($currentPage, $tableName = "null")
+    public function setData($currentPage, $tableName)
     {
         $deliveryPointDataSet = new DeliveryPointDataSet();
         $deliveryUserDataSet = new DeliveryUserDataSet();
         $offset = ($currentPage - 1) * $this->rowsPerPage;
         $this->totalDeliveries = $deliveryPointDataSet->fetchAllDeliveryPoints();
-        $this->totalDeliverers = $deliveryUserDataSet->fetchAllDeliveryUsers();
+        $this->totalUsers = $deliveryUserDataSet->fetchAllDeliveryUsers();
         $this->currentPage = $currentPage;
 
         if ($tableName == "Deliveries") {
@@ -25,10 +25,10 @@ class TableData
             $this->currentItems = array_slice($this->totalDeliveries, $start, $this->rowsPerPage);
 
         } elseif ($tableName == "Users") {
-            $totalRows = count($this->totalDeliverers);
+            $totalRows = count($this->totalUsers);
             $this->totalPages = ceil($totalRows / $this->rowsPerPage);
             $start = ($currentPage - 1) * $this->rowsPerPage;
-            $this->currentItems = array_slice($this->totalDeliverers, $start, $this->rowsPerPage);
+            $this->currentItems = array_slice($this->totalUsers, $start, $this->rowsPerPage);
         }
     }
 
@@ -49,7 +49,7 @@ class TableData
 
     public function getTotalUsers()
     {
-        return $this->totalDeliverers;
+        return $this->totalUsers;
     }
     public function getCurrentPage()
     {

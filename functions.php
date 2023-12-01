@@ -40,22 +40,12 @@ function logout()
     setcookie("PHPSESSID", '', time() - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
 }
 
-function authenticated()
+function authenticated(): bool
 {
-    if (isset($_SESSION['user']['username']))
+    if (isset($_SESSION['user']['loggedIn']))
     {
         return true;
     } else {
         return false;
     }
 }
-
-function abort($code = 404)
-{
-    http_response_code($code);
-
-    require base_path("views/{$code}.php");
-
-    die();
-}
-
