@@ -41,6 +41,18 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    public function updateStatusDeliveryPoint($id, $status) {
+        $sqlQuery = 'UPDATE delivery_point
+                    SET status = :status
+                    WHERE id = :id';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute([
+            ':status' => $status,
+            ':id' => $id
+        ]); // execute the PDO statement
+    }
+
     public function searchDeliveryPoints($value, $deliverer) {
         $sqlQuery = 'SELECT * 
         FROM delivery_point

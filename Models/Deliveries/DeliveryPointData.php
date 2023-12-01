@@ -60,7 +60,15 @@ class DeliveryPointData
 
     public function getPointStatus()
     {
-        return $this->status;
+        if ($this->status == '1') {
+            return 'Pending';
+        } else if ($this->status == '2') {
+            return 'Shipped';
+        } else if ($this->status == '3') {
+            return 'Out for delivery';
+        } else if ($this->status == '4') {
+            return 'Delivered';
+        }
     }
 
     public function getPointDelPhoto()
