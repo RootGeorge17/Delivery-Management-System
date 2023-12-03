@@ -7,7 +7,7 @@ $deliveryPointDataSet = new DeliveryPointDataSet();
 $deliveryUserDataSet = new DeliveryUserDataSet();
 $errors = [];
 
-if($_POST['type'] = 'Assign')
+if($_POST['type'] == 'Assign')
 {
     $assignedDeliverer = $_POST['username'];
     $parcelID = $_POST['_id'];
@@ -17,10 +17,13 @@ if($_POST['type'] = 'Assign')
     } else {
         $errors['InvalidUsername'] = "Username Not Found. Try again!";
     }
-} elseif($_POST['type'] = 'Edit') {
 
+} elseif($_POST["type"] == "Edit") {
+    $delivererUsername = $_POST['username'];
+    $delivererID = $_POST['_id'];
+
+    $deliveryUserDataSet->updateDeliverer($delivererID, $delivererUsername);
 }
-
 
 require_once("Controllers/Managers/show.php");
 exit();
