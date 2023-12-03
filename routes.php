@@ -1,5 +1,4 @@
 <?php
-
 $router->get('/', 'Controllers/Managers/index.php');
 $router->post('/', 'Controllers/Managers/show.php');
 $router->edit('/', 'Controllers/Managers/edit.php');
@@ -8,6 +7,7 @@ $router->delete('/', 'Controllers/Managers/delete.php');;
 
 $router->get('/users', 'Controllers/Managers/index.php');
 $router->post('/users', 'Controllers/Managers/show.php');
+$router->edit('/users', 'Controllers/Managers/edit.php');
 $router->delete('/users', 'Controllers/Managers/delete.php');;
 
 $router->get('/login', 'Controllers/Authentication/index.php');

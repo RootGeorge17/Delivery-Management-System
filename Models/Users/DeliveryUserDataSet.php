@@ -82,4 +82,26 @@ class DeliveryUserDataSet
 
         return ($user !== false); // If user is found, return true; otherwise, return false
     }
+
+    public function updateDeliverer($id, $username) {
+        $sqlQuery = 'UPDATE delivery_users
+                    SET username = :username
+                    WHERE id = :id';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute([
+            ':id' => $id,
+            ':username' => $username
+        ]); // execute the PDO statement
+    }
+
+    public function deleteDeliverer($id) {
+        $sqlQuery = 'DELETE FROM delivery_users
+                     WHERE id = :id';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute([
+            ':id' => $id
+        ]); // execute the PDO statement
+    }
 }

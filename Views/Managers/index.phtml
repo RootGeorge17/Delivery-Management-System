@@ -341,7 +341,7 @@
                                                 <span>
                                                     You are about to assign a deliverer for parcel with ID: <?= $deliveryPointData->getPointId() ?>
                                                 </span>
-                                                        <input type="hidden" id="type" name="Assign">
+                                                        <input type="hidden" name="type" value="Assign">
                                                         <input type="hidden" name="_method" value="EDIT">
                                                         <label for="username">Deliverer Username:</label>
                                                         <input type="text" id="username" name="username" required>
@@ -539,7 +539,7 @@
                                                 <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
                                                     <li>
                                                         <a class="btn dropdown-item" data-bs-toggle="modal"
-                                                           data-bs-target="#editModal<?= $deliveryUserData->getUserID() ?>">
+                                                           data-bs-target="#editUserModal<?= $deliveryUserData->getUserID() ?>">
                                                             Edit User Information
                                                         </a>
                                                     </li>
@@ -553,44 +553,38 @@
                                             </div>
 
                                             <!-- Edit User Dynamic Modal -->
-                                            <div class="modal fade" id="editModal<?= $deliveryUserData->getUserID() ?>"
+                                            <div class="modal fade" id="editUserModal<?= $deliveryUserData->getUserID() ?>"
                                                  tabindex="-1"
                                                  aria-labelledby="pendingModalLabel" aria-hidden="true">
                                                 <!-- Modal content for Pending -->
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
-                                                        <!-- Your modal content for "Pending" -->
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="statusModalLabel">Edit
                                                                 User <?= $deliveryUserData->getUserID() ?></h5>
-                                                            <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <form method="POST" action="/edit">
+                                                        <form method="POST" action="/users">
                                                             <div class="modal-body">
                                                                 <h5>Edit User</h5>
                                                                 <div class="form-group">
-                                                                    <label for="pointId">User ID:</label>
-                                                                    <input type="text" id="pointId" class="form-control"
+                                                                    <input type="hidden" name="type" value="Edit">
+                                                                    <input type="hidden" name="_method" value="EDIT">
+                                                                    <label for="userId">User ID:</label>
+                                                                    <input type="text" id="userId" class="form-control"
                                                                            value="<?= $deliveryUserData->getUserID() ?>"
                                                                            disabled>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="pointName">Username:</label>
-                                                                    <input type="text" id="pointName" name="username"
+                                                                    <label for="username">Username:</label>
+                                                                    <input type="text" id="username" name="username"
                                                                            class="form-control"
-                                                                           value="<?= $deliveryUserData->getUserUsername() ?>">
+                                                                           value="<?= $deliveryUserData->getUserUsername() ?>" required>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <input type="hidden" name="_id"
-                                                                       value="<?= $deliveryUserData->getUserID() ?>">
-                                                                <input type="hidden" name="_status" value="Pending">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">Close
-                                                                </button>
-                                                                <button type="submit" class="btn btn-danger">Save
-                                                                    Changes
+                                                                <input type="hidden" name="_id" value="<?= $deliveryUserData->getUserID() ?>">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-danger">Save Changes
                                                                 </button>
                                                             </div>
                                                         </form>
@@ -610,8 +604,6 @@
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="statusModalLabel">Delete
                                                                 User</h5>
-                                                            <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                     <span>
@@ -619,13 +611,12 @@
                                                     </span>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <form method="POST" action="/">
+                                                            <form method="POST" action="/users">
                                                                 <input type="hidden" name="_method" value="DELETE">
                                                                 <input type="hidden" name="id"
                                                                        value="<?= $deliveryUserData->getUserID() ?>">
-                                                                <input type="hidden" name="type" value="Parcel">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">Close
+                                                                <input type="hidden" name="type" value="Deliverer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                                                                 </button>
                                                                 <button type="submit" class="btn btn-danger">Delete
                                                                 </button>

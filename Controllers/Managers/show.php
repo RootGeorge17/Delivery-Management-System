@@ -17,13 +17,10 @@ if (isset($_POST["show"])) {
 }
 
 // For Pagination
-if(isCurrentUrl("/"))
-{
+if(isCurrentUrl("/")) {
     $_SESSION['user']['currentTable'] = "Deliveries";
     $table->setData($currentPage, "Deliveries");
-
-} elseif (isCurrentUrl("/users"))
-{
+} elseif (isCurrentUrl("/users")) {
     $_SESSION['user']['currentTable'] = "Users";
     $table->setData($currentPage, "Users");
 }
