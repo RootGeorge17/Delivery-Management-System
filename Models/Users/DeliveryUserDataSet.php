@@ -13,7 +13,8 @@ class DeliveryUserDataSet
     }
 
     public function fetchAllDeliveryUsers() {
-        $sqlQuery = 'SELECT * FROM delivery_users';
+        $sqlQuery = 'SELECT * FROM delivery_users
+                     WHERE usertype = 2';
 
         $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
         $statement->execute(); // execute the PDO statement
@@ -65,7 +66,8 @@ class DeliveryUserDataSet
         return $dataSet;
     }
 
-    public function checkUserExists($username) {
+    public function checkUserExists($username): bool
+    {
         $sqlQuery = 'SELECT * FROM delivery_users 
          WHERE username = :username';
 
@@ -75,10 +77,9 @@ class DeliveryUserDataSet
         $statement->execute([
             ':username' => $searchValue,
         ]); // execute the PDO statement
-        $dataSet = [];
-        while ($row = $statement->fetch()) {
-            $dataSet[] = new DeliveryUserData($row);
-        }
-        return $dataSet;
+
+        $user = $statement->fetch(); // Fetch the result
+
+        return ($user !== false); // If user is found, return true; otherwise, return false
     }
 }

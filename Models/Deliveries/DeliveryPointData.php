@@ -3,6 +3,7 @@
 class DeliveryPointData
 {
     protected $id, $name, $address_1, $address_2, $postcode, $deliverer, $lat, $lng, $status, $del_photo;
+    protected $delivererUsername;
 
     public function __construct($dbRow)
     {
@@ -12,6 +13,7 @@ class DeliveryPointData
         $this->address_2 = $dbRow['address_2'];
         $this->postcode = $dbRow['postcode'];
         $this->deliverer = $dbRow['deliverer'];
+        $this->delivererUsername = $dbRow['deliverer_username'];
         $this->lat = $dbRow['lat'];
         $this->lng = $dbRow['lng'];
         $this->status = $dbRow['status'];
@@ -46,6 +48,11 @@ class DeliveryPointData
     public function getPointDeliverer()
     {
         return $this->deliverer;
+    }
+
+    public function getPointDelivererUsername()
+    {
+        return $this->delivererUsername;
     }
 
     public function getPointLat()
