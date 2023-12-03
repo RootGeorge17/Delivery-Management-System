@@ -11,19 +11,15 @@ function getStatusNumber($statusWord) {
 $deliveryPointDataSet = new DeliveryPointDataSet();
 $id = $_POST['_id'];
 $statusWord = $_POST['_status'];
+$status = getStatusNumber($statusWord);
 
-if($_POST['_status'] == 'Pending')
-{
-    $status = getStatusNumber($statusWord);
+if($_POST['_status'] == 'Pending') {
     $deliveryPointDataSet->updateStatusDeliveryPoint($id, $status);
 } elseif($_POST['_status'] == 'Shipped') {
-    $status = getStatusNumber($statusWord);
     $deliveryPointDataSet->updateStatusDeliveryPoint($id, $status);
 } elseif($_POST['_status'] == 'Out for delivery') {
-    $status = getStatusNumber($statusWord);
     $deliveryPointDataSet->updateStatusDeliveryPoint($id, $status);
 } elseif($_POST['_status'] == 'Delivered') {
-    $status = getStatusNumber($statusWord);
     $deliveryPointDataSet->updateStatusDeliveryPoint($id, $status);
 }
 
