@@ -33,7 +33,7 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
-                                                <label class="form-label" for="password">Type this string below:
+                                                <label class="randomString-label" for="randomString">Type this string below:
                                                 <?= $_SESSION['antiSpamRandomBytes'] ?></label>
                                                 <input type="text" id="randomString" name="randomString"
                                                        placeholder="Anti Spam" class="form-control" required/>
@@ -43,7 +43,7 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
-                                                <input type="checkbox" id="notRobot" name="notRobot" value="notRobot" required>
+                                                <input type="checkbox" id="notRobot" name="notRobot" value="notRobot">
                                                 <label for="vehicle1">Confirm you are not a robot!</label><br>
                                             </div>
                                         </div>

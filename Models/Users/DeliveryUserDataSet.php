@@ -50,20 +50,40 @@ class DeliveryUserDataSet
     public function credentialsMatch($username, $password)
     {
         $sqlQuery = 'SELECT * FROM delivery_users
-                     WHERE username = :username
-                     AND password = :password';
+                     WHERE username = :username';
 
         $statement = $this->dbHandle->prepare($sqlQuery);
         $statement->execute([
             ':username' => $username,
-            ':password' => $password
         ]);
 
-        $dataSet = [];
-        while($row = $statement->fetch()) {
-            $dataSet[] = new DeliveryUserData($row);
+        $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $storedHashedPassword = $user['password'];
+            if (password_verify($password, $storedHashedPassword)) {
+                return true; // Passwords match
+            }
         }
-        return $dataSet;
+
+        return false;
+    }
+
+    public function getUserID($username)
+    {
+        $sqlQuery = 'SELECT id FROM delivery_users
+                     WHERE username = :username';
+
+        $statement = $this->dbHandle->prepare($sqlQuery);
+        $statement->execute([
+            ':username' => $username,
+        ]);
+
+        $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            return $user['id'];
+        }
     }
 
     public function checkUserExists($username): bool
@@ -83,7 +103,20 @@ class DeliveryUserDataSet
         return ($user !== false); // If user is found, return true; otherwise, return false
     }
 
-    public function updateDeliverer($id, $username) {
+    public function updateDeliverer($id, $username, $password) {
+        $sqlQuery = 'UPDATE delivery_users
+                    SET username = :username, password = :password
+                    WHERE id = :id';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute([
+            ':id' => $id,
+            ':username' => $username,
+            ':password' => password_hash($password, PASSWORD_BCRYPT),
+        ]); // execute the PDO statement
+    }
+
+    public function updateDelivererNoPassword($id, $username) {
         $sqlQuery = 'UPDATE delivery_users
                     SET username = :username
                     WHERE id = :id';
@@ -91,7 +124,20 @@ class DeliveryUserDataSet
         $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
         $statement->execute([
             ':id' => $id,
-            ':username' => $username
+            ':username' => $username,
+        ]); // execute the PDO statement
+    }
+
+    public function createDeliverer($username, $password, $usertype) {
+        $sqlQuery = 'INSERT INTO delivery_users 
+                     (username, password, usertype) 
+                     VALUES (:username, :password, :usertype)';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute([
+            ':username' => $username,
+            ':password' => password_hash($password, PASSWORD_BCRYPT),
+            ':usertype' => $usertype
         ]); // execute the PDO statement
     }
 

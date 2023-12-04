@@ -5,6 +5,7 @@ require_once('Models/Core/Router.php');
 use Core\Router;
 
 require_once('functions.php');
+require_once('Models/Core/Constants.php');
 
 $router = new Router();
 $routes = require ('routes.php');

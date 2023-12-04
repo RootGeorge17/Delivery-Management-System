@@ -39,6 +39,11 @@ class Router
         $this->add('EDIT', $uri, $controller);
     }
 
+    public function create($uri, $controller)
+    {
+        $this->add('CREATE', $uri, $controller);
+    }
+
     public function route($uri, $method)
     {
         foreach ($this->routes as $route) {
