@@ -26,17 +26,3 @@
     border-color: #000000;
 }
 
-/* Style for search box and button */
-.search-form {
-    display: flex;
-    align-items: center;
-    width: 400px;
-}
-
-.search-input {
-    flex: 1;
-}
-
-.search-button {
-    margin-left: 10px;
-}

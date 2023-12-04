@@ -49,3 +49,16 @@ function authenticated(): bool
         return false;
     }
 }
+
+function ParcelText($value)
+{
+    if($value == "Pending") {
+        return Constants::PENDING;
+    } elseif($value == "Shipped") {
+        return Constants::SHIPPED;
+    } elseif($value == "Out for delivery") {
+        return Constants::OUT_FOR_DELIVERY;
+    } elseif ($value == "Delivered") {
+        return Constants::DELIVERED;
+    }
+}
