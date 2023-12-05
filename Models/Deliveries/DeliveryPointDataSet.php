@@ -4,6 +4,10 @@ require_once('Models/Core/Database.php');
 require_once('Models/Deliveries/DeliveryPointData.php');
 require_once('Models/Users/DeliveryUserData.php');
 
+/**
+ * Class DeliveryPointDataSet
+ * Handles operations related to delivery points in the database.
+ */
 class DeliveryPointDataSet
 {
     protected $dbHandle, $dbInstance;
@@ -14,6 +18,12 @@ class DeliveryPointDataSet
         $this->dbHandle = $this->dbInstance->getDBConnection();
     }
 
+    /**
+     * Fetch delivery points for a specific user.
+     *
+     * @param int $delivererID The ID of the deliverer.
+     * @return array An array of DeliveryPointData objects.
+     */
     public function fetchUserDeliveryPoints($delivererID)
     {
         $sqlQuery = 'SELECT * FROM delivery_point
@@ -31,6 +41,11 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    /**
+     * Fetch all delivery points.
+     *
+     * @return array An array of DeliveryPointData objects.
+     */
     public function fetchAllDeliveryPoints()
     {
         $sqlQuery = 'SELECT dp.*, du.username AS deliverer_username 
@@ -47,6 +62,12 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    /**
+     * Update the status of a delivery point.
+     *
+     * @param int $id The ID of the delivery point.
+     * @param int $status The new status.
+     */
     public function updateStatusDeliveryPoint($id, $status)
     {
         $sqlQuery = 'UPDATE delivery_point
@@ -60,6 +81,11 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
+    /**
+     * Delete a delivery point by ID.
+     *
+     * @param int $id The ID of the delivery point.
+     */
     public function deleteStatusDeliveryPoint($id)
     {
         $sqlQuery = 'DELETE FROM delivery_point
@@ -71,6 +97,12 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
+    /**
+     * Assign a deliverer to a delivery point.
+     *
+     * @param int $id The ID of the delivery point.
+     * @param string $assignedDeliverer The username of the assigned deliverer.
+     */
     public function assignDeliverer($id, $assignedDeliverer)
     {
         $sqlQuery = 'UPDATE delivery_point dp
@@ -84,6 +116,18 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
+    /**
+     * Create a new delivery point.
+     *
+     * @param string $name The name of the delivery point.
+     * @param string $address1 The first address line.
+     * @param string $address2 The second address line.
+     * @param string $postcode The postcode.
+     * @param float $latitude The latitude.
+     * @param float $longitude The longitude.
+     * @param string $deliverer The username of the deliverer.
+     * @param int $status The status ID.
+     */
     public function createParcel($name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status)
     {
         $sqlQuery = 'INSERT INTO delivery_point
@@ -107,6 +151,19 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
+    /**
+     * Update a delivery point without changing the photo.
+     *
+     * @param int $id The ID of the delivery point.
+     * @param string $name The name of the delivery point.
+     * @param string $address1 The first address line.
+     * @param string $address2 The second address line.
+     * @param string $postcode The postcode.
+     * @param float $latitude The latitude.
+     * @param float $longitude The longitude.
+     * @param string $deliverer The username of the deliverer.
+     * @param int $status The status ID.
+     */
     public function updateParcelWithoutPhoto($id, $name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status)
     {
         $sqlQuery = 'UPDATE delivery_point  
@@ -136,32 +193,44 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
+    /**
+     * Search for delivery points based on conditions and a search term.
+     *
+     * @param array $conditions An array of conditions to search.
+     * @param string $searchTerm The term to search for.
+     * @return array An array of DeliveryPointData objects.
+     */
     public function searchDeliveryPoints($conditions, $searchTerm)
     {
-        $sqlQuery = 'SELECT * FROM delivery_point WHERE ';
-        $whereConditions = [];
-        foreach ($conditions as $column) {
-            $whereConditions[] = "$column LIKE :$column"; // Use column name as the parameter name
+        if (!empty($conditions) && !empty($searchTerm)) {
+            $sqlQuery = 'SELECT * FROM delivery_point WHERE';
+            $params = [];
+
+            foreach ($conditions as $key => $condition) {
+                if ($condition === 'id') {
+                    $sqlQuery .= " $condition = ?";
+                    $params[] = $searchTerm;
+                } else {
+                    $sqlQuery .= " $condition LIKE ?";
+                    $params[] = "%$searchTerm%";
+                }
+
+                if ($key !== array_key_last($conditions)) {
+                    $sqlQuery .= ' OR';
+                }
+            }
+        } else {
+            $sqlQuery = 'SELECT * FROM delivery_point';
         }
-        $sqlQuery .= implode(" OR ", $whereConditions);
 
         $statement = $this->dbHandle->prepare($sqlQuery);
+        $statement->execute($params);
 
-        // Bind each parameter separately
-        foreach ($conditions as $column) {
-            $statement->bindValue(":$column", '%' . $searchTerm . '%', PDO::PARAM_STR);
+        $dataSet = [];
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $dataSet[] = new DeliveryPointData($row);
         }
 
-        try {
-            $statement->execute();
-            $dataSet = [];
-            while ($row = $statement->fetch()) {
-                $dataSet[] = new DeliveryPointData($row);
-            }
-            return $dataSet;
-        } catch (PDOException $e) {
-            // Handle the exception appropriately, e.g., log the error or throw it further
-            throw $e;
-        }
+        return $dataSet;
     }
 }

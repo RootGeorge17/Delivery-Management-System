@@ -26,7 +26,8 @@ function login($id, $username, $usertypeid, $usertypename)
         'usertypeid' => $usertypeid,
         'usertypename' => $usertypename,
         'loggedIn' => $loggedIn,
-        'currentTable' => null
+        'currentTable' => null,
+        'searched' => false
     ];
 
     session_regenerate_id(true);

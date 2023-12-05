@@ -46,6 +46,8 @@ if ($_POST['type'] == 'Deliverer') {
     $parcelDeliverer = $_POST['deliverer'];
     $parcelStatus = $_POST['status'];
 
+    $status = ParcelText($parcelStatus); // Get status id based on status text
+
     // Validating parcel name and parcel addresses
     if (!Validator::validateString($parcelName, 1, 44)) {
         $errors['InvalidInput']['InvalidStringName'] = "Name must be between 1 and 44 characters!";
@@ -74,11 +76,13 @@ if ($_POST['type'] == 'Deliverer') {
     // Checking if the deliverer already exists or not
     if (!$deliveryUserDataSet->checkUserExists($parcelDeliverer)) {
         $errors['InvalidInput']['InvalidUsername'] = "Invalid deliverer. Try again! ";
+    } else {
+        $parcelDelivererID = $deliveryUserDataSet->getUserID($parcelDeliverer);
     }
 
     // If no errors, create a new Parcel
     if (empty($errors)) {
-        $deliveryPointDataSet->createParcel($parcelName, $parcelAddress1, $parcelAddress2, $parcelPostcode, $longitude, $latitude, $parcelDeliverer, $parcelStatus);
+        $deliveryPointDataSet->createParcel($parcelName, $parcelAddress1, $parcelAddress2, $parcelPostcode, $longitude, $latitude, $parcelDelivererID, $status);
     }
 }
 

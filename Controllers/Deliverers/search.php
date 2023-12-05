@@ -9,6 +9,7 @@ $table = new TableData();
 $searchTerm = $_POST['search'] ?? '';
 $currentPage = $_GET['page'] ?? 1;
 
+
 // Check the current table in session and perform search accordingly
 if ($_SESSION['user']['currentTable'] === "Deliveries") {
     // Define search columns based on received POST parameters
@@ -31,21 +32,8 @@ if ($_SESSION['user']['currentTable'] === "Deliveries") {
     $table->searchDeliveryPoints($currentPage, "Deliveries", $searchColumns, $searchTerm, $table);
     $_SESSION['user']['searched'] = true;
 
-} elseif ($_SESSION['user']['currentTable'] === "Users") {
-    // Define search columns based on received POST parameters
-    $searchColumns = [];
-    if (isset($_POST['userID'])) {
-        $searchColumns[] = 'id';
-    }
-    if (isset($_POST['username'])) {
-        $searchColumns[] = 'username';
-    }
-
-    // Perform search for users using TableData instance
-    $table->searchUsers($currentPage, "Users", $searchColumns, $searchTerm, $table);
-    $_SESSION['user']['searched'] = true;
 }
 
 // Include controller for showing search results
-require_once("Controllers/Managers/show.php");
+require_once("Controllers/Deliverers/show.php");
 exit();
