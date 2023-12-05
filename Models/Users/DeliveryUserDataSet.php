@@ -82,7 +82,24 @@ class DeliveryUserDataSet
         $user = $statement->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            return $user['id'];
+            return intval($user['id']);
+        }
+    }
+
+    public function getUsername($id)
+    {
+        $sqlQuery = 'SELECT username FROM delivery_users
+                     WHERE id = :id';
+
+        $statement = $this->dbHandle->prepare($sqlQuery);
+        $statement->execute([
+            ':id' => $id,
+        ]);
+
+        $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            return $user['username'];
         }
     }
 

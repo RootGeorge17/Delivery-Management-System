@@ -27,6 +27,16 @@ if ($_POST['type'] == 'AssignDeliverer') {
         $errors['InvalidInput']['InvalidStringUsername'] = "UserName must be between 1 and 44 characters!";
     }
 
+    if(!Validator::validateString($delivererPassword, 5, 44)) {
+        $errors['InvalidInput']['InvalidStringPassword'] = "Password must be between 5 and 44 characters!";
+    }
+
+    $previousUsername = $deliveryUserDataSet->getUsername($delivererID);
+
+    if ($deliveryUserDataSet->checkUserExists($delivererUsername) && $previousUsername != $delivererUsername) {
+        $errors['InvalidInput']['DuplicateUsername'] = "User with the same username already exists!";
+    }
+
     if(empty($errors))
     {
         if (!$_POST['password'] == null) {
@@ -63,12 +73,12 @@ if ($_POST['type'] == 'AssignDeliverer') {
     }
 
     if(!Validator::validateString($parcelAddress1, 5, 44)) {
-        $errors['InvalidInput']['InvalidStringAddress1'] = "Address 1 must be between 1 and 44 characters!";
+        $errors['InvalidInput']['InvalidStringAddress1'] = "Address 1 must be between 5 and 44 characters!";
     }
 
     if (!empty($parcelAddress2)) {
-        if (!Validator::validateString($parcelAddress2, 1, 44)) {
-            $errors['InvalidInput']['InvalidStringAddress2'] = "Address 2 must be between 1 and 44 characters!";
+        if (!Validator::validateString($parcelAddress2, 5, 44)) {
+            $errors['InvalidInput']['InvalidStringAddress2'] = "Address 2 must be between 5 and 44 characters!";
         }
     }
 

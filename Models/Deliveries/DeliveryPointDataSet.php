@@ -34,8 +34,8 @@ class DeliveryPointDataSet
     public function fetchAllDeliveryPoints()
     {
         $sqlQuery = 'SELECT dp.*, du.username AS deliverer_username 
-                 FROM delivery_point dp
-                 INNER JOIN delivery_users du ON dp.deliverer = du.id';
+                     FROM delivery_point dp
+                     LEFT JOIN delivery_users du ON dp.deliverer = du.id';
 
         $statement = $this->dbHandle->prepare($sqlQuery);
         $statement->execute();
@@ -81,6 +81,28 @@ class DeliveryPointDataSet
         $statement->execute([
             ':id' => $id,
             ':assignedDeliverer' => $assignedDeliverer
+        ]); // execute the PDO statement
+    }
+
+    public function createParcel($name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status) {
+        $sqlQuery = 'INSERT INTO delivery_point
+        (name, address_1, address_2, postcode, deliverer, lat, lng, status) 
+        VALUES
+         (:name, :address1, :address2, :postcode, 
+        (SELECT id FROM delivery_users WHERE username = :deliverer), 
+         :latitude, :longitude, 
+         (SELECT id FROM delivery_status WHERE id = :status));';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute([
+            ':name' => $name,
+            ':address1' => $address1,
+            ':address2' => $address2,
+            ':postcode' => $postcode,
+            ':latitude' => $latitude,
+            ':longitude' => $longitude,
+            ':deliverer' => $deliverer,
+            ':status' => $status
         ]); // execute the PDO statement
     }
 
