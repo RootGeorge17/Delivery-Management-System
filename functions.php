@@ -15,6 +15,7 @@ function isCurrentUrl($value) {
     return $requestedPath === $value;
 }
 
+// Function to log in a user and store their information in a session
 function login($id, $username, $usertypeid, $usertypename)
 {
     $loggedIn = true;
@@ -31,6 +32,7 @@ function login($id, $username, $usertypeid, $usertypename)
     session_regenerate_id(true);
 }
 
+// Function to log out a user by destroying the session and clearing cookies
 function logout()
 {
     $_SESSION = [];
@@ -40,6 +42,7 @@ function logout()
     setcookie("PHPSESSID", '', time() - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
 }
 
+// Function to check if a user is authenticated by verifying session information
 function authenticated(): bool
 {
     if (isset($_SESSION['user']['loggedIn']))
@@ -50,6 +53,7 @@ function authenticated(): bool
     }
 }
 
+// Function to convert a textual status to its corresponding ID
 function ParcelText($value)
 {
     if($value == "Pending") {
@@ -62,3 +66,12 @@ function ParcelText($value)
         return Constants::DELIVERED;
     }
 }
+
+// Function to redirect to the root if the current page is out of range
+function redirectToRootIfOutOfRange($currentPage, $totalPages) {
+    if ($currentPage < 1 || $currentPage > $totalPages) {
+        header("Location: /"); // Redirect to the root
+        exit; // Stop further execution
+    }
+}
+

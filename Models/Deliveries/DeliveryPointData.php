@@ -13,7 +13,7 @@ class DeliveryPointData
         $this->address_2 = $dbRow['address_2'];
         $this->postcode = $dbRow['postcode'];
         $this->deliverer = $dbRow['deliverer'];
-        $this->delivererUsername = $dbRow['deliverer_username'];
+        //$this->delivererUsername = $dbRow['deliverer_username'];
         $this->lat = $dbRow['lat'];
         $this->lng = $dbRow['lng'];
         $this->status = $dbRow['status'];

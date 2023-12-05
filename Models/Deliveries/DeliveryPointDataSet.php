@@ -84,7 +84,8 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
-    public function createParcel($name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status) {
+    public function createParcel($name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status)
+    {
         $sqlQuery = 'INSERT INTO delivery_point
         (name, address_1, address_2, postcode, deliverer, lat, lng, status) 
         VALUES
@@ -106,7 +107,8 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
-    public function updateParcelWithoutPhoto($id, $name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status) {
+    public function updateParcelWithoutPhoto($id, $name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status)
+    {
         $sqlQuery = 'UPDATE delivery_point  
                      SET 
                      name = :name,
@@ -134,63 +136,32 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
-    public function updateParcelWithPhoto($id, $name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status, $photoName)
+    public function searchDeliveryPoints($conditions, $searchTerm)
     {
-        $sqlQuery = 'UPDATE delivery_point  
-                     SET 
-                     name = :name,
-                     address_1 = :address1,
-                     address_2 = :address2,
-                     postcode = :postcode,
-                     lat = :latitude,
-                     lng = :longitude,
-                     deliverer = :deliverer,
-                     status = :status,
-                     photo_name = :photoName,
-                     WHERE 
-                     id = :id';
-
-        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
-        $statement->execute([
-            ':name' => $name,
-            ':address1' => $address1,
-            ':address2' => $address2,
-            ':postcode' => $postcode,
-            ':latitude' => $latitude,
-            ':longitude' => $longitude,
-            ':deliverer' => $deliverer,
-            ':status' => $status,
-            ':photoName' => $photoName,
-            ':id' => $id
-        ]); // execute the PDO statement
-    }
-
-    public function searchDeliveryPoints($value, $deliverer)
-    {
-        $sqlQuery = 'SELECT * 
-        FROM delivery_point
-        WHERE deliverer = :deliverer AND id LIKE :id
-        OR name LIKE :name
-        OR address_1 LIKE :address_1
-        OR address_2 LIKE :address_2
-        OR postcode LIKE :postcode';
-
-        $searchValue = '%' . trim($value) . '%';
+        $sqlQuery = 'SELECT * FROM delivery_point WHERE ';
+        $whereConditions = [];
+        foreach ($conditions as $column) {
+            $whereConditions[] = "$column LIKE :$column"; // Use column name as the parameter name
+        }
+        $sqlQuery .= implode(" OR ", $whereConditions);
 
         $statement = $this->dbHandle->prepare($sqlQuery);
-        $statement->execute([
-            ':deliverer' => $deliverer,
-            ':id' => $searchValue,
-            ':name' => $searchValue,
-            ':address_1' => $searchValue,
-            ':address_2' => $searchValue,
-            ':postcode' => $searchValue
-        ]);
 
-        $dataSet = [];
-        while ($row = $statement->fetch()) {
-            $dataSet[] = new DeliveryPointData($row, $deliverer);
+        // Bind each parameter separately
+        foreach ($conditions as $column) {
+            $statement->bindValue(":$column", '%' . $searchTerm . '%', PDO::PARAM_STR);
         }
-        return $dataSet;
+
+        try {
+            $statement->execute();
+            $dataSet = [];
+            while ($row = $statement->fetch()) {
+                $dataSet[] = new DeliveryPointData($row);
+            }
+            return $dataSet;
+        } catch (PDOException $e) {
+            // Handle the exception appropriately, e.g., log the error or throw it further
+            throw $e;
+        }
     }
 }

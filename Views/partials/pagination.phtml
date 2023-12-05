@@ -1,26 +1,45 @@
-<!-- Pagination -->
 <div>
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <?php if ($view->currentPage > 1): ?>
                 <li class="page-item">
-                    <a class="page-link" href="?page=<?php echo $view->currentPage - 1; ?>"
-                       aria-label="Previous">
+                    <a class="page-link" href="?page=1" aria-label="First">
+                        <span aria-hidden="true">First Page</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $view->currentPage - 1; ?>" aria-label="Previous">
                         <span aria-hidden="true">&laquo; Previous</span>
                     </a>
                 </li>
             <?php endif; ?>
 
-            <?php for ($i = 1; $i <= $view->totalPages; $i++): ?>
+            <?php
+            $startPage = max(1, $view->currentPage - 2);
+            $endPage = min($view->totalPages, $view->currentPage + 2);
+            if ($startPage > 1): ?>
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            <?php endif; ?>
+
+            <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
                 <li class="page-item <?php echo ($i == $view->currentPage) ? 'active' : ''; ?>">
                     <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
                 </li>
             <?php endfor; ?>
 
+            <?php if ($endPage < $view->totalPages): ?>
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            <?php endif; ?>
+
             <?php if ($view->currentPage < $view->totalPages): ?>
                 <li class="page-item">
                     <a class="page-link" href="?page=<?php echo $view->currentPage + 1; ?>" aria-label="Next">
                         <span aria-hidden="true">Next &raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $view->totalPages; ?>" aria-label="Last">
+                        <span aria-hidden="true">Last Page</span>
                     </a>
                 </li>
             <?php endif; ?>

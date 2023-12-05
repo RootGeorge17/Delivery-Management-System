@@ -9,7 +9,7 @@ class TableData
     protected $totalDeliveries;
     protected $totalUsers;
 
-    public function setData($currentPage, $tableName)
+    public function setDataForManagers($currentPage, $tableName)
     {
         $deliveryPointDataSet = new DeliveryPointDataSet();
         $deliveryUserDataSet = new DeliveryUserDataSet();
@@ -29,6 +29,21 @@ class TableData
             $this->totalPages = ceil($totalRows / $this->rowsPerPage);
             $start = ($currentPage - 1) * $this->rowsPerPage;
             $this->currentItems = array_slice($this->totalUsers, $start, $this->rowsPerPage);
+        }
+    }
+
+    public function setDataForDeliverers($currentPage, $tableName, $deliverer)
+    {
+        $deliveryPointDataSet = new DeliveryPointDataSet();
+        $offset = ($currentPage - 1) * $this->rowsPerPage;
+        $this->totalDeliveries = $deliveryPointDataSet->fetchUserDeliveryPoints($deliverer);
+        $this->currentPage = $currentPage;
+
+        if ($tableName == "Deliveries") {
+            $totalRows = count($this->totalDeliveries);
+            $this->totalPages = ceil($totalRows / $this->rowsPerPage);
+            $start = ($currentPage - 1) * $this->rowsPerPage;
+            $this->currentItems = array_slice($this->totalDeliveries, $start, $this->rowsPerPage);
         }
     }
 

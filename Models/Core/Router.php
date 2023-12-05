@@ -44,6 +44,11 @@ class Router
         $this->add('CREATE', $uri, $controller);
     }
 
+    public function search($uri, $controller)
+    {
+        $this->add('SEARCH', $uri, $controller);
+    }
+
     public function route($uri, $method)
     {
         foreach ($this->routes as $route) {

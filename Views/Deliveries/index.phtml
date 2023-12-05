@@ -25,43 +25,15 @@
                                     </button>
                                 </div>
                             </th>
-                            <th scope="col">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Total Deliverers</span>
-                                    <button type="submit" name="show_deliverers" value="show"
-                                            class="btn btn-sm btn-danger">
-                                        Show All Deliverers
-                                    </button>
-                                </div>
-                            </th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
                             <td><?= count($view->totalDeliveries) ?></td>
-                            <td><?= count($view->totalUsers) ?></td>
                         </tr>
                         </tbody>
                     </table>
                 </form>
-                <table class="table border-dark table-bordered table-grey table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Total "Pending" Deliveries</th>
-                        <th scope="col">Total "Shipped" Deliveries</th>
-                        <th scope="col">Total "Out For Delivery" Deliveries</th>
-                        <th scope="col">Total "Delivered" Deliveries</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>5</td>
-                        <td>5</td>
-                        <td>5</td>
-                        <td>5</td>
-                    </tr>
-                    </tbody>
-                </table>
             </section>
 
             <?php if ($_SESSION['user']['currentTable'] == 'Deliveries'): ?>
@@ -79,32 +51,30 @@
                             <th scope="col">Address1</th>
                             <th scope="col">Address2</th>
                             <th scope="col">Postcode</th>
+                            <th scope="col">Latitude / Longitude</th>
                             <th scope="col">
                                 Status
                                 <i class="bi bi-info-circle"></i>
                             </th>
+                            <th scope="col">Delivery Photos</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($view->deliveriesTable as $deliveryPointData) : ?>
+                        <?php foreach ($view->currentItems as $deliveryPointData) : ?>
                             <tr>
                                 <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
                                 <td><?= $deliveryPointData->getPointName() ?></td>
                                 <td><?= $deliveryPointData->getPointAddress1() ?></td>
                                 <td><?= $deliveryPointData->getPointAddress2() ?></td>
                                 <td><?= $deliveryPointData->getPointPostcode() ?></td>
-                                <td>
-                                    <?php
-                                    if ($deliveryPointData->getPointStatus() == '1') {
-                                        echo 'Pending';
-                                    } else if ($deliveryPointData->getPointStatus() == '2') {
-                                        echo 'Shipped';
-                                    } else if ($deliveryPointData->getPointStatus() == '3') {
-                                        echo 'Out for delivery';
-                                    } else if ($deliveryPointData->getPointStatus() == '4') {
-                                        echo 'Delivered';
-                                    }
-                                    ?></td>
+                                <td><?= htmlspecialchars($deliveryPointData->getPointLat()) . " / " . htmlspecialchars($deliveryPointData->getPointLng()) ?></td>
+                                <td><?= htmlspecialchars($deliveryPointData->getPointStatus()) ?></td>
+                                <?php if (htmlspecialchars($deliveryPointData->getPointDelPhoto())): ?>
+                                    <td><img src="images/<?= htmlspecialchars($deliveryPointData->getPointDelPhoto()) ?>" alt="no picture"/></td>
+
+                                <?php elseif (!htmlspecialchars($deliveryPointData->getPointDelPhoto())): ?>
+                                    <td>Only delivered parcels have pictures!</td>
+                                <?php endif; ?>
                             </tr>
                             <?php require_once('Views/partials/pagination.phtml') ?>
                         <?php endforeach; ?>
