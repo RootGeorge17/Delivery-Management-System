@@ -1,7 +1,7 @@
 <?php require('Views/partials/head.phtml') ?>
 <?php require('Views/partials/nav.phtml') ?>
 <?php require('Views/partials/header.phtml') ?>
-
+<?php $_SESSION['user']['searched'] = false ?>
 <div id="main-content">
     <div class="mt-2 m-4">
         <!-- Manager View -->
@@ -29,21 +29,21 @@
                         <thead>
                         <tr>
                             <th scope="col">
-                                <form method="POST" action="/">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Total Deliveries</span>
-                                        <div class="btn-group btn-group-sm mt-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Total Deliveries</span>
+                                    <div class="btn-group btn-group-sm mt-2">
+                                        <form method="POST" action="/">
                                             <button type="submit" name="show_deliveries" value="show"
-                                                    class="btn btn-danger mx-1">
+                                                    class="btn btn-sm btn-danger mx-1">
                                                 Show All Parcels
                                             </button>
-                                            <button type="submit" name="create_delivery" value="show"
-                                                    class="btn btn-primary mx-1">
-                                                Add new Parcel
-                                            </button>
-                                        </div>
+                                        </form>
+                                        <button class="btn-primary btn-sm mx-1" data-bs-toggle="modal"
+                                                data-bs-target="#createParcel">
+                                            Create new Parcel
+                                        </button>
                                     </div>
-                                </form>
+                                </div>
                             </th>
                             <th scope="col">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -110,6 +110,92 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Create Parcel Dynamic Modal -->
+                <div class="modal fade" id="createParcel" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="statusModalLabel">Create Parcel</h5>
+                            </div>
+                            <form method="POST" action="/users">
+                                <div class="modal-body">
+                                    <h5>Create Parcel</h5>
+                                    <div class="form-group">
+                                        <label for="pointName">* Name:</label>
+                                        <input type="text" id="pointName" name="name"
+                                               class="form-control"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address1">* Address Line 1:</label>
+                                        <input type="text" id="address1" name="address1"
+                                               class="form-control"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address2">Address Line 2:</label>
+                                        <input type="text" id="address2" name="address2"
+                                               class="form-control"
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="postcode">* Postcode:</label>
+                                        <input type="text" id="postcode" name="postcode"
+                                               class="form-control"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="latitude">* Latitude:</label>
+                                        <input type="text" id="latitude" name="latitude"
+                                               class="form-control"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="longitude">* Longitude:</label>
+                                        <input type="text" id="longitude" name="longitude"
+                                               class="form-control"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="deliverer">* Deliverer Username:</label>
+                                        <input type="text" id="deliverer" name="deliverer"
+                                               class="form-control"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="status">* Status:</label>
+                                        <div class="input-group">
+                                            <select id="status" name="status" class="form-select"
+                                                    required>
+                                                <option value="Pending">
+                                                    Pending
+                                                </option>
+                                                <option value="Shipped">
+                                                    Shipped
+                                                </option>
+                                                <option value="Out for delivery">
+                                                    Out for delivery
+                                                </option>
+                                                <option value="Delivered">
+                                                    Delivered
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="hidden" name="_method" value="CREATE">
+                                    <input type="hidden" name="type" value="Parcel">
+                                    <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close
+                                    </button>
+                                    <button type="submit" class="btn btn-danger">Create Deliverer
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
@@ -152,12 +238,11 @@
                             <td><?= htmlspecialchars($deliveryPointData->getPointDelivererUsername()) ?></td>
                             <td><?= htmlspecialchars($deliveryPointData->getPointLat()) . " / " . htmlspecialchars($deliveryPointData->getPointLng()) ?></td>
                             <?php if (htmlspecialchars($deliveryPointData->getPointDelPhoto())): ?>
-                                <td><img src="images/' . htmlspecialchars($deliveryPointData->getPointDelPhoto()) . ' " alt="no picture"/>
-                                </td>
+                                <td><img src="images/<?= htmlspecialchars($deliveryPointData->getPointDelPhoto()) ?>" alt="no picture"/></td>
+
                             <?php elseif (!htmlspecialchars($deliveryPointData->getPointDelPhoto())): ?>
                                 <td>Only delivered parcels have pictures!</td>
                             <?php endif; ?>
-
                             <td>
                                 <div class="dropdown">
                                     <button class="btn btn-primary dropdown-toggle" type="button"
@@ -227,7 +312,8 @@
 
 
                                 <!-- Pending Status Dynamic Modal -->
-                                <div class="modal fade" id="pendingModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                <div class="modal fade"
+                                     id="pendingModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
                                      tabindex="-1"
                                      aria-labelledby="pendingModalLabel" aria-hidden="true">
                                     <!-- Modal content for Pending -->
@@ -265,7 +351,8 @@
                                 </div>
 
                                 <!-- Shipped Status Dynamic Modal -->
-                                <div class="modal fade" id="shippedModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                <div class="modal fade"
+                                     id="shippedModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
                                      tabindex="-1"
                                      aria-labelledby="pendingModalLabel" aria-hidden="true">
                                     <!-- Modal content for Pending -->
@@ -303,7 +390,8 @@
                                 </div>
 
                                 <!-- Out for Delivery Status Dynamic Modal -->
-                                <div class="modal fade" id="outModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                <div class="modal fade"
+                                     id="outModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
                                      tabindex="-1"
                                      aria-labelledby="pendingModalLabel" aria-hidden="true">
                                     <!-- Modal content for Pending -->
@@ -381,7 +469,8 @@
                                 </div>
 
                                 <!-- Assign Deliverer Dynamic Modal -->
-                                <div class="modal fade" id="assignModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                <div class="modal fade"
+                                     id="assignModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
                                      tabindex="-1"
                                      aria-labelledby="pendingModalLabel" aria-hidden="true">
                                     <!-- Modal content for Pending -->
@@ -419,7 +508,8 @@
                                 </div>
 
                                 <!-- Edit Parcel Dynamic Modal -->
-                                <div class="modal fade" id="editModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                <div class="modal fade"
+                                     id="editModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
                                      tabindex="-1"
                                      aria-labelledby="pendingModalLabel" aria-hidden="true">
                                     <!-- Modal content for Pending -->
@@ -443,13 +533,15 @@
                                                         <label for="pointName">* Name:</label>
                                                         <input type="text" id="pointName" name="name"
                                                                class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointName()) ?>" required>
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointName()) ?>"
+                                                               required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="address1">* Address Line 1:</label>
                                                         <input type="text" id="address1" name="address1"
                                                                class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointAddress1()) ?>" required>
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointAddress1()) ?>"
+                                                               required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="address2">Address Line 2:</label>
@@ -461,30 +553,35 @@
                                                         <label for="postcode">* Postcode:</label>
                                                         <input type="text" id="postcode" name="postcode"
                                                                class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointPostcode()) ?>" required>
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointPostcode()) ?>"
+                                                               required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="latitude">* Latitude:</label>
                                                         <input type="text" id="latitude" name="latitude"
                                                                class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointLat()) ?>" required>
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointLat()) ?>"
+                                                               required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="longitude">* Longitude:</label>
                                                         <input type="text" id="longitude" name="longitude"
                                                                class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointLng()) ?>" required>
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointLng()) ?>"
+                                                               required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="deliverer">* Deliverer:</label>
                                                         <input type="text" id="deliverer" name="deliverer"
                                                                class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointDelivererUsername()) ?>" required>
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointDelivererUsername()) ?>"
+                                                               required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="status">* Status:</label>
                                                         <div class="input-group">
-                                                            <select id="status" name="status" class="form-select" required>
+                                                            <select id="status" name="status" class="form-select"
+                                                                    required>
                                                                 <option value="Pending" <?php if (htmlspecialchars($deliveryPointData->getPointStatus()) === 'Pending') echo 'selected'; ?>>
                                                                     Pending
                                                                 </option>
@@ -518,7 +615,8 @@
                                 </div>
 
                                 <!-- Delete Parcel Dynamic Modal -->
-                                <div class="modal fade" id="deleteModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                <div class="modal fade"
+                                     id="deleteModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
                                      tabindex="-1"
                                      aria-labelledby="pendingModalLabel" aria-hidden="true">
                                     <!-- Modal content for Pending -->
@@ -615,7 +713,8 @@
                                     </div>
 
                                     <!-- Edit User Dynamic Modal -->
-                                    <div class="modal fade" id="editUserModal<?= htmlspecialchars($deliveryUserData->getUserID()) ?>"
+                                    <div class="modal fade"
+                                         id="editUserModal<?= htmlspecialchars($deliveryUserData->getUserID()) ?>"
                                          tabindex="-1"
                                          aria-labelledby="pendingModalLabel" aria-hidden="true">
                                         <!-- Modal content for Pending -->

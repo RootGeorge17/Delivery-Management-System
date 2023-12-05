@@ -4,6 +4,10 @@ require_once('Models/Core/Database.php');
 require_once('Models/Deliveries/DeliveryPointData.php');
 require_once('Models/Users/DeliveryUserData.php');
 
+/**
+ * Class DeliveryPointDataSet
+ * Handles operations related to delivery points in the database.
+ */
 class DeliveryPointDataSet
 {
     protected $dbHandle, $dbInstance;
@@ -14,6 +18,12 @@ class DeliveryPointDataSet
         $this->dbHandle = $this->dbInstance->getDBConnection();
     }
 
+    /**
+     * Fetch delivery points for a specific user.
+     *
+     * @param int $delivererID The ID of the deliverer.
+     * @return array An array of DeliveryPointData objects.
+     */
     public function fetchUserDeliveryPoints($delivererID)
     {
         $sqlQuery = 'SELECT * FROM delivery_point
@@ -31,11 +41,16 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    /**
+     * Fetch all delivery points.
+     *
+     * @return array An array of DeliveryPointData objects.
+     */
     public function fetchAllDeliveryPoints()
     {
         $sqlQuery = 'SELECT dp.*, du.username AS deliverer_username 
-                 FROM delivery_point dp
-                 INNER JOIN delivery_users du ON dp.deliverer = du.id';
+                     FROM delivery_point dp
+                     LEFT JOIN delivery_users du ON dp.deliverer = du.id';
 
         $statement = $this->dbHandle->prepare($sqlQuery);
         $statement->execute();
@@ -47,6 +62,12 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    /**
+     * Update the status of a delivery point.
+     *
+     * @param int $id The ID of the delivery point.
+     * @param int $status The new status.
+     */
     public function updateStatusDeliveryPoint($id, $status)
     {
         $sqlQuery = 'UPDATE delivery_point
@@ -60,6 +81,11 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
+    /**
+     * Delete a delivery point by ID.
+     *
+     * @param int $id The ID of the delivery point.
+     */
     public function deleteStatusDeliveryPoint($id)
     {
         $sqlQuery = 'DELETE FROM delivery_point
@@ -71,6 +97,12 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
+    /**
+     * Assign a deliverer to a delivery point.
+     *
+     * @param int $id The ID of the delivery point.
+     * @param string $assignedDeliverer The username of the assigned deliverer.
+     */
     public function assignDeliverer($id, $assignedDeliverer)
     {
         $sqlQuery = 'UPDATE delivery_point dp
@@ -84,7 +116,56 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
-    public function updateParcelWithoutPhoto($id, $name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status) {
+    /**
+     * Create a new delivery point.
+     *
+     * @param string $name The name of the delivery point.
+     * @param string $address1 The first address line.
+     * @param string $address2 The second address line.
+     * @param string $postcode The postcode.
+     * @param float $latitude The latitude.
+     * @param float $longitude The longitude.
+     * @param string $deliverer The username of the deliverer.
+     * @param int $status The status ID.
+     */
+    public function createParcel($name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status)
+    {
+        $sqlQuery = 'INSERT INTO delivery_point
+        (name, address_1, address_2, postcode, deliverer, lat, lng, status) 
+        VALUES
+         (:name, :address1, :address2, :postcode, 
+        (SELECT id FROM delivery_users WHERE username = :deliverer), 
+         :latitude, :longitude, 
+         (SELECT id FROM delivery_status WHERE id = :status));';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute([
+            ':name' => $name,
+            ':address1' => $address1,
+            ':address2' => $address2,
+            ':postcode' => $postcode,
+            ':latitude' => $latitude,
+            ':longitude' => $longitude,
+            ':deliverer' => $deliverer,
+            ':status' => $status
+        ]); // execute the PDO statement
+    }
+
+    /**
+     * Update a delivery point without changing the photo.
+     *
+     * @param int $id The ID of the delivery point.
+     * @param string $name The name of the delivery point.
+     * @param string $address1 The first address line.
+     * @param string $address2 The second address line.
+     * @param string $postcode The postcode.
+     * @param float $latitude The latitude.
+     * @param float $longitude The longitude.
+     * @param string $deliverer The username of the deliverer.
+     * @param int $status The status ID.
+     */
+    public function updateParcelWithoutPhoto($id, $name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status)
+    {
         $sqlQuery = 'UPDATE delivery_point  
                      SET 
                      name = :name,
@@ -112,63 +193,44 @@ class DeliveryPointDataSet
         ]); // execute the PDO statement
     }
 
-    public function updateParcelWithPhoto($id, $name, $address1, $address2, $postcode, $latitude, $longitude, $deliverer, $status, $photoName)
+    /**
+     * Search for delivery points based on conditions and a search term.
+     *
+     * @param array $conditions An array of conditions to search.
+     * @param string $searchTerm The term to search for.
+     * @return array An array of DeliveryPointData objects.
+     */
+    public function searchDeliveryPoints($conditions, $searchTerm)
     {
-        $sqlQuery = 'UPDATE delivery_point  
-                     SET 
-                     name = :name,
-                     address_1 = :address1,
-                     address_2 = :address2,
-                     postcode = :postcode,
-                     lat = :latitude,
-                     lng = :longitude,
-                     deliverer = :deliverer,
-                     status = :status,
-                     photo_name = :photoName,
-                     WHERE 
-                     id = :id';
+        if (!empty($conditions) && !empty($searchTerm)) {
+            $sqlQuery = 'SELECT * FROM delivery_point WHERE';
+            $params = [];
 
-        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
-        $statement->execute([
-            ':name' => $name,
-            ':address1' => $address1,
-            ':address2' => $address2,
-            ':postcode' => $postcode,
-            ':latitude' => $latitude,
-            ':longitude' => $longitude,
-            ':deliverer' => $deliverer,
-            ':status' => $status,
-            ':photoName' => $photoName,
-            ':id' => $id
-        ]); // execute the PDO statement
-    }
+            foreach ($conditions as $key => $condition) {
+                if ($condition === 'id') {
+                    $sqlQuery .= " $condition = ?";
+                    $params[] = $searchTerm;
+                } else {
+                    $sqlQuery .= " $condition LIKE ?";
+                    $params[] = "%$searchTerm%";
+                }
 
-    public function searchDeliveryPoints($value, $deliverer)
-    {
-        $sqlQuery = 'SELECT * 
-        FROM delivery_point
-        WHERE deliverer = :deliverer AND id LIKE :id
-        OR name LIKE :name
-        OR address_1 LIKE :address_1
-        OR address_2 LIKE :address_2
-        OR postcode LIKE :postcode';
-
-        $searchValue = '%' . trim($value) . '%';
+                if ($key !== array_key_last($conditions)) {
+                    $sqlQuery .= ' OR';
+                }
+            }
+        } else {
+            $sqlQuery = 'SELECT * FROM delivery_point';
+        }
 
         $statement = $this->dbHandle->prepare($sqlQuery);
-        $statement->execute([
-            ':deliverer' => $deliverer,
-            ':id' => $searchValue,
-            ':name' => $searchValue,
-            ':address_1' => $searchValue,
-            ':address_2' => $searchValue,
-            ':postcode' => $searchValue
-        ]);
+        $statement->execute($params);
 
         $dataSet = [];
-        while ($row = $statement->fetch()) {
-            $dataSet[] = new DeliveryPointData($row, $deliverer);
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $dataSet[] = new DeliveryPointData($row);
         }
+
         return $dataSet;
     }
 }
