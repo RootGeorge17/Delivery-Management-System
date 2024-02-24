@@ -1,46 +1,10 @@
 <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
     <!-- Search form -->
-    <div class="col-md-3 mb-1">
+    <div class="flex-grow-1">
         <form action="/" method="POST">
             <input type="hidden" name="_method" value="SEARCH">
-            <div class="input-group">
+            <div>
                 <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search for Parcel">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-dark" type="submit">Search</button>
-                </div>
-            </div>
-            <!-- Labels and checkboxes -->
-            <div class="mt-2">
-                <div class="d-flex flex-wrap">
-                    <div class="col-sm-6 col-md-3 mb-2">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="parcelID" name="parcelID"
-                                   value="parcelID">
-                            <label class="form-check-label" for="parcelID">Search by ID</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3 mb-2">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="recipientName" name="recipientName"
-                                   value="recipientName">
-                            <label class="form-check-label" for="recipientName">Search by Recipient Name</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3 mb-2">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="postcode" name="postcode"
-                                   value="postcode">
-                            <label class="form-check-label" for="postcode">Search by Postcode</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3 mb-2">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="address" name="address"
-                                   value="address">
-                            <label class="form-check-label" for="address">Search by Address</label>
-                        </div>
-                    </div>
-                </div>
             </div>
         </form>
     </div>
