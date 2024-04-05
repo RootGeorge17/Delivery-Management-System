@@ -1,22 +1,22 @@
 <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
 <!-- Order Dropdown -->
-<div class="col-md-6 mb-3 d-flex justify-content-start">
+<div class="mb-3 flex-grow-1 d-flex">
     <!-- Order Dropdown -->
-    <div class="dropdown me-3">
-        <button class="btn btn-dark dropdown-toggle" type="button" id="orderDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="flex-grow-1 dropdown me-3">
+        <button class="btn btn-dark dropdown-toggle w-100" type="button" id="orderDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             Order Table By...
         </button>
-        <ul class="dropdown-menu" aria-labelledby="orderDropdown">
+        <ul class="dropdown-menu w-100" aria-labelledby="orderDropdown">
             <li><a class="dropdown-item" href="#">Order by ID - Ascending</a></li>
             <li><a class="dropdown-item" href="#">Order by ID - Descending</a></li>
         </ul>
     </div>
 <!-- Filter Dropdown -->
-    <div class="dropdown">
-        <button class="btn btn-dark dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="flex-grow-1 dropdown">
+        <button class="btn btn-dark dropdown-toggle w-100" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             Filter Table By...
         </button>
-        <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+        <ul class="dropdown-menu w-100" aria-labelledby="filterDropdown">
             <li><a class="dropdown-item" href="#">Only Pending Deliveries</a></li>
             <li><a class="dropdown-item" href="#">Only Shipped Deliveries</a></li>
             <li><a class="dropdown-item" href="#">Only Out for Delivery Deliveries</a></li>

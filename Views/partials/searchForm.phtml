@@ -3,39 +3,82 @@
     <div class="flex-grow-1">
         <form action="/" method="POST">
             <input type="hidden" name="_method" value="SEARCH">
-            <div>
-                <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search for Parcel">
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchInputDeliveries" name="search" placeholder="Search for Parcel">
+                <div class="input-group-append">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filter by
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                            <div class="dropdown-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="id" id="filterId">
+                                    <label class="form-check-label" for="filterId">
+                                        ID
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="recipientName" id="filterRecipientName">
+                                    <label class="form-check-label" for="filterRecipientName">
+                                        Recipient Name
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="postcode" id="filterPostcode">
+                                    <label class="form-check-label" for="filterPostcode">
+                                        Postcode
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="address" id="filterAddress">
+                                    <label class="form-check-label" for="filterAddress">
+                                        Address
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 <?php endif; ?>
 
 <?php if ($_SESSION['user']['currentTable'] == "Users"): ?>
-    <!-- Search form -->
-    <div class="col-md-3 mb-1">
+    <div class="flex-grow-1">
         <form action="/" method="POST">
             <input type="hidden" name="_method" value="SEARCH">
             <div class="input-group">
-                <input type="text" class="form-control" id="searchInput" name="search" placeholder="Search for Parcel">
+                <input type="text" class="form-control" id="searchInputUsers" name="search" placeholder="Search for Parcel">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-dark" type="submit">Search</button>
-                </div>
-            </div>
-            <!-- Labels and checkboxes -->
-            <div class="mt-2">
-                <div class="d-flex flex-wrap">
-                    <div class="col-sm-6 col-md-3 mb-2">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="userID" name="userID"
-                                   value="userID">
-                            <label class="form-check-label" for="userID">Search by ID</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-3 mb-2">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="username" name="username"
-                                   value="username">
-                            <label class="form-check-label" for="username">Search by Username</label>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filter by
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                            <div class="dropdown-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="id" id="filterId">
+                                    <label class="form-check-label" for="filterId">
+                                        ID
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="id" id="filterId">
+                                    <label class="form-check-label" for="filterId">
+                                        Username
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,3 +86,29 @@
         </form>
     </div>
 <?php endif; ?>
+
+<script>
+    const searchInputDeliveries = document.getElementById('searchInputDeliveries');
+    const resultsDeliveries = document.getElementById('resultsDeliveries');
+    const filterCheckboxes = document.querySelectorAll('.dropdown-menu .form-check-input');
+
+    searchInputDeliveries.addEventListener('input', () => {
+        const searchTerm = searchInputDeliveries.value.trim().toLowerCase();
+        const activeFilters = Array.from(filterCheckboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+        resultsDeliveries.innerHTML = '';
+        // Perform your search and filtering logic here based on searchTerm and activeFilters
+    });
+
+    filterCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const searchTerm = searchInputDeliveries.value.trim().toLowerCase();
+            const activeFilters = Array.from(filterCheckboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
+            resultsDeliveries.innerHTML = '';
+            // Perform your search and filtering logic here based on searchTerm and activeFilters
+        });
+    });
+</script>

@@ -12,17 +12,37 @@
 }
 
 .pagination .page-link {
-    color: #333333;
+    color: dodgerblue;
     border-color: #000000;
 }
 
 .pagination .page-item.active .page-link {
-    background-color: #333333;
+    background-color: black;
+    color: white;
     border-color: #333333;
 }
 
 .pagination .page-item:not(.active) .page-link {
     background-color: #DEDEDE;
     border-color: #000000;
+}
+
+.navbar-container {
+    position: relative;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
 }
 
