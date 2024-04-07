@@ -36,3 +36,7 @@
     overflow-y: auto;
 }
 
+#map {
+    height: 360px;
+}
+

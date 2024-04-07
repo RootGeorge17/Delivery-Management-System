@@ -27,6 +27,7 @@ if (authenticated()) {
         $router->filterAndOrder('/', 'Controllers/Managers/search.php');;
 
         $router->get('/livesearch', 'Controllers/Managers/livesearch.php');
+        $router->get('/map', 'Controllers/Map/DeliveryPointsController.php');
     } elseif ($_SESSION['user']['usertypename'] == "Deliverer") {
         // Routes for Deliverer role
         $router->get('/', 'Controllers/Deliverers/index.php');
@@ -35,6 +36,7 @@ if (authenticated()) {
         $router->filterAndOrder('/', 'Controllers/Managers/search.php');;
 
         $router->get('/livesearch', 'Controllers/Managers/livesearch.php');
+        $router->get('/map', 'Controllers/Map/DeliveryPointsController.php');
     }
 } else {
     $router->get('/', 'Controllers/Authentication/index.php');
