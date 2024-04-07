@@ -33,6 +33,8 @@ if (authenticated()) {
         $router->post('/', 'Controllers/Deliverers/show.php');
         $router->search('/', 'Controllers/Deliverers/search.php');;
         $router->filterAndOrder('/', 'Controllers/Managers/search.php');;
+
+        $router->get('/livesearch', 'Controllers/Managers/livesearch.php');
     }
 } else {
     $router->get('/', 'Controllers/Authentication/index.php');

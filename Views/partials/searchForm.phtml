@@ -21,7 +21,7 @@
                             </div>
                             <div class="dropdown-item">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="recipientName" id="filterRecipientName">
+                                    <input class="form-check-input" type="checkbox" value="name" id="filterRecipientName">
                                     <label class="form-check-label" for="filterRecipientName">
                                         Recipient Name
                                     </label>
@@ -37,7 +37,7 @@
                             </div>
                             <div class="dropdown-item">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="address" id="filterAddress">
+                                    <input class="form-check-input" type="checkbox" value="address_1" id="filterAddress">
                                     <label class="form-check-label" for="filterAddress">
                                         Address
                                     </label>
@@ -91,14 +91,42 @@
 <script>
     const searchInputDeliveries = document.getElementById('searchInputDeliveries');
     const resultsContainer = document.getElementById('resultsContainer');
+    const filterCheckboxes = document.querySelectorAll('.form-check-input');
+    const checkboxes = document.querySelectorAll("input[type=checkbox]");
+    let keyword = '';
 
     searchInputDeliveries.addEventListener('keyup', function() {
-        liveSearch(this.value);
+        const conditions = [];
+
+        filterCheckboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                conditions.push(checkbox.value);
+            }
+        });
+
+        keyword = this.value;
+        liveSearch(this.value, conditions);
     });
 
-    function liveSearch(keyword) {
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function () {
+            const conditions = [];
+
+            filterCheckboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    conditions.push(checkbox.value);
+                }
+            });
+
+            liveSearch(keyword, conditions);
+        });
+    });
+
+    function liveSearch(keyword, conditions) {
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', '/livesearch?action=search-delivery&keyword=' + keyword);
+        const conditionsQuery = conditions.map((condition) => `condition[]=${condition}`).join('&');
+        const url = `/livesearch?action=search-delivery&keyword=${keyword}&${conditionsQuery}`;
+        xhr.open('GET', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -113,6 +141,15 @@
                         // Create a list element to hold the results
                         const resultsList = document.createElement('ul');
                         resultsList.classList.add('list-group');
+
+                        const resultsAmount = document.createElement('ul');
+                        resultsAmount.classList.add('list-group');
+                        const resultItem = document.createElement('li');
+                        resultItem.classList.add('list-group-item');
+                        const itemContent = 'Results: ' + result.length + '. Pagination Shown: ' + Math.min(result.length, 5) + '/' + result.length;
+                        resultItem.textContent = itemContent;
+                        resultsAmount.appendChild(resultItem);
+                        resultsContainer.appendChild(resultsAmount);
 
                         // Loop through the first 5 results and create a list item for each result
                         for (let i = 0; i < Math.min(result.length, 5); i++) {
