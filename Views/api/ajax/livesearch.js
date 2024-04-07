@@ -62,7 +62,7 @@ function liveSearch(keyword, conditions) {
                     // Add an option for each result, limited to 5
                     for (let i = 0; i < Math.min(result.length, 5); i++) {
                         const listItem = document.createElement('li');
-                        listItem.innerHTML = `<a class="dropdown-item" href='/?search=' + keyword>ID: ${result[i].id}, Name: ${result[i].name}, Address: ${result[i].address_1} ${result[i].address_2}, Postcode: ${result[i].postcode}</a>`;
+                        listItem.innerHTML = `<a class="dropdown-item" href="/?search=${keyword}">ID: ${result[i].id}, Name: ${result[i].name}, Address: ${result[i].address_1} ${result[i].address_2}, Postcode: ${result[i].postcode}</a>`;
                         resultsDropdown.appendChild(listItem);
                     }
 
