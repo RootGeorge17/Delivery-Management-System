@@ -47,6 +47,7 @@
                     </div>
                 </div>
             </div>
+            <div id="resultsContainer"> </div>
         </form>
     </div>
 <?php endif; ?>
@@ -89,26 +90,55 @@
 
 <script>
     const searchInputDeliveries = document.getElementById('searchInputDeliveries');
-    const resultsDeliveries = document.getElementById('resultsDeliveries');
-    const filterCheckboxes = document.querySelectorAll('.dropdown-menu .form-check-input');
+    const resultsContainer = document.getElementById('resultsContainer');
 
-    searchInputDeliveries.addEventListener('input', () => {
-        const searchTerm = searchInputDeliveries.value.trim().toLowerCase();
-        const activeFilters = Array.from(filterCheckboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.value);
-        resultsDeliveries.innerHTML = '';
-        // Perform your search and filtering logic here based on searchTerm and activeFilters
+    searchInputDeliveries.addEventListener('keyup', function() {
+        liveSearch(this.value);
     });
 
-    filterCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const searchTerm = searchInputDeliveries.value.trim().toLowerCase();
-            const activeFilters = Array.from(filterCheckboxes)
-                .filter(checkbox => checkbox.checked)
-                .map(checkbox => checkbox.value);
-            resultsDeliveries.innerHTML = '';
-            // Perform your search and filtering logic here based on searchTerm and activeFilters
-        });
-    });
+    function liveSearch(keyword) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/livesearch?action=search-delivery&keyword=' + keyword);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    const result = JSON.parse(xhr.responseText);
+                    console.log(result[0]);
+
+                    // Clear previous results
+                    resultsContainer.innerHTML = '';
+
+                    if (result.length > 0) {
+                        // Create a list element to hold the results
+                        const resultsList = document.createElement('ul');
+                        resultsList.classList.add('list-group');
+
+                        // Loop through the first 5 results and create a list item for each result
+                        for (let i = 0; i < Math.min(result.length, 5); i++) {
+                            const item = result[i];
+                            const listItem = document.createElement('li');
+                            listItem.classList.add('list-group-item');
+
+                            const itemContent = `ID: ${item.id}, Name: ${item.name}, Address: ${item.address_1} ${item.address_2}, Postcode: ${item.postcode}`;
+                            listItem.textContent = itemContent;
+
+                            resultsList.appendChild(listItem);
+                        }
+
+                        // Append the results list to the container
+                        resultsContainer.appendChild(resultsList);
+                    } else {
+                        // If no results, display a message
+                        const noResultsMessage = document.createElement('p');
+                        noResultsMessage.textContent = 'No results found.';
+                        resultsContainer.appendChild(noResultsMessage);
+                    }
+                } else {
+                    console.error('Error:', xhr.status);
+                }
+            }
+        };
+        xhr.send();
+    }
 </script>

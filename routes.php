@@ -25,6 +25,8 @@ if (authenticated()) {
         $router->create('/users', 'Controllers/Managers/create.php');;
         $router->search('/users', 'Controllers/Managers/search.php');;
         $router->filterAndOrder('/', 'Controllers/Managers/search.php');;
+
+        $router->get('/livesearch', 'Controllers/Managers/livesearch.php');
     } elseif ($_SESSION['user']['usertypename'] == "Deliverer") {
         // Routes for Deliverer role
         $router->get('/', 'Controllers/Deliverers/index.php');

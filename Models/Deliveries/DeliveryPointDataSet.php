@@ -228,9 +228,9 @@ class DeliveryPointDataSet
 
         $dataSet = [];
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $dataSet[] = new DeliveryPointData($row);
+            $dataSet[] = $row;
         }
 
-        return $dataSet;
+        return json_encode($dataSet);
     }
 }
