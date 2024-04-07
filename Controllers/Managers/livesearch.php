@@ -13,11 +13,11 @@ if($action == 'search-delivery') {
 function liveSearch($keyword) {
     $conditions = $_GET['condition'] ?? ['id', 'name', 'postcode', 'address_1', 'address_2'];
     $deliveryPointDataSet = new DeliveryPointDataSet();
-    $data = $deliveryPointDataSet->searchDeliveryPoints($conditions, $keyword);
-
-    header('Content-Type: application/json');
+    $data = $deliveryPointDataSet->searchDeliveryPointsLive($conditions, $keyword);
+    
     $json = $data;
     echo $json;
 }
+
 
 

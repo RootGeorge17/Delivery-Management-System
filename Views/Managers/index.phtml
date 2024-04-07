@@ -201,7 +201,6 @@
             <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
                 <div class="row">
                     <?php require_once('Views/partials/searchForm.phtml') ?>
-                    <?php require_once('Views/partials/filterAndOrder.phtml') ?>
                 </div>
                 <!-- Table Section -->
                 <section id="table-section">
@@ -660,7 +659,6 @@
             <?php elseif ($_SESSION['user']['currentTable'] == "Users"): ?>
                 <div class="row">
                     <?php require_once('Views/partials/searchForm.phtml') ?>
-                    <?php require_once('Views/partials/filterAndOrder.phtml') ?>
                 </div>
                 <?php require_once('Views/partials/pagination.phtml') ?>
                 <div class="table table-responsive">

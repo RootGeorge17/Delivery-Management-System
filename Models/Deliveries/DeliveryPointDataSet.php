@@ -202,11 +202,16 @@ class DeliveryPointDataSet
      */
     public function searchDeliveryPoints($conditions, $searchTerm)
     {
-        if (!empty($conditions) && !empty($searchTerm)) {
-            $sqlQuery = 'SELECT * FROM delivery_point WHERE';
-            $params = [];
+        // Initialize the SQL query and parameters array
+        $sqlQuery = 'SELECT * FROM delivery_point';
+        $params = [];
 
+        if (!empty($conditions) && !empty($searchTerm)) {
+            $sqlQuery .= ' WHERE';
+
+            // Loop through conditions
             foreach ($conditions as $key => $condition) {
+                // Append condition to SQL query
                 if ($condition === 'id') {
                     $sqlQuery .= " $condition = ?";
                     $params[] = $searchTerm;
@@ -215,22 +220,65 @@ class DeliveryPointDataSet
                     $params[] = "%$searchTerm%";
                 }
 
+                // Append OR between conditions except for the last one
                 if ($key !== array_key_last($conditions)) {
                     $sqlQuery .= ' OR';
                 }
             }
-        } else {
-            $sqlQuery = 'SELECT * FROM delivery_point';
         }
 
+        // Prepare and execute the SQL query
         $statement = $this->dbHandle->prepare($sqlQuery);
         $statement->execute($params);
 
+        // Fetch the results
+        $dataSet = [];
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $dataSet[] = new DeliveryPointData($row);
+        }
+
+        // Return JSON-encoded result
+        return $dataSet;
+    }
+
+    public function searchDeliveryPointsLive($conditions, $searchTerm)
+    {
+        // Initialize the SQL query and parameters array
+        $sqlQuery = 'SELECT * FROM delivery_point';
+        $params = [];
+
+        if (!empty($conditions) && !empty($searchTerm)) {
+            $sqlQuery .= ' WHERE';
+
+            // Loop through conditions
+            foreach ($conditions as $key => $condition) {
+                // Append condition to SQL query
+                if ($condition === 'id') {
+                    $sqlQuery .= " $condition = ?";
+                    $params[] = $searchTerm;
+                } else {
+                    $sqlQuery .= " $condition LIKE ?";
+                    $params[] = "%$searchTerm%";
+                }
+
+                // Append OR between conditions except for the last one
+                if ($key !== array_key_last($conditions)) {
+                    $sqlQuery .= ' OR';
+                }
+            }
+        }
+
+        // Prepare and execute the SQL query
+        $statement = $this->dbHandle->prepare($sqlQuery);
+        $statement->execute($params);
+
+        // Fetch the results
         $dataSet = [];
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $dataSet[] = $row;
         }
 
+        // Return JSON-encoded result
         return json_encode($dataSet);
     }
 }

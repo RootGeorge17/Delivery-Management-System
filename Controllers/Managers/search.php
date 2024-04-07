@@ -10,19 +10,17 @@ $searchTerm = $_POST['search'] ?? '';
 $currentPage = $_GET['page'] ?? 1;
 
 // Check the current table in session and perform search accordingly
-if ($_SESSION['user']['currentTable'] === "Deliveries") {
-    // Define search columns based on received POST parameters
-    $searchColumns = [];
-    if (isset($_POST['parcelID'])) {
+if (isset($_POST['filters'])) {
+    if (in_array('id', $_POST['filters'])) {
         $searchColumns[] = 'id';
     }
-    if (isset($_POST['recipientName'])) {
+    if (in_array('name', $_POST['filters'])) {
         $searchColumns[] = 'name';
     }
-    if (isset($_POST['postcode'])) {
+    if (in_array('postcode', $_POST['filters'])) {
         $searchColumns[] = 'postcode';
     }
-    if (isset($_POST['address'])) {
+    if (in_array('address_1', $_POST['filters'])) {
         $searchColumns[] = 'address_1';
         $searchColumns[] = 'address_2';
     }
@@ -30,8 +28,13 @@ if ($_SESSION['user']['currentTable'] === "Deliveries") {
     // Perform search for delivery points using TableData instance
     $table->searchDeliveryPoints($currentPage, "Deliveries", $searchColumns, $searchTerm, $table);
     $_SESSION['user']['searched'] = true;
+} else {
+    $searchColumns = ['id', 'name', 'postcode', 'address_1', 'address_2'];
+    $table->searchDeliveryPoints($currentPage, "Deliveries", $searchColumns, $searchTerm, $table);
+    $_SESSION['user']['searched'] = true;
+}
 
-} elseif ($_SESSION['user']['currentTable'] === "Users") {
+if ($_SESSION['user']['currentTable'] === "Users") {
     // Define search columns based on received POST parameters
     $searchColumns = [];
     if (isset($_POST['userID'])) {

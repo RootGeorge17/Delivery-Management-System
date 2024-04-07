@@ -1,6 +1,6 @@
 <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
     <!-- Search form -->
-    <div class="flex-grow-1">
+    <div class="flex-grow-1 position-relative">
         <form action="/" method="POST">
             <input type="hidden" name="_method" value="SEARCH">
             <div class="input-group">
@@ -10,10 +10,10 @@
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             Filter Search by..
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdown">
                             <div class="dropdown-item">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="id" id="filterId">
+                                    <input class="form-check-input" type="checkbox" value="id" id="filterId" name="filters[]">
                                     <label class="form-check-label" for="filterId">
                                         ID
                                     </label>
@@ -21,7 +21,7 @@
                             </div>
                             <div class="dropdown-item">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="name" id="filterRecipientName">
+                                    <input class="form-check-input" type="checkbox" value="name" id="filterRecipientName" name="filters[]">
                                     <label class="form-check-label" for="filterRecipientName">
                                         Recipient Name
                                     </label>
@@ -29,7 +29,7 @@
                             </div>
                             <div class="dropdown-item">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="postcode" id="filterPostcode">
+                                    <input class="form-check-input" type="checkbox" value="postcode" id="filterPostcode" name="filters[]">
                                     <label class="form-check-label" for="filterPostcode">
                                         Postcode
                                     </label>
@@ -37,7 +37,7 @@
                             </div>
                             <div class="dropdown-item">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="address_1" id="filterAddress">
+                                    <input class="form-check-input" type="checkbox" value="address_1" id="filterAddress" name="filters[]">
                                     <label class="form-check-label" for="filterAddress">
                                         Address
                                     </label>
@@ -47,135 +47,9 @@
                     </div>
                 </div>
             </div>
-            <div id="resultsContainer"> </div>
+            <ul id="resultsDropdown" class="dropdown-menu dropdown-menu-end position-absolute" aria-labelledby="resultsDropdownButton"></ul>
         </form>
     </div>
 <?php endif; ?>
 
-<?php if ($_SESSION['user']['currentTable'] == "Users"): ?>
-    <div class="flex-grow-1">
-        <form action="/" method="POST">
-            <input type="hidden" name="_method" value="SEARCH">
-            <div class="input-group">
-                <input type="text" class="form-control" id="searchInputUsers" name="search" placeholder="Search for Parcel">
-                <div class="input-group-append">
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Filter Search by..
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="filterDropdown">
-                            <div class="dropdown-item">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="id" id="filterId">
-                                    <label class="form-check-label" for="filterId">
-                                        ID
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="dropdown-item">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="id" id="filterId">
-                                    <label class="form-check-label" for="filterId">
-                                        Username
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-<?php endif; ?>
-
-<script>
-    const searchInputDeliveries = document.getElementById('searchInputDeliveries');
-    const resultsContainer = document.getElementById('resultsContainer');
-    const filterCheckboxes = document.querySelectorAll('.form-check-input');
-    const checkboxes = document.querySelectorAll("input[type=checkbox]");
-    let keyword = '';
-
-    searchInputDeliveries.addEventListener('keyup', function() {
-        const conditions = [];
-
-        filterCheckboxes.forEach((checkbox) => {
-            if (checkbox.checked) {
-                conditions.push(checkbox.value);
-            }
-        });
-
-        keyword = this.value;
-        liveSearch(this.value, conditions);
-    });
-
-    checkboxes.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function () {
-            const conditions = [];
-
-            filterCheckboxes.forEach((checkbox) => {
-                if (checkbox.checked) {
-                    conditions.push(checkbox.value);
-                }
-            });
-
-            liveSearch(keyword, conditions);
-        });
-    });
-
-    function liveSearch(keyword, conditions) {
-        const xhr = new XMLHttpRequest();
-        const conditionsQuery = conditions.map((condition) => `condition[]=${condition}`).join('&');
-        const url = `/livesearch?action=search-delivery&keyword=${keyword}&${conditionsQuery}`;
-        xhr.open('GET', url);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    const result = JSON.parse(xhr.responseText);
-                    console.log(result[0]);
-
-                    // Clear previous results
-                    resultsContainer.innerHTML = '';
-
-                    if (result.length > 0) {
-                        // Create a list element to hold the results
-                        const resultsList = document.createElement('ul');
-                        resultsList.classList.add('list-group');
-
-                        const resultsAmount = document.createElement('ul');
-                        resultsAmount.classList.add('list-group');
-                        const resultItem = document.createElement('li');
-                        resultItem.classList.add('list-group-item');
-                        const itemContent = 'Results: ' + result.length + '. Pagination Shown: ' + Math.min(result.length, 5) + '/' + result.length;
-                        resultItem.textContent = itemContent;
-                        resultsAmount.appendChild(resultItem);
-                        resultsContainer.appendChild(resultsAmount);
-
-                        // Loop through the first 5 results and create a list item for each result
-                        for (let i = 0; i < Math.min(result.length, 5); i++) {
-                            const item = result[i];
-                            const listItem = document.createElement('li');
-                            listItem.classList.add('list-group-item');
-
-                            const itemContent = `ID: ${item.id}, Name: ${item.name}, Address: ${item.address_1} ${item.address_2}, Postcode: ${item.postcode}`;
-                            listItem.textContent = itemContent;
-
-                            resultsList.appendChild(listItem);
-                        }
-
-                        // Append the results list to the container
-                        resultsContainer.appendChild(resultsList);
-                    } else {
-                        // If no results, display a message
-                        const noResultsMessage = document.createElement('p');
-                        noResultsMessage.textContent = 'No results found.';
-                        resultsContainer.appendChild(noResultsMessage);
-                    }
-                } else {
-                    console.error('Error:', xhr.status);
-                }
-            }
-        };
-        xhr.send();
-    }
-</script>
+<script src="Views/api/ajax/livesearch.js"></script>
