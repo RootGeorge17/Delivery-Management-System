@@ -281,4 +281,22 @@ class DeliveryPointDataSet
         // Return JSON-encoded result
         return json_encode($dataSet);
     }
+
+    // DeliveryPointDataSet.php
+    public function fetchAllDeliveryPointsJSON()
+    {
+        $sqlQuery = 'SELECT dp.*, du.username AS deliverer_username 
+                 FROM delivery_point dp
+                 LEFT JOIN delivery_users du ON dp.deliverer = du.id';
+
+        $statement = $this->dbHandle->prepare($sqlQuery);
+        $statement->execute();
+
+        $dataSet = [];
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $dataSet[] = $row;
+        }
+
+        return json_encode($dataSet);
+    }
 }
