@@ -22,7 +22,7 @@
             <?php endif; ?>
 
             <div id="map"></div>
-            <script src="Views/map/map.js"></script>
+            <script src="Views/api/ajax/map.js"></script>
 
             <!-- Statistics Section -->
             <section id="statistics-section">
@@ -202,461 +202,439 @@
             </section>
 
             <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
-                <div class="row">
-                    <?php require_once('Views/partials/searchForm.phtml') ?>
-                </div>
-                <!-- Table Section -->
-                <section id="table-section">
-                <!-- Deliveries Table -->
-                <?php require_once('Views/partials/pagination.phtml') ?>
-                <div class="table table-responsive">
-                <table class="table border-dark table-bordered table-grey table-striped">
-                    <thead class="table-dark">
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Address1</th>
-                        <th scope="col">Address2</th>
-                        <th scope="col">Postcode</th>
-                        <th scope="col">Deliverer</th>
-                        <th scope="col">Lat / Lng</th>
-                        <th scope="col">Photo of delivery</th>
-                        <th scope="col">
-                            Status
-                            <i class="bi bi-info-circle"></i>
-                        </th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                    <!-- Status -->
-                    </thead>
-                    <tbody>
+            <div class="container-fluid px-0">
+                <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mx-0">
                     <?php foreach ($view->currentItems as $deliveryPointData) : ?>
-                        <tr>
-                            <th scope="row"><?= htmlspecialchars($deliveryPointData->getPointId()) ?></th>
-                            <td><?= htmlspecialchars($deliveryPointData->getPointName()) ?></td>
-                            <td><?= htmlspecialchars($deliveryPointData->getPointAddress1()) ?></td>
-                            <td><?= htmlspecialchars($deliveryPointData->getPointAddress2()) ?></td>
-                            <td><?= htmlspecialchars($deliveryPointData->getPointPostcode()) ?></td>
-                            <td><?= htmlspecialchars($deliveryPointData->getPointDelivererUsername()) ?></td>
-                            <td><?= htmlspecialchars($deliveryPointData->getPointLat()) . " / " . htmlspecialchars($deliveryPointData->getPointLng()) ?></td>
-                            <?php if (htmlspecialchars($deliveryPointData->getPointDelPhoto())): ?>
-                                <td><img src="images/<?= htmlspecialchars($deliveryPointData->getPointDelPhoto()) ?>" alt="no picture"/></td>
-
-                            <?php elseif (!htmlspecialchars($deliveryPointData->getPointDelPhoto())): ?>
-                                <td>Only delivered parcels have pictures!</td>
-                            <?php endif; ?>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                            id="statusDropdown" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                        <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                                        <li>
-                                            <a class="btn dropdown-item" data-bs-toggle="modal"
-                                               data-bs-target="#pendingModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                Mark as: Pending
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a class="btn dropdown-item" data-bs-toggle="modal"
-                                               data-bs-target="#shippedModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                Mark as: Shipped
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a class="btn dropdown-item" data-bs-toggle="modal"
-                                               data-bs-target="#outModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                Mark as: Out for delivery
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="btn dropdown-item disabled" data-bs-toggle="modal"
-                                               data-bs-target="#deliveredModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                Edit Parcel to mark as delivered
-                                            </a>
-                                        </li>
-                                    </ul>
+                        <div class="col px-3 mb-4">
+                            <div class="delivery-point">
+                                <div class="delivery-point-header">
+                                    <h5><?= $deliveryPointData->getPointName() ?></h5>
+                                    <button class="status">Show on Map</button>
+                                    <span class="status"><?= htmlspecialchars($deliveryPointData->getPointStatus()) ?></span>
                                 </div>
-                            </td>
-                            <td>
-                                <!-- Actions -->
-                                <div class="dropdown">
-                                    <button class="btn btn-danger dropdown-toggle" type="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                        Edit Parcel:
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
-                                        <li>
-                                            <a class="btn dropdown-item" data-bs-toggle="modal"
-                                               data-bs-target="#assignModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                Assign / Change Deliverer
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="btn dropdown-item" data-bs-toggle="modal"
-                                               data-bs-target="#editModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                Edit Delivery Item
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="btn dropdown-item" data-bs-toggle="modal"
-                                               data-bs-target="#deleteModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                Delete Delivery Item
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <div class="delivery-point-body">
+                                    <p><strong>ID:</strong> <?= $deliveryPointData->getPointId() ?></p>
+                                    <p><strong>Address:</strong> <?= $deliveryPointData->getPointAddress1() ?>, <?= $deliveryPointData->getPointAddress2() ?>, <?= $deliveryPointData->getPointPostcode() ?></p>
+                                    <p><strong>Coordinates:</strong> <?= htmlspecialchars($deliveryPointData->getPointLat()) ?> / <?= htmlspecialchars($deliveryPointData->getPointLng()) ?></p>
+                                    <p><strong>Deliverer:</strong> <?= htmlspecialchars($deliveryPointData->getPointDelivererUsername()) ?></p>
+                                    <?php if (htmlspecialchars($deliveryPointData->getPointDelPhoto())) : ?>
+                                        <div class="delivery-photo">
+                                            <img src="images/<?= htmlspecialchars($deliveryPointData->getPointDelPhoto()) ?>" alt="Delivery Photo" class="img-fluid">
+                                        </div>
+                                    <?php else : ?>
+                                        <p>Only delivered parcels have pictures!</p>
+                                    <?php endif; ?>
+                                    <div class="d-flex justify-content-between mt-3">
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+                                            <li>
+                                                <a class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#pendingModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                    Mark as: Pending
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#shippedModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                    Mark as: Shipped
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#outModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                    Mark as: Out for delivery
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#deliveredModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                    Mark as: Delivered
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- All modals from the previous code go here -->
+                                    <!-- Actions -->
+                                    <div class="dropdown">
+                                        <button class="btn btn-danger dropdown-toggle" type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            Edit Parcel:
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
+                                            <li>
+                                                <a class="btn dropdown-item" data-bs-toggle="modal"
+                                                   data-bs-target="#assignModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                    Assign / Change Deliverer
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="btn dropdown-item" data-bs-toggle="modal"
+                                                   data-bs-target="#editModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                    Edit Delivery Item
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="btn dropdown-item" data-bs-toggle="modal"
+                                                   data-bs-target="#deleteModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                    Delete Delivery Item
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
 
 
-                                <!-- Pending Status Dynamic Modal -->
-                                <div class="modal fade"
-                                     id="pendingModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                     tabindex="-1"
-                                     aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                    <!-- Modal content for Pending -->
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <!-- Your modal content for "Pending" -->
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="statusModalLabel">Change
-                                                    Status</h5>
-                                                <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
+                                    <!-- Pending Status Dynamic Modal -->
+                                    <div class="modal fade"
+                                         id="pendingModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                         tabindex="-1"
+                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
+                                        <!-- Modal content for Pending -->
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <!-- Your modal content for "Pending" -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="statusModalLabel">Change
+                                                        Status</h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
                                                     <span>
                                                           Are you sure you want to change the status of delivery item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>
                                                           from: <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?> to Pending?
                                                     </span>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
-                                                    <input type="hidden" name="_method" value="UPDATE">
-                                                    <input type="hidden" name="_id"
-                                                           value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                    <input type="hidden" name="_status" value="Pending">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close
-                                                    </button>
-                                                    <button type="submit" class="btn btn-primary">Confirm
-                                                        Change
-                                                    </button>
-                                                </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
+                                                        <input type="hidden" name="_method" value="UPDATE">
+                                                        <input type="hidden" name="_id"
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                        <input type="hidden" name="_status" value="Pending">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Confirm
+                                                            Change
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Shipped Status Dynamic Modal -->
-                                <div class="modal fade"
-                                     id="shippedModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                     tabindex="-1"
-                                     aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                    <!-- Modal content for Pending -->
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <!-- Your modal content for "Pending" -->
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="statusModalLabel">Change
-                                                    Status</h5>
-                                                <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
+                                    <!-- Shipped Status Dynamic Modal -->
+                                    <div class="modal fade"
+                                         id="shippedModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                         tabindex="-1"
+                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
+                                        <!-- Modal content for Pending -->
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <!-- Your modal content for "Pending" -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="statusModalLabel">Change
+                                                        Status</h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
                                                     <span>
                                                           Are you sure you want to change the status of delivery item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>
                                                           from: <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?> to Shipped?
                                                     </span>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
-                                                    <input type="hidden" name="_method" value="UPDATE">
-                                                    <input type="hidden" name="_id"
-                                                           value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                    <input type="hidden" name="_status" value="Shipped">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close
-                                                    </button>
-                                                    <button type="submit" class="btn btn-primary">Confirm
-                                                        Change
-                                                    </button>
-                                                </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
+                                                        <input type="hidden" name="_method" value="UPDATE">
+                                                        <input type="hidden" name="_id"
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                        <input type="hidden" name="_status" value="Shipped">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Confirm
+                                                            Change
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Out for Delivery Status Dynamic Modal -->
-                                <div class="modal fade"
-                                     id="outModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                     tabindex="-1"
-                                     aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                    <!-- Modal content for Pending -->
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <!-- Your modal content for "Pending" -->
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="statusModalLabel">Change
-                                                    Status</h5>
-                                                <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
+                                    <!-- Out for Delivery Status Dynamic Modal -->
+                                    <div class="modal fade"
+                                         id="outModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                         tabindex="-1"
+                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
+                                        <!-- Modal content for Pending -->
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <!-- Your modal content for "Pending" -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="statusModalLabel">Change
+                                                        Status</h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
                                                     <span>
                                                           Are you sure you want to change the status of delivery item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>
                                                           from: <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?> to Out for delivery?
                                                     </span>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
-                                                    <input type="hidden" name="_method" value="UPDATE">
-                                                    <input type="hidden" name="_id"
-                                                           value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                    <input type="hidden" name="_status"
-                                                           value="Out for delivery">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close
-                                                    </button>
-                                                    <button type="submit" class="btn btn-primary">Confirm
-                                                        Change
-                                                    </button>
-                                                </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
+                                                        <input type="hidden" name="_method" value="UPDATE">
+                                                        <input type="hidden" name="_id"
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                        <input type="hidden" name="_status"
+                                                               value="Out for delivery">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Confirm
+                                                            Change
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Delivered Status Dynamic Modal -->
-                                <div class="modal fade"
-                                     id="deliveredModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                     tabindex="-1"
-                                     aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                    <!-- Modal content for Pending -->
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <!-- Your modal content for "Pending" -->
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="statusModalLabel">Change
-                                                    Status</h5>
-                                                <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
+                                    <!-- Delivered Status Dynamic Modal -->
+                                    <div class="modal fade"
+                                         id="deliveredModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                         tabindex="-1"
+                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
+                                        <!-- Modal content for Pending -->
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <!-- Your modal content for "Pending" -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="statusModalLabel">Change
+                                                        Status</h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
                                                     <span>
                                                           Are you sure you want to change the status of delivery item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>
                                                           from: <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?> to Delivered?
                                                     </span>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
-                                                    <input type="hidden" name="_method" value="UPDATE">
-                                                    <input type="hidden" name="_id"
-                                                           value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                    <input type="hidden" name="_status" value="Delivered">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close
-                                                    </button>
-                                                    <button type="submit" class="btn btn-primary">Confirm
-                                                        Change
-                                                    </button>
-                                                </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
+                                                        <input type="hidden" name="_method" value="UPDATE">
+                                                        <input type="hidden" name="_id"
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                        <input type="hidden" name="_status" value="Delivered">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Confirm
+                                                            Change
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Assign Deliverer Dynamic Modal -->
-                                <div class="modal fade"
-                                     id="assignModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                     tabindex="-1"
-                                     aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                    <!-- Modal content for Pending -->
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <!-- Your modal content for "Pending" -->
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="statusModalLabel">Assign Deliverer</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <form action="/" method="POST">
-                                                <div class="modal-body">
+                                    <!-- Assign Deliverer Dynamic Modal -->
+                                    <div class="modal fade"
+                                         id="assignModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                         tabindex="-1"
+                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
+                                        <!-- Modal content for Pending -->
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <!-- Your modal content for "Pending" -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="statusModalLabel">Assign Deliverer</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <form action="/" method="POST">
+                                                    <div class="modal-body">
                                                 <span>
                                                     You are about to assign a deliverer for parcel with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>
                                                 </span>
-                                                    <input type="hidden" name="type" value="AssignDeliverer">
-                                                    <input type="hidden" name="_method" value="EDIT">
-                                                    <label for="username">Deliverer Username:</label>
-                                                    <input type="text" id="username" name="username" required>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="hidden" name="_id"
-                                                           value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">
-                                                        Close
-                                                    </button>
-                                                    <button type="submit" class="btn btn-danger">Confirm Change
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Edit Parcel Dynamic Modal -->
-                                <div class="modal fade"
-                                     id="editModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                     tabindex="-1"
-                                     aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                    <!-- Modal content for Pending -->
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <!-- Your modal content for "Pending" -->
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="statusModalLabel">Edit
-                                                    Parcel <?= htmlspecialchars($deliveryPointData->getPointId()) ?></h5>
-                                            </div>
-                                            <form method="POST" action="/">
-                                                <div class="modal-body">
-                                                    <h5>Edit Parcel</h5>
-                                                    <div class="form-group">
-                                                        <label for="pointId">Parcel ID:</label>
-                                                        <input type="text" id="pointId" class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                                               disabled>
+                                                        <input type="hidden" name="type" value="AssignDeliverer">
+                                                        <input type="hidden" name="_method" value="EDIT">
+                                                        <label for="username">Deliverer Username:</label>
+                                                        <input type="text" id="username" name="username" required>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="pointName">* Name:</label>
-                                                        <input type="text" id="pointName" name="name"
-                                                               class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointName()) ?>"
-                                                               required>
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="_id"
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-danger">Confirm Change
+                                                        </button>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="address1">* Address Line 1:</label>
-                                                        <input type="text" id="address1" name="address1"
-                                                               class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointAddress1()) ?>"
-                                                               required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="address2">Address Line 2:</label>
-                                                        <input type="text" id="address2" name="address2"
-                                                               class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointAddress2()) ?>">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="postcode">* Postcode:</label>
-                                                        <input type="text" id="postcode" name="postcode"
-                                                               class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointPostcode()) ?>"
-                                                               required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="latitude">* Latitude:</label>
-                                                        <input type="text" id="latitude" name="latitude"
-                                                               class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointLat()) ?>"
-                                                               required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="longitude">* Longitude:</label>
-                                                        <input type="text" id="longitude" name="longitude"
-                                                               class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointLng()) ?>"
-                                                               required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="deliverer">* Deliverer:</label>
-                                                        <input type="text" id="deliverer" name="deliverer"
-                                                               class="form-control"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointDelivererUsername()) ?>"
-                                                               required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="status">* Status:</label>
-                                                        <div class="input-group">
-                                                            <select id="status" name="status" class="form-select"
-                                                                    required>
-                                                                <option value="Pending" <?php if (htmlspecialchars($deliveryPointData->getPointStatus()) === 'Pending') echo 'selected'; ?>>
-                                                                    Pending
-                                                                </option>
-                                                                <option value="Shipped" <?php if (htmlspecialchars($deliveryPointData->getPointStatus()) === 'Shipped') echo 'selected'; ?>>
-                                                                    Shipped
-                                                                </option>
-                                                                <option value="Out for delivery" <?php if (htmlspecialchars($deliveryPointData->getPointStatus()) === 'Out for delivery') echo 'selected'; ?>>
-                                                                    Out for delivery
-                                                                </option>
-                                                                <option value="Delivered" <?php if (htmlspecialchars($deliveryPointData->getPointStatus()) === 'Delivered') echo 'selected'; ?>>
-                                                                    Delivered
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="hidden" name="_id"
-                                                           value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                    <input type="hidden" name="type" value="EditParcel">
-                                                    <input type="hidden" name="_method" value="EDIT">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close
-                                                    </button>
-                                                    <button type="submit" class="btn btn-danger">Save Changes
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Delete Parcel Dynamic Modal -->
-                                <div class="modal fade"
-                                     id="deleteModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                     tabindex="-1"
-                                     aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                    <!-- Modal content for Pending -->
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <!-- Your modal content for "Pending" -->
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="statusModalLabel">Delete Parcel</h5>
-                                                <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                    <span>
-                                                          Are you sure you want to delete the parcel item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>?
-                                                    </span>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form method="POST" action="/">
-                                                    <input type="hidden" name="_method" value="DELETE">
-                                                    <input type="hidden" name="id"
-                                                           value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                    <input type="hidden" name="type" value="Parcel">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close
-                                                    </button>
-                                                    <button type="submit" class="btn btn-danger">Delete
-                                                    </button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
 
+                                    <!-- Edit Parcel Dynamic Modal -->
+                                    <div class="modal fade"
+                                         id="editModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                         tabindex="-1"
+                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
+                                        <!-- Modal content for Pending -->
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <!-- Your modal content for "Pending" -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="statusModalLabel">Edit
+                                                        Parcel <?= htmlspecialchars($deliveryPointData->getPointId()) ?></h5>
+                                                </div>
+                                                <form method="POST" action="/">
+                                                    <div class="modal-body">
+                                                        <h5>Edit Parcel</h5>
+                                                        <div class="form-group">
+                                                            <label for="pointId">Parcel ID:</label>
+                                                            <input type="text" id="pointId" class="form-control"
+                                                                   value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                                                   disabled>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="pointName">* Name:</label>
+                                                            <input type="text" id="pointName" name="name"
+                                                                   class="form-control"
+                                                                   value="<?= htmlspecialchars($deliveryPointData->getPointName()) ?>"
+                                                                   required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="address1">* Address Line 1:</label>
+                                                            <input type="text" id="address1" name="address1"
+                                                                   class="form-control"
+                                                                   value="<?= htmlspecialchars($deliveryPointData->getPointAddress1()) ?>"
+                                                                   required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="address2">Address Line 2:</label>
+                                                            <input type="text" id="address2" name="address2"
+                                                                   class="form-control"
+                                                                   value="<?= htmlspecialchars($deliveryPointData->getPointAddress2()) ?>">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="postcode">* Postcode:</label>
+                                                            <input type="text" id="postcode" name="postcode"
+                                                                   class="form-control"
+                                                                   value="<?= htmlspecialchars($deliveryPointData->getPointPostcode()) ?>"
+                                                                   required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="latitude">* Latitude:</label>
+                                                            <input type="text" id="latitude" name="latitude"
+                                                                   class="form-control"
+                                                                   value="<?= htmlspecialchars($deliveryPointData->getPointLat()) ?>"
+                                                                   required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="longitude">* Longitude:</label>
+                                                            <input type="text" id="longitude" name="longitude"
+                                                                   class="form-control"
+                                                                   value="<?= htmlspecialchars($deliveryPointData->getPointLng()) ?>"
+                                                                   required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="deliverer">* Deliverer:</label>
+                                                            <input type="text" id="deliverer" name="deliverer"
+                                                                   class="form-control"
+                                                                   value="<?= htmlspecialchars($deliveryPointData->getPointDelivererUsername()) ?>"
+                                                                   required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="status">* Status:</label>
+                                                            <div class="input-group">
+                                                                <select id="status" name="status" class="form-select"
+                                                                        required>
+                                                                    <option value="Pending" <?php if (htmlspecialchars($deliveryPointData->getPointStatus()) === 'Pending') echo 'selected'; ?>>
+                                                                        Pending
+                                                                    </option>
+                                                                    <option value="Shipped" <?php if (htmlspecialchars($deliveryPointData->getPointStatus()) === 'Shipped') echo 'selected'; ?>>
+                                                                        Shipped
+                                                                    </option>
+                                                                    <option value="Out for delivery" <?php if (htmlspecialchars($deliveryPointData->getPointStatus()) === 'Out for delivery') echo 'selected'; ?>>
+                                                                        Out for delivery
+                                                                    </option>
+                                                                    <option value="Delivered" <?php if (htmlspecialchars($deliveryPointData->getPointStatus()) === 'Delivered') echo 'selected'; ?>>
+                                                                        Delivered
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="_id"
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                        <input type="hidden" name="type" value="EditParcel">
+                                                        <input type="hidden" name="_method" value="EDIT">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-danger">Save Changes
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Delete Parcel Dynamic Modal -->
+                                    <div class="modal fade"
+                                         id="deleteModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
+                                         tabindex="-1"
+                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
+                                        <!-- Modal content for Pending -->
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <!-- Your modal content for "Pending" -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="statusModalLabel">Delete Parcel</h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <span>
+                                                          Are you sure you want to delete the parcel item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>?
+                                                    </span>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form method="POST" action="/">
+                                                        <input type="hidden" name="_method" value="DELETE">
+                                                        <input type="hidden" name="id"
+                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                        <input type="hidden" name="type" value="Parcel">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-danger">Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <!-- ... -->
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <?php require_once('Views/partials/pagination.phtml') ?>
+                    </div>
+                </div>
+            </div>
 
                 <!-- Users Table -->
             <?php elseif ($_SESSION['user']['currentTable'] == "Users"): ?>

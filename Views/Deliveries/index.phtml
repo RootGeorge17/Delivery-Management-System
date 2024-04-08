@@ -9,7 +9,7 @@
     <div class="mt-2 m-4">
         <h1><?= $_SESSION['user']['username'] ?>'s Deliveries</h1>
         <div id="map"></div>
-        <script src="Views/map/map.js"></script>
+        <script src="Views/api/ajax/map.js"></script>
         <h4>Statistics:</h4>
 
         <div>
@@ -40,50 +40,38 @@
             </section>
 
             <?php if ($_SESSION['user']['currentTable'] == 'Deliveries'): ?>
-            <div>
-                <!-- Deliverers Table -->
-                <div class="table table-responsive">
-                    <table class="table border-dark table-bordered table-grey table-striped">
-                        <thead class="table-dark">
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Address1</th>
-                            <th scope="col">Address2</th>
-                            <th scope="col">Postcode</th>
-                            <th scope="col">Latitude / Longitude</th>
-                            <th scope="col">
-                                Status
-                                <i class="bi bi-info-circle"></i>
-                            </th>
-                            <th scope="col">Delivery Photos</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                <div class="container-fluid px-0">
+                    <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mx-0">
                         <?php foreach ($view->currentItems as $deliveryPointData) : ?>
-                            <tr>
-                                <th scope="row"><?= $deliveryPointData->getPointId() ?></th>
-                                <td><?= $deliveryPointData->getPointName() ?></td>
-                                <td><?= $deliveryPointData->getPointAddress1() ?></td>
-                                <td><?= $deliveryPointData->getPointAddress2() ?></td>
-                                <td><?= $deliveryPointData->getPointPostcode() ?></td>
-                                <td><?= htmlspecialchars($deliveryPointData->getPointLat()) . " / " . htmlspecialchars($deliveryPointData->getPointLng()) ?></td>
-                                <td><?= htmlspecialchars($deliveryPointData->getPointStatus()) ?></td>
-                                <?php if (htmlspecialchars($deliveryPointData->getPointDelPhoto())): ?>
-                                    <td><img src="images/<?= htmlspecialchars($deliveryPointData->getPointDelPhoto()) ?>" alt="no picture"/></td>
-
-                                <?php elseif (!htmlspecialchars($deliveryPointData->getPointDelPhoto())): ?>
-                                    <td>Only delivered parcels have pictures!</td>
-                                <?php endif; ?>
-                            </tr>
-                            <?php require_once('Views/partials/pagination.phtml') ?>
+                            <div class="col px-3 mb-4">
+                                <div class="delivery-point">
+                                    <div class="delivery-point-header">
+                                        <h5><?= $deliveryPointData->getPointName() ?></h5>
+                                        <button class="status">Show on Map</button>
+                                        <span class="status"><?= htmlspecialchars($deliveryPointData->getPointStatus()) ?></span>
+                                    </div>
+                                    <div class="delivery-point-body">
+                                        <p><strong>ID:</strong> <?= $deliveryPointData->getPointId() ?></p>
+                                        <p><strong>Address:</strong> <?= $deliveryPointData->getPointAddress1() ?>, <?= $deliveryPointData->getPointAddress2() ?>, <?= $deliveryPointData->getPointPostcode() ?></p>
+                                        <p><strong>Coordinates:</strong> <?= htmlspecialchars($deliveryPointData->getPointLat()) ?> / <?= htmlspecialchars($deliveryPointData->getPointLng()) ?></p>
+                                        <?php if (htmlspecialchars($deliveryPointData->getPointDelPhoto())) : ?>
+                                            <div class="delivery-photo">
+                                                <img src="images/<?= htmlspecialchars($deliveryPointData->getPointDelPhoto()) ?>" alt="Delivery Photo" class="img-fluid">
+                                            </div>
+                                        <?php else : ?>
+                                            <p>Only delivered parcels have pictures!</p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
                         <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <?php require_once('Views/partials/pagination.phtml') ?>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
     <?php endif; ?>
     <?php endif; ?>
 
