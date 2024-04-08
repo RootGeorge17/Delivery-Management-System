@@ -12,16 +12,27 @@ xhr.onload = function() {
     if (xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
         // Loop through the delivery points and add markers
-        console.log(data)
         data.forEach(point => {
             var marker = L.marker([point.lat, point.lng]).addTo(map);
             marker.bindPopup(`
-                <b>${point.id}</b><br>
-                <b>${point.name}</b><br>
-                ${point.address_1}<br>
-                ${point.address_2}<br>
-                ${point.postcode}
-            `);
+        <b>${point.id}</b><br>
+        <b>${point.name}</b><br>
+        ${point.address_1}<br>
+        ${point.address_2}<br>
+        ${point.postcode}
+        <div id="qrcode_${point.id}"></div>
+    `);
+
+            // Add event listener to open popup
+            marker.on('popupopen', function () {
+                // Generate QR code for the delivery record
+                var qr = new QRCode(document.getElementById(`qrcode_${point.id}`), {
+                    text: `/map/${point.id}`, // Change URL as per your backend route
+                    width: 100,
+                    height: 100
+                });
+                console.log(qr);
+            });
         });
     } else {
         console.error('Error fetching delivery points:', xhr.statusText);
@@ -49,3 +60,4 @@ if (navigator.geolocation) {
     // If geolocation is not supported by the browser, handle it accordingly
     console.error('Geolocation is not supported by this browser.');
 }
+

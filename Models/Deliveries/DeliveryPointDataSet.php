@@ -286,8 +286,9 @@ class DeliveryPointDataSet
     public function fetchAllDeliveryPointsJSON()
     {
         $sqlQuery = 'SELECT dp.*, du.username AS deliverer_username 
-                 FROM delivery_point dp
-                 LEFT JOIN delivery_users du ON dp.deliverer = du.id';
+             FROM delivery_point dp
+             LEFT JOIN delivery_users du ON dp.deliverer = du.id
+             WHERE dp.status <> 4';
 
         $statement = $this->dbHandle->prepare($sqlQuery);
         $statement->execute();
