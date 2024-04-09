@@ -11,6 +11,7 @@ xhr.open('GET', '/map');
 xhr.onload = function() {
     if (xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
+        console.log("Fetched parcels for Markers: \n ", data);
         // Loop through the delivery points and add markers
         data.forEach(point => {
             var marker = L.marker([point.lat, point.lng]).addTo(map);
@@ -31,7 +32,7 @@ xhr.onload = function() {
                     width: 100,
                     height: 100
                 });
-                console.log(qr);
+                console.log("Fetched parcels for QR Generation \n ", qr);
             });
         });
     } else {

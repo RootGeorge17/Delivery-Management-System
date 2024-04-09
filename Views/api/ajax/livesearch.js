@@ -41,14 +41,14 @@ checkboxes.forEach(function(checkbox) {
             }
         });
 
-        currentPage = 1;
-        liveSearch(keyword, conditions);
+        if (keyword.length > 0) {
+            currentPage = 1;
+            liveSearch(keyword, conditions);
+        }
     });
 });
 
 function liveSearch(keyword, conditions) {
-    console.log("running")
-    console.log(currentPage);
     const xhr = new XMLHttpRequest();
     const conditionsQuery = conditions.map((condition) => `condition[]=${condition}`).join('&');
     const url = `/livesearch?action=search-delivery&keyword=${keyword}&${conditionsQuery}&page=${currentPage}&resultsPerPage=${resultsPerPage}`;
@@ -58,6 +58,7 @@ function liveSearch(keyword, conditions) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 const result = JSON.parse(xhr.responseText);
+                console.log("Fetched parcels for Live Search: \n ", result);
 
                 // Clear previous results
                 resultsDropdown.innerHTML = '';

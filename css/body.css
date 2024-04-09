@@ -39,6 +39,30 @@
     height: 360px;
 }
 
+.hide {
+    display: none;
+}
+
+#loadMapButton {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove border */
+    color: white; /* White text */
+    padding: 15px 0; /* Padding */
+    text-align: center; /* Center text */
+    text-decoration: none; /* Remove underline */
+    display: block; /* Display as block to fill the width */
+    font-size: 16px; /* Font size */
+    margin: 4px 0; /* Margin */
+    cursor: pointer; /* Add cursor pointer */
+    border-radius: 10px; /* Rounded corners */
+    transition-duration: 0.4s; /* Smooth transition */
+    width: 100%; /* Set width to 100% of viewport width */
+}
+
+#loadMapButton:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
 .delivery-point {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
