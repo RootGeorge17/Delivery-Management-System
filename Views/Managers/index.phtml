@@ -209,7 +209,7 @@
                             <div class="delivery-point">
                                 <div class="delivery-point-header">
                                     <h5><?= $deliveryPointData->getPointName() ?></h5>
-                                    <button class="status">Show on Map</button>
+                                    <button id="show-on-<?= $deliveryPointData->getPointId() ?>" class="status show-on-map" data-lat="<?= $deliveryPointData->getPointLat() ?>" data-lng="<?= $deliveryPointData->getPointLng() ?>">Show on Map</button>
                                     <span class="status"><?= htmlspecialchars($deliveryPointData->getPointStatus()) ?></span>
                                 </div>
                                 <div class="delivery-point-body">

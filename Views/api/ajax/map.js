@@ -15,19 +15,19 @@ xhr.onload = function() {
         data.forEach(point => {
             var marker = L.marker([point.lat, point.lng]).addTo(map);
             marker.bindPopup(`
-        <b>${point.id}</b><br>
-        <b>${point.name}</b><br>
-        ${point.address_1}<br>
-        ${point.address_2}<br>
-        ${point.postcode}
-        <div id="qrcode_${point.id}"></div>
-    `);
+                <b>${point.id}</b><br>
+                <b>${point.name}</b><br>
+                ${point.address_1}<br>
+                ${point.address_2}<br>
+                ${point.postcode}
+                <div id="qrcode_${point.id}"></div>
+            `);
 
             // Add event listener to open popup
             marker.on('popupopen', function () {
                 // Generate QR code for the delivery record
                 var qr = new QRCode(document.getElementById(`qrcode_${point.id}`), {
-                    text: `/map/${point.id}`, // Change URL as per your backend route
+                    text: `/map/${point.id}`,
                     width: 100,
                     height: 100
                 });
@@ -61,3 +61,17 @@ if (navigator.geolocation) {
     console.error('Geolocation is not supported by this browser.');
 }
 
+// Function to add event listeners to "Show on Map" buttons
+function addShowOnMapEventListeners() {
+    var showOnMapButtons = document.querySelectorAll('.show-on-map');
+    showOnMapButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var lat = parseFloat(this.dataset.lat);
+            var lng = parseFloat(this.dataset.lng);
+            map.setView([lat, lng], 16); // Zoom level 16 for better view
+        });
+    });
+}
+
+// Call the function after the HTML content has finished loading
+document.addEventListener('DOMContentLoaded', addShowOnMapEventListeners);
