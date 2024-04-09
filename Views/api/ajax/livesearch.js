@@ -7,7 +7,6 @@ function setMaxWidth() {
     document.getElementById('resultsDropdown').style.width = `${searchInputWidth}px`;
 }
 
-// Call setMaxWidth initially to set the initial max width
 setMaxWidth();
 
 const searchInputDeliveries = document.getElementById('searchInputDeliveries');
@@ -15,6 +14,8 @@ const resultsDropdown = document.getElementById('resultsDropdown');
 const filterCheckboxes = document.querySelectorAll('.form-check-input');
 const checkboxes = document.querySelectorAll("input[type=checkbox]");
 let keyword = '';
+let currentPage = 1;
+const resultsPerPage = 5;
 
 searchInputDeliveries.addEventListener('keyup', function() {
     const conditions = [];
@@ -26,6 +27,7 @@ searchInputDeliveries.addEventListener('keyup', function() {
     });
 
     keyword = this.value;
+    currentPage = 1;
     liveSearch(this.value, conditions);
 });
 
@@ -39,28 +41,56 @@ checkboxes.forEach(function(checkbox) {
             }
         });
 
+        currentPage = 1;
         liveSearch(keyword, conditions);
     });
 });
 
 function liveSearch(keyword, conditions) {
+    console.log("running")
+    console.log(currentPage);
     const xhr = new XMLHttpRequest();
     const conditionsQuery = conditions.map((condition) => `condition[]=${condition}`).join('&');
-    const url = `/livesearch?action=search-delivery&keyword=${keyword}&${conditionsQuery}`;
+    const url = `/livesearch?action=search-delivery&keyword=${keyword}&${conditionsQuery}&page=${currentPage}&resultsPerPage=${resultsPerPage}`;
     xhr.open('GET', url);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 const result = JSON.parse(xhr.responseText);
-                console.log(result[0]);
 
                 // Clear previous results
                 resultsDropdown.innerHTML = '';
 
+                // Add pagination controls
+                const pagination = document.createElement('div');
+                pagination.classList.add('pagination');
+
+                const prevButton = document.createElement('button');
+                prevButton.textContent = 'Previous';
+                prevButton.disabled = currentPage === 1;
+                prevButton.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent form submission
+                    currentPage--;
+                    liveSearch(keyword, conditions);
+                });
+
+                const nextButton = document.createElement('button');
+                nextButton.textContent = 'Next';
+                nextButton.disabled = result.length < resultsPerPage;
+                nextButton.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent form submission
+                    currentPage++;
+                    liveSearch(keyword, conditions);
+                });
+
+                pagination.appendChild(prevButton);
+                pagination.appendChild(nextButton);
+                resultsDropdown.appendChild(pagination);
+
                 if (result.length > 0) {
-                    // Add an option for each result, limited to 5
-                    for (let i = 0; i < Math.min(result.length, 5); i++) {
+                    // Add an option for each result, limited to the resultsPerPage value
+                    for (let i = 0; i < result.length; i++) {
                         const listItem = document.createElement('li');
                         listItem.innerHTML = `<a class="dropdown-item" href="/?search=${keyword}">ID: ${result[i].id}, Name: ${result[i].name}, Address: ${result[i].address_1} ${result[i].address_2}, Postcode: ${result[i].postcode}</a>`;
                         resultsDropdown.appendChild(listItem);

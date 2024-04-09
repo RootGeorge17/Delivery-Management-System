@@ -241,8 +241,11 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
-    public function searchDeliveryPointsLive($conditions, $searchTerm)
+    public function searchDeliveryPointsLive($conditions, $searchTerm, $page, $resultsPerPage = 5)
     {
+        // Calculate the offset for the current page
+        $offset = ($page - 1) * $resultsPerPage;
+
         // Initialize the SQL query and parameters array
         $sqlQuery = 'SELECT * FROM delivery_point';
         $params = [];
@@ -267,6 +270,9 @@ class DeliveryPointDataSet
                 }
             }
         }
+
+        // Add the LIMIT and OFFSET clauses to the SQL query with literal values
+        $sqlQuery .= " LIMIT $resultsPerPage OFFSET $offset";
 
         // Prepare and execute the SQL query
         $statement = $this->dbHandle->prepare($sqlQuery);

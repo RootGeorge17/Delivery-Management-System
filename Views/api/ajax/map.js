@@ -53,11 +53,10 @@ if (navigator.geolocation) {
         // Set the map view to the user's geolocation
         map.setView([lat, lon], 13);
     }, function(error) {
-        // Handle errors when getting user's location
         console.error('Error getting user location:', error);
     });
 } else {
-    // If geolocation is not supported by the browser, handle it accordingly
+    // If geolocation is not supported by the browser
     console.error('Geolocation is not supported by this browser.');
 }
 
@@ -68,7 +67,7 @@ function addShowOnMapEventListeners() {
         button.addEventListener('click', function() {
             var lat = parseFloat(this.dataset.lat);
             var lng = parseFloat(this.dataset.lng);
-            map.setView([lat, lng], 16); // Zoom level 16 for better view
+            map.setView([lat, lng], 16);
         });
     });
 }
