@@ -6,11 +6,12 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Fetch delivery points data from the server
-var xhr = new XMLHttpRequest();
-xhr.open('GET', '/map');
-xhr.onload = function() {
-    if (xhr.status === 200) {
-        var data = JSON.parse(xhr.responseText);
+const url = '/map';
+ajax.get(url, (error, response) => {
+    if (error) {
+        console.error('Error fetching delivery points:', error);
+    } else {
+        const data = JSON.parse(response);
         console.log("Fetched parcels for Markers: \n ", data);
         // Loop through the delivery points and add markers
         data.forEach(point => {
@@ -35,14 +36,8 @@ xhr.onload = function() {
                 console.log("Fetched parcels for QR Generation \n ", qr);
             });
         });
-    } else {
-        console.error('Error fetching delivery points:', xhr.statusText);
     }
-};
-xhr.onerror = function() {
-    console.error('Error fetching delivery points:', xhr.statusText);
-};
-xhr.send();
+});
 
 if (navigator.geolocation) {
     // Get the user's current position

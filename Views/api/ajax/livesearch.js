@@ -16,6 +16,7 @@ const checkboxes = document.querySelectorAll("input[type=checkbox]");
 let keyword = '';
 let currentPage = 1;
 const resultsPerPage = 5;
+const ajax = new window.Ajax(); // Create an instance of the Ajax class
 
 searchInputDeliveries.addEventListener('keyup', function() {
     const conditions = [];
@@ -49,64 +50,64 @@ checkboxes.forEach(function(checkbox) {
 });
 
 function liveSearch(keyword, conditions) {
-    const xhr = new XMLHttpRequest();
     const conditionsQuery = conditions.map((condition) => `condition[]=${condition}`).join('&');
     const url = `/livesearch?action=search-delivery&keyword=${keyword}&${conditionsQuery}&page=${currentPage}&resultsPerPage=${resultsPerPage}`;
-    xhr.open('GET', url);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                const result = JSON.parse(xhr.responseText);
-                console.log("Fetched parcels for Live Search: \n ", result);
+    console.log(url);
 
-                // Clear previous results
-                resultsDropdown.innerHTML = '';
+    ajax.get(url, (error, response) => {
+        if (error) {
+            console.error('Error:', error);
+        } else {
+            const result = JSON.parse(response);
+            console.log("Fetched parcels for Live Search: \n ", result);
+            var nextPage = currentPage + 1;
+            var lastPage = currentPage + - 1;
 
-                // Add pagination controls
-                const pagination = document.createElement('div');
-                pagination.classList.add('pagination');
+            // Clear previous results
+            resultsDropdown.innerHTML = '';
 
-                const prevButton = document.createElement('button');
-                prevButton.textContent = 'Previous';
-                prevButton.disabled = currentPage === 1;
-                prevButton.addEventListener('click', (event) => {
-                    event.preventDefault(); // Prevent form submission
-                    currentPage--;
-                    liveSearch(keyword, conditions);
-                });
+            // Add pagination controls
+            const pagination = document.createElement('div');
+            pagination.classList.add('pagination', 'd-flex', 'justify-content-center'); // Add Bootstrap classes for flexbox and centering
 
-                const nextButton = document.createElement('button');
-                nextButton.textContent = 'Next';
-                nextButton.disabled = result.length < resultsPerPage;
-                nextButton.addEventListener('click', (event) => {
-                    event.preventDefault(); // Prevent form submission
-                    currentPage++;
-                    liveSearch(keyword, conditions);
-                });
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous (Page: ' + lastPage + ')';
+            prevButton.disabled = currentPage === 1;
+            prevButton.classList.add('w-100');
+            prevButton.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent form submission
+                currentPage--;
+                liveSearch(keyword, conditions);
+            });
 
-                pagination.appendChild(prevButton);
-                pagination.appendChild(nextButton);
-                resultsDropdown.appendChild(pagination);
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next (Page: ' + nextPage + ')';
+            nextButton.disabled = result.length < resultsPerPage;
+            nextButton.classList.add('w-100');
+            nextButton.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent form submission
+                currentPage++;
+                liveSearch(keyword, conditions);
+            });
 
-                if (result.length > 0) {
-                    // Add an option for each result, limited to the resultsPerPage value
-                    for (let i = 0; i < result.length; i++) {
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `<a class="dropdown-item" href="/?search=${keyword}">ID: ${result[i].id}, Name: ${result[i].name}, Address: ${result[i].address_1} ${result[i].address_2}, Postcode: ${result[i].postcode}</a>`;
-                        resultsDropdown.appendChild(listItem);
-                    }
+            pagination.appendChild(prevButton);
+            pagination.appendChild(nextButton);
+            resultsDropdown.appendChild(pagination);
 
-                    // Show the dropdown
-                    resultsDropdown.style.display = 'block';
-                } else {
-                    // If no results, hide the dropdown
-                    resultsDropdown.style.display = 'none';
+            if (result.length > 0) {
+                // Add an option for each result, limited to the resultsPerPage value
+                for (let i = 0; i < result.length; i++) {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<a class="dropdown-item" href="/?search=${keyword}">ID: ${result[i].id}, Name: ${result[i].name}, Address: ${result[i].address_1} ${result[i].address_2}, Postcode: ${result[i].postcode}</a>`;
+                    resultsDropdown.appendChild(listItem);
                 }
+
+                // Show the dropdown
+                resultsDropdown.style.display = 'block';
             } else {
-                console.error('Error:', xhr.status);
+                // If no results, hide the dropdown
+                resultsDropdown.style.display = 'none';
             }
         }
-    };
-    xhr.send();
+    });
 }
