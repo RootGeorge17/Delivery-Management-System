@@ -6,9 +6,9 @@ function addShowOnMapEventListeners() {
             var lat = parseFloat(this.dataset.lat);
             var lng = parseFloat(this.dataset.lng);
             try {
-                map.setView([lat, lng], 16);
+                mapView.DoSetView([lat, lng], 15);
             } catch (e) {
-                console.log("Open the map!")
+                console.log(e + "Open the map!")
             }
 
         });

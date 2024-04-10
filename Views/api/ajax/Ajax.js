@@ -34,5 +34,3 @@ class Ajax {
         this.xhr.send(JSON.stringify(data));
     }
 }
-
-window.Ajax = Ajax;

@@ -4,7 +4,7 @@
  * Class DeliveryUserData
  * Represents user data related to delivery operations.
  */
-class DeliveryUserData
+class DeliveryUserData implements JsonSerializable
 {
     /**
      * @var int The user ID.
@@ -32,6 +32,16 @@ class DeliveryUserData
         $this->username = $dbRow['username'];
         $this->password = $dbRow['password'];
         $this->usertype = $dbRow['usertype'];
+    }
+
+    public function jsonSerialize() : array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'address_1' => $this->password,
+            'address_2' => $this->usertype,
+        ];
     }
 
     /**
