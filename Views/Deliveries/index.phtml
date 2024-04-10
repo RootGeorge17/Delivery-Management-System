@@ -17,26 +17,27 @@
             <!-- Statistics Section -->
             <section class="table table-responsive">
                 <form method="POST" action="/">
-                    <table class="table border-dark table-bordered table-grey table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Total Deliveries</span>
-                                    <button type="submit" name="show_deliveries" value="show_deliveries"
-                                            class="btn btn-sm btn-danger">
-                                        Show All Deliveries
-                                    </button>
-                                </div>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><?= count($view->totalDeliveries) ?></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table border-dark table-bordered table-grey table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>Total Deliveries</span>
+                                        <button type="submit" name="show_deliveries" value="show_deliveries" class="btn btn-sm btn-danger">
+                                            Show All Deliveries
+                                        </button>
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><?= count($view->totalDeliveries) ?></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </form>
             </section>
 

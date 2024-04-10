@@ -3,7 +3,7 @@
  * Class DeliveryPointData
  * Represents delivery point data fetched from the database.
  */
-class DeliveryPointData
+class DeliveryPointData implements JsonSerializable
 {
     protected $id, $name, $address_1, $address_2, $postcode, $deliverer, $lat, $lng, $status, $del_photo;
     protected $delivererUsername;
@@ -26,6 +26,23 @@ class DeliveryPointData
         $this->lng = $dbRow['lng'];
         $this->status = $dbRow['status'];
         $this->del_photo = $dbRow['del_photo'];
+    }
+
+    public function jsonSerialize() : array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'address_1' => $this->address_1,
+            'address_2' => $this->address_2,
+            'postcode' => $this->postcode,
+            'deliverer' => $this->deliverer,
+            'delivererUsername' => $this->delivererUsername,
+            'lat' => $this->lat,
+            'lng' => $this->lng,
+            'status' => $this->getPointStatus(),
+            'del_photo' => $this->del_photo,
+        ];
     }
 
     // Getter methods for various delivery point attributes

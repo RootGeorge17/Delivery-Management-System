@@ -200,48 +200,7 @@ class DeliveryPointDataSet
      * @param string $searchTerm The term to search for.
      * @return array An array of DeliveryPointData objects.
      */
-    public function searchDeliveryPoints($conditions, $searchTerm)
-    {
-        // Initialize the SQL query and parameters array
-        $sqlQuery = 'SELECT * FROM delivery_point';
-        $params = [];
-
-        if (!empty($conditions) && !empty($searchTerm)) {
-            $sqlQuery .= ' WHERE';
-
-            // Loop through conditions
-            foreach ($conditions as $key => $condition) {
-                // Append condition to SQL query
-                if ($condition === 'id') {
-                    $sqlQuery .= " $condition = ?";
-                    $params[] = $searchTerm;
-                } else {
-                    $sqlQuery .= " $condition LIKE ?";
-                    $params[] = "%$searchTerm%";
-                }
-
-                // Append OR between conditions except for the last one
-                if ($key !== array_key_last($conditions)) {
-                    $sqlQuery .= ' OR';
-                }
-            }
-        }
-
-        // Prepare and execute the SQL query
-        $statement = $this->dbHandle->prepare($sqlQuery);
-        $statement->execute($params);
-
-        // Fetch the results
-        $dataSet = [];
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $dataSet[] = new DeliveryPointData($row);
-        }
-
-        // Return JSON-encoded result
-        return $dataSet;
-    }
-
-    public function searchDeliveryPointsLive($conditions, $searchTerm, $page, $resultsPerPage = 5)
+    public function searchDeliveryPoints($conditions, $searchTerm, $page, $resultsPerPage)
     {
         // Calculate the offset for the current page
         $offset = ($page - 1) * $resultsPerPage;
@@ -281,29 +240,30 @@ class DeliveryPointDataSet
         // Fetch the results
         $dataSet = [];
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $dataSet[] = $row;
+            $dataSet[] = new DeliveryPointData($row);
         }
 
-        // Return JSON-encoded result
-        return json_encode($dataSet);
+        return $dataSet;
     }
 
-    // DeliveryPointDataSet.php
-    public function fetchAllDeliveryPointsJSON()
+    public function fetchAllDeliveryPointsForMap()
     {
         $sqlQuery = 'SELECT dp.*, du.username AS deliverer_username 
              FROM delivery_point dp
              LEFT JOIN delivery_users du ON dp.deliverer = du.id
-             WHERE dp.status <> 4';
+             WHERE dp.status <> 4 
+             ORDER BY dp.id ASC
+             LIMIT 100';
 
         $statement = $this->dbHandle->prepare($sqlQuery);
         $statement->execute();
 
+        // Fetch the results
         $dataSet = [];
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $dataSet[] = $row;
+            $dataSet[] = new DeliveryPointData($row);
         }
 
-        return json_encode($dataSet);
+        return $dataSet;
     }
 }

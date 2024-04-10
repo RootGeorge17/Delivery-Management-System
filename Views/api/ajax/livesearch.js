@@ -102,11 +102,14 @@ function liveSearch(keyword, conditions) {
                     resultsDropdown.appendChild(listItem);
                 }
 
-                // Show the dropdown
                 resultsDropdown.style.display = 'block';
-            } else {
+            }
+
+            if (result.length === 0) {
                 // If no results, hide the dropdown
-                resultsDropdown.style.display = 'none';
+                const error = document.createElement('p');
+                error.innerHTML = `No Results`;
+                resultsDropdown.appendChild(error);
             }
         }
     });

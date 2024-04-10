@@ -5,7 +5,12 @@ function addShowOnMapEventListeners() {
         button.addEventListener('click', function() {
             var lat = parseFloat(this.dataset.lat);
             var lng = parseFloat(this.dataset.lng);
-            map.setView([lat, lng], 16);
+            try {
+                map.setView([lat, lng], 16);
+            } catch (e) {
+                console.log("Open the map!")
+            }
+
         });
     });
 }

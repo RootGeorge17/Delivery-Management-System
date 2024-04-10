@@ -2,6 +2,6 @@
 require_once('Models/Deliveries/DeliveryPointDataSet.php');
 
 $deliveryPointDataSet = new DeliveryPointDataSet();
-$deliveryPoints = $deliveryPointDataSet->fetchAllDeliveryPointsJSON();
+$deliveryPoints = $deliveryPointDataSet->fetchAllDeliveryPointsForMap();
 
-echo $deliveryPoints;
+echo json_encode($deliveryPoints);

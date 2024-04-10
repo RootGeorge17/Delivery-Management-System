@@ -28,175 +28,175 @@
             <!-- Statistics Section -->
             <section id="statistics-section">
                 <h4>Statistics:</h4>
-                <div class="table-responsive">
-                    <table class="table border-dark table-bordered table-grey table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Total Deliveries</span>
-                                    <div class="btn-group btn-group-sm mt-2">
-                                        <form method="POST" action="/">
-                                            <button type="submit" name="show_deliveries" value="show"
-                                                    class="btn btn-sm btn-danger mx-1">
-                                                Show All Parcels
-                                            </button>
-                                        </form>
-                                        <button class="btn-primary btn-sm mx-1" data-bs-toggle="modal"
-                                                data-bs-target="#createParcel">
-                                            Create new Parcel
-                                        </button>
-                                    </div>
-                                </div>
-                            </th>
-                            <th scope="col">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Total Deliverers</span>
-                                    <div class="btn-group btn-group-sm mt-2">
-                                        <form method="POST" action="/users">
-                                            <button type="submit" name="show_deliverers" value="show"
-                                                    class="btn btn-sm btn-danger mx-1">
-                                                Show All Deliverers
-                                            </button>
-                                        </form>
-                                        <button class="btn-primary btn-sm mx-1" data-bs-toggle="modal"
-                                                data-bs-target="#createUser">
-                                            Create new User
-                                        </button>
-                                    </div>
-                                </div>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><?= count($view->totalDeliveries) ?></td>
-                            <td><?= count($view->totalUsers) ?></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Create User Dynamic Modal -->
-                <div class="modal fade" id="createUser" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="statusModalLabel">Create Deliverer</h5>
-                            </div>
-                            <form method="POST" action="/users">
-                                <div class="modal-body">
-                                    <span>Create a new deliverer below:</span>
-                                    <div class="form-group">
-                                        <label for="username">Username:</label>
-                                        <input type="text" id="username" name="username" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Password:</label>
-                                        <input type="text" id="password" name="password" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="userType">User Type:</label>
-                                        <input type="text" id="userType" name="userType" class="form-control"
-                                               placeholder="Deliverer" disabled>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="hidden" name="_method" value="CREATE">
-                                    <input type="hidden" name="type" value="Deliverer">
-                                    <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close
-                                    </button>
-                                    <button type="submit" class="btn btn-danger">Create Deliverer
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Create Parcel Dynamic Modal -->
-                <div class="modal fade" id="createParcel" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="statusModalLabel">Create Parcel</h5>
-                            </div>
-                            <form method="POST" action="/users">
-                                <div class="modal-body">
-                                    <h5>Create Parcel</h5>
-                                    <div class="form-group">
-                                        <label for="pointName">* Name:</label>
-                                        <input type="text" id="pointName" name="name"
-                                               class="form-control"
-                                               required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="address1">* Address Line 1:</label>
-                                        <input type="text" id="address1" name="address1"
-                                               class="form-control"
-                                               required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="address2">Address Line 2:</label>
-                                        <input type="text" id="address2" name="address2"
-                                               class="form-control"
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="postcode">* Postcode:</label>
-                                        <input type="text" id="postcode" name="postcode"
-                                               class="form-control"
-                                               required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="latitude">* Latitude:</label>
-                                        <input type="text" id="latitude" name="latitude"
-                                               class="form-control"
-                                               required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="longitude">* Longitude:</label>
-                                        <input type="text" id="longitude" name="longitude"
-                                               class="form-control"
-                                               required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="deliverer">* Deliverer Username:</label>
-                                        <input type="text" id="deliverer" name="deliverer"
-                                               class="form-control"
-                                               required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="status">* Status:</label>
-                                        <div class="input-group">
-                                            <select id="status" name="status" class="form-select"
-                                                    required>
-                                                <option value="Pending">
-                                                    Pending
-                                                </option>
-                                                <option value="Shipped">
-                                                    Shipped
-                                                </option>
-                                                <option value="Out for delivery">
-                                                    Out for delivery
-                                                </option>
-                                                <option value="Delivered">
-                                                    Delivered
-                                                </option>
-                                            </select>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table border-dark table-bordered table-grey table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Total Deliveries</span>
+                                            <div class="btn-group btn-group-sm mt-2">
+                                                <form method="POST" action="/">
+                                                    <button type="submit" name="show_deliveries" value="show" class="btn btn-sm btn-danger mx-1">
+                                                        Show All Parcels
+                                                    </button>
+                                                </form>
+                                                <button class="btn-primary btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#createParcel">
+                                                    Create new Parcel
+                                                </button>
+                                            </div>
                                         </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Total Deliverers</span>
+                                            <div class="btn-group btn-group-sm mt-2">
+                                                <form method="POST" action="/users">
+                                                    <button type="submit" name="show_deliverers" value="show" class="btn btn-sm btn-danger mx-1">
+                                                        Show All Deliverers
+                                                    </button>
+                                                </form>
+                                                <button class="btn-primary btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#createUser">
+                                                    Create new User
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><?= count($view->totalDeliveries) ?></td>
+                                    <td><?= count($view->totalUsers) ?></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Create User Dynamic Modal -->
+                        <div class="modal fade" id="createUser" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="statusModalLabel">Create Deliverer</h5>
                                     </div>
+                                    <form method="POST" action="/users">
+                                        <div class="modal-body">
+                                            <span>Create a new deliverer below:</span>
+                                            <div class="form-group">
+                                                <label for="username">Username:</label>
+                                                <input type="text" id="username" name="username" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password">Password:</label>
+                                                <input type="text" id="password" name="password" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="userType">User Type:</label>
+                                                <input type="text" id="userType" name="userType" class="form-control"
+                                                       placeholder="Deliverer" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="hidden" name="_method" value="CREATE">
+                                            <input type="hidden" name="type" value="Deliverer">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close
+                                            </button>
+                                            <button type="submit" class="btn btn-danger">Create Deliverer
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="modal-footer">
-                                    <input type="hidden" name="_method" value="CREATE">
-                                    <input type="hidden" name="type" value="Parcel">
-                                    <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close
-                                    </button>
-                                    <button type="submit" class="btn btn-danger">Create Deliverer
-                                    </button>
+                            </div>
+                        </div>
+
+                        <!-- Create Parcel Dynamic Modal -->
+                        <div class="modal fade" id="createParcel" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="statusModalLabel">Create Parcel</h5>
+                                    </div>
+                                    <form method="POST" action="/users">
+                                        <div class="modal-body">
+                                            <h5>Create Parcel</h5>
+                                            <div class="form-group">
+                                                <label for="pointName">* Name:</label>
+                                                <input type="text" id="pointName" name="name"
+                                                       class="form-control"
+                                                       required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address1">* Address Line 1:</label>
+                                                <input type="text" id="address1" name="address1"
+                                                       class="form-control"
+                                                       required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address2">Address Line 2:</label>
+                                                <input type="text" id="address2" name="address2"
+                                                       class="form-control"
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="postcode">* Postcode:</label>
+                                                <input type="text" id="postcode" name="postcode"
+                                                       class="form-control"
+                                                       required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="latitude">* Latitude:</label>
+                                                <input type="text" id="latitude" name="latitude"
+                                                       class="form-control"
+                                                       required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="longitude">* Longitude:</label>
+                                                <input type="text" id="longitude" name="longitude"
+                                                       class="form-control"
+                                                       required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="deliverer">* Deliverer Username:</label>
+                                                <input type="text" id="deliverer" name="deliverer"
+                                                       class="form-control"
+                                                       required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="status">* Status:</label>
+                                                <div class="input-group">
+                                                    <select id="status" name="status" class="form-select"
+                                                            required>
+                                                        <option value="Pending">
+                                                            Pending
+                                                        </option>
+                                                        <option value="Shipped">
+                                                            Shipped
+                                                        </option>
+                                                        <option value="Out for delivery">
+                                                            Out for delivery
+                                                        </option>
+                                                        <option value="Delivered">
+                                                            Delivered
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="hidden" name="_method" value="CREATE">
+                                            <input type="hidden" name="type" value="Parcel">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close
+                                            </button>
+                                            <button type="submit" class="btn btn-danger">Create Deliverer
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
