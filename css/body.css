@@ -102,3 +102,7 @@
     text-align: center;
 }
 
+.leaflet-popup-content-wrapper {
+    min-width: 140px;
+}
+

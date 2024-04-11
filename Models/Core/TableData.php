@@ -83,7 +83,7 @@ class TableData
         $deliveryPointDataSet = new DeliveryPointDataSet();
         $deliveryUserDataSet = new DeliveryUserDataSet();
         $this->currentPage = $currentPage;
-        $this->totalDeliveries = $deliveryPointDataSet->searchDeliveryPoints($conditions, $searchTerm);
+        $this->totalDeliveries = $deliveryPointDataSet->searchDeliveryPoints($conditions, $searchTerm,1, 10);
         $this->totalUsers = $deliveryUserDataSet->fetchAllDeliveryUsers();
         $this->currentPage = $currentPage;
 

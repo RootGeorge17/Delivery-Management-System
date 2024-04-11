@@ -51,7 +51,7 @@ class MapView extends Ajax {
             const qr = new QRCode(document.getElementById(`qrcode_${point.id}`), {
                 text: `/map/${point.id}`,
                 width: 100,
-                height: 100
+                height: 100,
             });
             console.log("Fetched parcels for QR Generation \n ", qr);
         });
