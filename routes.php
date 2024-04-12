@@ -4,6 +4,8 @@ $router->get('/login', 'Controllers/Authentication/index.php');
 $router->post('/login', 'Controllers/Authentication/store.php');
 $router->get('/signout', 'Controllers/Authentication/destroy.php');
 
+$router->get('/token', 'Controllers/AjaxController/token.php');
+
 // Define routes based on user type if the user is logged in and has a user type set
 if (authenticated()) {
     // Routes for Manager role

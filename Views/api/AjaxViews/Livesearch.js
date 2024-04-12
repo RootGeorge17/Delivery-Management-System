@@ -52,7 +52,8 @@ class Livesearch extends Ajax {
 
     liveSearch(keyword, conditions) {
         const conditionsQuery = conditions.map(condition => `condition[]=${condition}`).join('&');
-        const url = `/livesearch?action=search-delivery&keyword=${keyword}&${conditionsQuery}&page=${this.currentPage}&resultsPerPage=${this.resultsPerPage}`;
+        const baseUrl = `/livesearch?action=search-delivery&keyword=${keyword}&${conditionsQuery}&page=${this.currentPage}&resultsPerPage=${this.resultsPerPage}`;
+        const url = this.addTokenToUrl(baseUrl);
         console.log(url);
 
         this.get(url, (error, response) => {

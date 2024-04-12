@@ -22,18 +22,23 @@ class MapView extends Ajax {
     }
 
     fetchDeliveryPoints() {
-        const url = '/map';
-        this.get(url, (error, response) => {
-            if (error) {
-                console.error('Error fetching delivery points:', error);
-            } else {
-                const data = JSON.parse(response);
-                console.log("Fetched parcels for Markers: \n ", data);
-                data.forEach(point => {
-                    this.addMarker(point);
-                });
-            }
-        });
+        setTimeout(() => {
+            const baseUrl = `/map`;
+            const url = this.addTokenToUrl(baseUrl);
+            console.log(url);
+
+            this.get(url, (error, response) => {
+                if (error) {
+                    console.error('Error fetching delivery points:', error);
+                } else {
+                    const data = JSON.parse(response);
+                    console.log("Fetched parcels for Markers: \n ", data);
+                    data.forEach(point => {
+                        this.addMarker(point);
+                    });
+                }
+            });
+        }, "1");
     }
 
     addMarker(point) {

@@ -20,6 +20,10 @@ function login($id, $username, $usertypeid, $usertypename)
 {
     $loggedIn = true;
 
+    // Generate a new token and set the expiration time (e.g., 1 hour from now)
+    $token = bin2hex(random_bytes(20));
+    $expirationTime = time() + 3600; // 1 hour
+
     $_SESSION['user'] = [
         'id' => $id,
         'username' => $username,
@@ -27,7 +31,9 @@ function login($id, $username, $usertypeid, $usertypename)
         'usertypename' => $usertypename,
         'loggedIn' => $loggedIn,
         'currentTable' => null,
-        'searched' => false
+        'searched' => false,
+        'ajaxToken' => $token,
+        'ajaxTokenExpiration' => $expirationTime
     ];
 
     session_regenerate_id(true);
