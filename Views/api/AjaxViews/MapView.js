@@ -10,7 +10,7 @@ class MapView extends Ajax {
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 15,
-            minZoom: 7,
+            minZoom: 6,
         }).addTo(this.map);
 
         this.fetchDeliveryPoints();
