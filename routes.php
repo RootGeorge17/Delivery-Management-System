@@ -28,8 +28,9 @@ if (authenticated()) {
         $router->search('/users', 'Controllers/Managers/search.php');;
         $router->filterAndOrder('/', 'Controllers/Managers/search.php');;
 
-        $router->get('/livesearch', 'Controllers/Managers/livesearch.php');
-        $router->get('/map', 'Controllers/Map/DeliveryPointsController.php');
+        // AJAX CONTROLLERS
+        $router->get('/livesearch', 'Controllers/AjaxController/livesearch.php');
+        $router->get('/map', 'Controllers/AjaxController/deliveryPoints.php');
     } elseif ($_SESSION['user']['usertypename'] == "Deliverer") {
         // Routes for Deliverer role
         $router->get('/', 'Controllers/Deliverers/index.php');
@@ -37,8 +38,10 @@ if (authenticated()) {
         $router->search('/', 'Controllers/Deliverers/search.php');;
         $router->filterAndOrder('/', 'Controllers/Managers/search.php');;
 
-        $router->get('/livesearch', 'Controllers/Managers/livesearch.php');
-        $router->get('/map', 'Controllers/Map/DeliveryPointsController.php');
+        // AJAX CONTROLLERS
+        $router->get('/livesearch', 'Controllers/AjaxController/livesearch.php');
+        $router->get('/map', 'Controllers/AjaxController/deliveryPoints.php');
+        $router->get('/update', 'Controllers/AjaxController/updateDeliveryStatus.php');
     }
 } else {
     $router->get('/', 'Controllers/Authentication/index.php');

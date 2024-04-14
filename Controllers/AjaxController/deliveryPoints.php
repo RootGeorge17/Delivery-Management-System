@@ -3,6 +3,7 @@ require_once('Models/Deliveries/DeliveryPointDataSet.php');
 
 $token = $_GET['token'];
 
+// My router already checks for if user is logged in for extra security
 if (isset($_SESSION['user']['ajaxToken'])) {
     $userToken = $_SESSION['user']['ajaxToken'];
 

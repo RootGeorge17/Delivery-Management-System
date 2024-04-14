@@ -82,6 +82,27 @@ class DeliveryPointDataSet
     }
 
     /**
+     * Update the status of a delivery point.
+     *
+     * @param int $id The ID of the delivery point.
+     * @param int $status The new status.
+     */
+    public function getDeliveryPointStatus($id)
+    {
+        $sqlQuery = 'SELECT status
+                    FROM delivery_point
+                    WHERE id = :id';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute([
+            ':id' => $id
+        ]); // execute the PDO statement
+
+        $status = $statement->fetch(PDO::FETCH_ASSOC);
+        return $status;
+    }
+
+    /**
      * Delete a delivery point by ID.
      *
      * @param int $id The ID of the delivery point.

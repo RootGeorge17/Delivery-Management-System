@@ -6,6 +6,7 @@ $page = $_GET['page'];
 $keyword = $_GET['keyword'];
 $token = $_GET['token'];
 
+// My router already checks for if user is logged in for extra security
 if (isset($_SESSION['user']['ajaxToken'])) {
     $userToken = $_SESSION['user']['ajaxToken'];
 
