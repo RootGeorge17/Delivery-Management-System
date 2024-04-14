@@ -29,7 +29,7 @@ class MapView extends Ajax {
 
             this.get(url, (error, response) => {
                 if (error) {
-                    console.error('Error fetching delivery points:', error);
+                    this.renderAlert('Error fetching delivery points:', error);
                 } else {
                     const data = JSON.parse(response);
                     console.log("Fetched parcels for Markers: \n ", data);
@@ -70,11 +70,11 @@ class MapView extends Ajax {
                     this.map.setView([latitude, longitude], 13);
                 },
                 (error) => {
-                    console.error('Error getting user location:', error);
+                    this.renderAlert('Error getting user location. Follow this tutorial to allow your location to be shared: https://support.google.com/chrome/answer/142065?hl=en&co=GENIE.Platform%3DDesktop');
                 }
             );
         } else {
-            console.error('Geolocation is not supported by this browser.');
+            this.renderAlert('Geolocation is not supported by this browser.');
         }
     }
 }

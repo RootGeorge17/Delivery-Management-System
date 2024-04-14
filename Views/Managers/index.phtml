@@ -217,7 +217,6 @@
                                     <p><strong>ID:</strong> <?= $deliveryPointData->getPointId() ?></p>
                                     <p><strong>Address:</strong> <?= $deliveryPointData->getPointAddress1() ?>, <?= $deliveryPointData->getPointAddress2() ?>, <?= $deliveryPointData->getPointPostcode() ?></p>
                                     <p><strong>Coordinates:</strong> <?= htmlspecialchars($deliveryPointData->getPointLat()) ?> / <?= htmlspecialchars($deliveryPointData->getPointLng()) ?></p>
-                                    <p><strong>Deliverer:</strong> <?= htmlspecialchars($deliveryPointData->getPointDelivererUsername()) ?></p>
                                     <?php if (htmlspecialchars($deliveryPointData->getPointDelPhoto())) : ?>
                                         <div class="delivery-photo">
                                             <img src="images/<?= htmlspecialchars($deliveryPointData->getPointDelPhoto()) ?>" alt="Delivery Photo" class="img-fluid">

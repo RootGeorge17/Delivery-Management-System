@@ -8,9 +8,19 @@ function addShowOnMapEventListeners() {
             try {
                 mapView.DoSetView([lat, lng], 15);
             } catch (e) {
-                console.log(e + "Open the map!")
-            }
+                const alertDiv = document.querySelector('.alert.alert-danger');
+                if (alertDiv) {
+                    const li = alertDiv.querySelector('li');
+                    if (li) {
+                        li.textContent = "Open the map first!";
+                        alertDiv.classList.remove('hide');
 
+                        setTimeout(() => {
+                            alertDiv.classList.add('hide');
+                        }, 5000);
+                    }
+                }
+            }
         });
     });
 }

@@ -1,5 +1,6 @@
-class Ajax {
+class Ajax extends Validator {
     constructor() {
+        super();
         this.xhr = new XMLHttpRequest();
         this.token = '';
         this.fetchToken();
@@ -37,20 +38,5 @@ class Ajax {
         const urlWithToken = new URL(url, window.location.origin);
         urlWithToken.searchParams.append('token', this.token);
         return urlWithToken.toString();
-    }
-
-    renderAlert(response) {
-        const alertDiv = document.querySelector('.alert.alert-danger');
-        if (alertDiv) {
-            const li = alertDiv.querySelector('li');
-            if (li) {
-                li.textContent = response;
-                alertDiv.classList.remove('hide');
-
-                setTimeout(() => {
-                    alertDiv.classList.add('hide');
-                }, 10000);
-            }
-        }
     }
 }
