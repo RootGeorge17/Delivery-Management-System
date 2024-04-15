@@ -32,13 +32,17 @@ class MapView extends Ajax {
                     this.renderAlert('Error fetching delivery points:', error);
                 } else {
                     const data = JSON.parse(response);
-                    console.log("Fetched parcels for Markers: \n ", data);
-                    data.forEach(point => {
-                        this.addMarker(point);
-                    });
+                    if (data.error) {
+                        this.renderAlert('Error fetching delivery points:', data.error);
+                    } else {
+                        console.log("Fetched parcels for Markers: \n ", data);
+                        data.forEach(point => {
+                            this.addMarker(point);
+                        });
+                    }
                 }
             });
-        }, "1");
+        }, "50");
     }
 
     fetchDeliveryPoint(lat, lng) {
@@ -65,7 +69,7 @@ class MapView extends Ajax {
                     }
                 }
             });
-        }, "1");
+        }, "50");
     }
 
     addMarker(point) {
@@ -81,7 +85,7 @@ class MapView extends Ajax {
 
         marker.on('popupopen', () => {
             const qr = new QRCode(document.getElementById(`qrcode_${point.id}`), {
-                text: `/map/${point.id}`,
+                text: `https://sgc017.poseidon.salford.ac.uk/?parcel=${point.id}`,
                 width: 100,
                 height: 100,
             });

@@ -36,7 +36,7 @@ class Ajax extends Validator {
 
     addTokenToUrl(url) {
         const urlWithToken = new URL(url, window.location.origin);
-        urlWithToken.searchParams.append('token', this.token);
+        urlWithToken.searchParams.set('token', this.token);
         return urlWithToken.toString();
     }
 }

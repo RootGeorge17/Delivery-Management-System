@@ -180,4 +180,16 @@ class TableData
     {
         return $this->currentPage;
     }
+
+    public function displayParcelById($searchTerm, $delivererId)
+    {
+        $deliveryPointDataSet = new DeliveryPointDataSet();
+        $deliveryUserDataSet = new DeliveryUserDataSet();
+        $this->totalUsers = $deliveryUserDataSet->fetchAllDeliveryUsers();
+        $this->totalDeliveries = $deliveryPointDataSet->fetchDeliveryPointById($searchTerm, $delivererId);
+        $this->currentItems = $this->totalDeliveries;
+        $this->currentPage = 1;
+        $this->totalPages = 1;
+        $this->rowsPerPage = 1;
+    }
 }

@@ -365,6 +365,25 @@ class DeliveryPointDataSet
         return $point;
     }
 
+    public function fetchDeliveryPointById($id, $delivererId)
+    {
+        $sqlQuery = 'SELECT * FROM delivery_point
+                     WHERE deliverer = :delivererID
+                     AND id = :id';
+
+        $statement = $this->dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute([
+            ':delivererID' => $delivererId,
+            'id' => $id
+        ]); // execute the PDO statement
+
+        $dataSet = [];
+        while ($row = $statement->fetch()) {
+            $dataSet[] = new DeliveryPointData($row);
+        }
+        return $dataSet;
+    }
+
     public function isDelivered($delivery)
     {
         $sqlQuery = "SELECT * FROM delivery_point WHERE id = :delivery";

@@ -45,6 +45,13 @@ if (isCurrentUrl("/")) {
     $table->setDataForDeliverers($currentPage, "Deliveries", $_SESSION['user']['id']);
 }
 
+// Check if the current URL is '/search'
+if (isset($_GET['parcel'])) {
+    $searchTerm = $_GET['parcel'];
+
+    $table->displayParcelById($searchTerm, $_SESSION['user']['id']);
+}
+
 // Fetching necessary data for rendering the view
 $view->totalDeliveries = $table->getTotalDeliveries();
 $view->currentItems = $table->getCurrentItems();

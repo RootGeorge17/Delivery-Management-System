@@ -32,6 +32,8 @@ if (authenticated()) {
         $router->get('/livesearch', 'Controllers/AjaxController/livesearch.php');
         $router->get('/map', 'Controllers/AjaxController/deliveryPoints.php');
         $router->get('/point', 'Controllers/AjaxController/deliveryPoint.php');
+        $router->get('/point', 'Controllers/AjaxController/deliveryPoint.php');
+
     } elseif ($_SESSION['user']['usertypename'] == "Deliverer") {
         // Routes for Deliverer role
         $router->get('/', 'Controllers/Deliverers/index.php');
