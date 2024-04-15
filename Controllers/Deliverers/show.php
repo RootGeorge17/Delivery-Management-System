@@ -5,7 +5,6 @@ require_once("Models/Core/TableData.php");
 // Creating a new stdClass object to hold view-related data
 $view = new stdClass();
 
-
 // Setting the page title for the Home Page
 $view->pageTitle = 'Dashboard';
 

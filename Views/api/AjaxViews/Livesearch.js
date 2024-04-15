@@ -83,7 +83,7 @@ class Livesearch extends Ajax {
             // Add an option for each result, limited to the resultsPerPage value
             for (let i = 0; i < results.length; i++) {
                 const listItem = document.createElement('li');
-                listItem.innerHTML = `<a class="dropdown-item" href="/?search=${this.keyword}">ID: ${results[i].id}, Name: ${results[i].name}, Address: ${results[i].address_1} ${results[i].address_2}, Postcode: ${results[i].postcode}</a>`;
+                listItem.innerHTML = `<a class="dropdown-item" href="/?parcel=${results[i].id}">ID: ${results[i].id}, Name: ${results[i].name}, Address: ${results[i].address_1} ${results[i].address_2}, Postcode: ${results[i].postcode}</a>`;
                 this.resultsDropdown.appendChild(listItem);
             }
 
