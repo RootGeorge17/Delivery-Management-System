@@ -221,7 +221,7 @@ class DeliveryPointDataSet
      * @param string $searchTerm The term to search for.
      * @return array An array of DeliveryPointData objects.
      */
-    public function searchDeliveryPoints($conditions, $searchTerm, $page, $resultsPerPage)
+    public function searchDeliveryPointsLive($conditions, $searchTerm, $page, $resultsPerPage)
     {
         // Calculate the offset for the current page
         $offset = ($page - 1) * $resultsPerPage;
@@ -267,6 +267,66 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    public function searchDeliveryPoints($conditions, $searchTerm, $page, $resultsPerPage)
+    {
+        // Calculate the offset for the current page
+        $offset = ($page - 1) * $resultsPerPage;
+
+        // Initialize the SQL query and parameters array
+        $sqlQuery = 'SELECT * FROM delivery_point';
+        $params = [];
+        $whereConditions = [];
+
+        if (!empty($conditions) && !empty($searchTerm)) {
+            $whereConditions[] = '(';
+
+            // Loop through conditions
+            foreach ($conditions as $key => $condition) {
+                // Append condition to SQL query
+                if ($condition === 'id') {
+                    $whereConditions[] = "$condition = ?";
+                    $params[] = $searchTerm;
+                } else {
+                    $whereConditions[] = "$condition LIKE ?";
+                    $params[] = "%$searchTerm%";
+                }
+
+                // Append OR between conditions except for the last one
+                if ($key !== array_key_last($conditions)) {
+                    $whereConditions[] = 'OR';
+                }
+            }
+
+            $whereConditions[] = ')';
+            $sqlQuery .= ' WHERE ' . implode(' ', $whereConditions);
+        }
+
+        // Add the LIMIT and OFFSET clauses to the SQL query with literal values
+        $sqlQuery .= " LIMIT $resultsPerPage OFFSET $offset";
+
+        // Prepare and execute the SQL query
+        $statement = $this->dbHandle->prepare($sqlQuery);
+        $statement->execute($params);
+
+        // Fetch the results
+        $dataSet = [];
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $dataSet[] = new DeliveryPointData($row);
+        }
+
+        // Get the total count of matching rows
+        $countQuery = 'SELECT COUNT(*) AS total_count FROM delivery_point';
+        if (!empty($conditions) && !empty($searchTerm)) {
+            $countQuery .= ' WHERE ' . implode(' ', $whereConditions);
+        }
+
+        $statement = $this->dbHandle->prepare($countQuery);
+        $statement->execute($params);
+        $totalCount = $statement->fetch(PDO::FETCH_ASSOC)['total_count'];
+
+        return ['dataSet' => $dataSet, 'totalCount' => $totalCount];
+    }
+
     public function fetchAllDeliveryPointsForMap()
     {
         $sqlQuery = 'SELECT dp.*, du.username AS deliverer_username 
@@ -287,4 +347,43 @@ class DeliveryPointDataSet
 
         return $dataSet;
     }
+
+    public function fetchDeliveryPointByLatLng($lat, $lng)
+    {
+        $sqlQuery = "
+        SELECT *
+        FROM delivery_point
+        ORDER BY ABS(lat - ?) + ABS(lng - ?)
+        LIMIT 1";
+
+        $statement = $this->dbHandle->prepare($sqlQuery);
+        $statement->bindParam(1, $lat, PDO::PARAM_STR);
+        $statement->bindParam(2, $lng, PDO::PARAM_STR);
+        $statement->execute();
+
+        $point = $statement->fetch(PDO::FETCH_ASSOC);
+        return $point;
+    }
+
+    public function isDelivered($delivery)
+    {
+        $sqlQuery = "SELECT * FROM delivery_point WHERE id = :delivery";
+
+        $statement = $this->dbHandle->prepare($sqlQuery);
+        $statement->execute([':delivery' => $delivery['id']]);
+
+        $deliveryPoint = $statement->fetch(PDO::FETCH_ASSOC);
+
+        // Assuming 'status' is the column that indicates delivery status
+        if ($deliveryPoint && $deliveryPoint['status'] != 4) {
+            return $deliveryPoint; // Return the delivery point if it's not delivered
+        } elseif ($deliveryPoint && $deliveryPoint['status'] == 4) {
+            return 'Delivery already completed'; // Return an error if it's delivered
+        } else {
+            return 'Delivery point not found'; // Return an error if the delivery point doesn't exist
+        }
+    }
+
+
+
 }

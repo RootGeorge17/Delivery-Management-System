@@ -1,4 +1,6 @@
 // Function to add event listeners to "Show on Map" buttons
+
+/*
 function addShowOnMapEventListeners() {
     var showOnMapButtons = document.querySelectorAll('.show-on-map');
     showOnMapButtons.forEach(function(button) {
@@ -27,3 +29,5 @@ function addShowOnMapEventListeners() {
 
 // Call the function after the HTML content has finished loading
 document.addEventListener('DOMContentLoaded', addShowOnMapEventListeners);
+
+ */

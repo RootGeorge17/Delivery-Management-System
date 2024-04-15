@@ -22,7 +22,7 @@ if (isset($_SESSION['user']['ajaxToken'])) {
 
 function liveSearch($keyword, $conditions, $page, $resultsPerPage) {
     $deliveryPointDataSet = new DeliveryPointDataSet();
-    $data = $deliveryPointDataSet->searchDeliveryPoints($conditions, $keyword, $page, $resultsPerPage);
+    $data = $deliveryPointDataSet->searchDeliveryPointsLive($conditions, $keyword, $page, $resultsPerPage);
 
     echo json_encode($data);
 }

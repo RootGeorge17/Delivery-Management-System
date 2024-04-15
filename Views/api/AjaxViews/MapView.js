@@ -41,6 +41,35 @@ class MapView extends Ajax {
         }, "1");
     }
 
+    fetchDeliveryPoint(lat, lng) {
+        setTimeout(() => {
+            const baseUrl = `/point`;
+            const url = `${baseUrl}?lat=${lat}&lng=${lng}`;
+            const urlWithToken = this.addTokenToUrl(url);
+            console.log(urlWithToken);
+
+            this.get(urlWithToken, (error, response) => {
+                console.log(response);
+                const responseData = JSON.parse(response); // Parse the JSON response
+                if (responseData === "Delivery already completed") {
+                    this.renderAlert('Completed deliveries are not shown on the map!');
+                } else {
+                    if (error) {
+                        this.renderAlert('Error fetching delivery point:', error);
+                    } else {
+                        console.log(responseData);
+                        if (responseData.error) {
+                            this.renderAlert('Error fetching delivery point:', responseData.error);
+                        } else {
+                            this.addMarker(responseData);
+                            this.DoSetView([lat, lng], 15);
+                        }
+                    }
+                }
+            });
+        }, "1");
+    }
+
     addMarker(point) {
         const marker = L.marker([point.lat, point.lng]).addTo(this.map);
         marker.bindPopup(`
@@ -59,6 +88,17 @@ class MapView extends Ajax {
                 height: 100,
             });
             console.log("Fetched parcels for QR Generation \n ", qr);
+        });
+    }
+
+    isMarkerPresent(lat, lng) {
+        const markers = this.map._layers;
+        return Object.values(markers).some(marker => {
+            if (marker instanceof L.Marker) {
+                const markerPosition = marker.getLatLng();
+                return markerPosition.lat === lat && markerPosition.lng === lng;
+            }
+            return false;
         });
     }
 
@@ -81,3 +121,44 @@ class MapView extends Ajax {
 
 // Instantiate the MapView class
 const mapView = new MapView();
+
+// Function to add event listeners to "Show on Map" buttons
+function addShowOnMapEventListeners(mapView) {
+    var showOnMapButtons = document.querySelectorAll('.show-on-map');
+
+    showOnMapButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var lat = parseFloat(this.dataset.lat);
+            var lng = parseFloat(this.dataset.lng);
+            console.log('Clicked button with lat:', lat, 'lng:', lng);
+            console.log(!mapView.isMarkerPresent(lat, lat));
+
+            try {
+                if (!mapView.isMarkerPresent(lat, lat)) {
+                    mapView.fetchDeliveryPoint(lat, lng);
+                } else {
+                    console.log("Was on the map");
+                    mapView.DoSetView([lat, lng], 15);
+                }
+            } catch (e) {
+                const alertDiv = document.querySelector('.alert.alert-danger');
+                if (alertDiv) {
+                    const li = alertDiv.querySelector('li');
+                    if (li) {
+                        li.textContent = "Open the map first!";
+                        alertDiv.classList.remove('hide');
+
+                        setTimeout(() => {
+                            alertDiv.classList.add('hide');
+                        }, 5000);
+                    }
+                }
+            }
+        });
+    });
+}
+
+// Call the function after the HTML content has finished loading
+document.addEventListener('DOMContentLoaded', function() {
+    addShowOnMapEventListeners(mapView);
+});
