@@ -51,6 +51,13 @@ if (isCurrentUrl("/")) {
     $table->SetDataForManagers($currentPage, "Users");
 }
 
+// Check if the current URL is '?parcel='
+if (isset($_GET['parcel'])) {
+    $searchTerm = $_GET['parcel'];
+
+    $table->displayParcelById($searchTerm, $_SESSION['user']['id']);
+}
+
 
 // Fetching necessary data for rendering the view
 $view->totalDeliveries = $table->getTotalDeliveries();

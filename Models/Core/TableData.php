@@ -186,7 +186,7 @@ class TableData
         $deliveryPointDataSet = new DeliveryPointDataSet();
         $deliveryUserDataSet = new DeliveryUserDataSet();
         $this->totalUsers = $deliveryUserDataSet->fetchAllDeliveryUsers();
-        $this->totalDeliveries = $deliveryPointDataSet->fetchDeliveryPointById($searchTerm, $delivererId);
+        $this->totalDeliveries = $deliveryPointDataSet->fetchDeliveryPointByIdForManagers($searchTerm);
         $this->currentItems = $this->totalDeliveries;
         $this->currentPage = 1;
         $this->totalPages = 1;

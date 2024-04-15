@@ -42,7 +42,7 @@ class MapView extends Ajax {
                     }
                 }
             });
-        }, "50");
+        }, "100");
     }
 
     fetchDeliveryPoint(lat, lng) {
@@ -55,7 +55,7 @@ class MapView extends Ajax {
                 const responseData = JSON.parse(response);
 
                 if (responseData === "Delivery already completed") {
-                    this.renderAlert('Completed deliveries are not shown on the map!');
+                    this.renderAlert('Completed deliveries are not shown on the map for privacy reasons!');
                 } else {
                     if (error) {
                         this.renderAlert('Error fetching delivery point:', error);

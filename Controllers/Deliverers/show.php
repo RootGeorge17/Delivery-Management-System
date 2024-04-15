@@ -44,7 +44,7 @@ if (isCurrentUrl("/")) {
     $table->setDataForDeliverers($currentPage, "Deliveries", $_SESSION['user']['id']);
 }
 
-// Check if the current URL is '/search'
+// Check if the current URL is '?parcel='
 if (isset($_GET['parcel'])) {
     $searchTerm = $_GET['parcel'];
 
