@@ -46,18 +46,16 @@ class MapView extends Ajax {
             const baseUrl = `/point`;
             const url = `${baseUrl}?lat=${lat}&lng=${lng}`;
             const urlWithToken = this.addTokenToUrl(url);
-            console.log(urlWithToken);
 
             this.get(urlWithToken, (error, response) => {
-                console.log(response);
-                const responseData = JSON.parse(response); // Parse the JSON response
+                const responseData = JSON.parse(response);
+
                 if (responseData === "Delivery already completed") {
                     this.renderAlert('Completed deliveries are not shown on the map!');
                 } else {
                     if (error) {
                         this.renderAlert('Error fetching delivery point:', error);
                     } else {
-                        console.log(responseData);
                         if (responseData.error) {
                             this.renderAlert('Error fetching delivery point:', responseData.error);
                         } else {
@@ -88,6 +86,17 @@ class MapView extends Ajax {
                 height: 100,
             });
             console.log("Fetched parcels for QR Generation \n ", qr);
+        });
+    }
+
+    removeMarker(lat, lng) {
+        // Iterate through all layers on the map
+        Object.values(this.map._layers).forEach(layer => {
+            // Check if the layer is a marker and its position matches the lat and lng
+            if (layer instanceof L.Marker && layer.getLatLng().lat === lat && layer.getLatLng().lng === lng) {
+                // Remove the marker from the map
+                this.map.removeLayer(layer);
+            }
         });
     }
 
@@ -130,16 +139,9 @@ function addShowOnMapEventListeners(mapView) {
         button.addEventListener('click', function() {
             var lat = parseFloat(this.dataset.lat);
             var lng = parseFloat(this.dataset.lng);
-            console.log('Clicked button with lat:', lat, 'lng:', lng);
-            console.log(!mapView.isMarkerPresent(lat, lat));
 
             try {
-                if (!mapView.isMarkerPresent(lat, lat)) {
-                    mapView.fetchDeliveryPoint(lat, lng);
-                } else {
-                    console.log("Was on the map");
-                    mapView.DoSetView([lat, lng], 15);
-                }
+                mapView.fetchDeliveryPoint(lat, lng);
             } catch (e) {
                 const alertDiv = document.querySelector('.alert.alert-danger');
                 if (alertDiv) {
@@ -157,6 +159,27 @@ function addShowOnMapEventListeners(mapView) {
         });
     });
 }
+
+const deliveredButtons = document.querySelectorAll('.btn-primary');
+const noAnswerButtons = document.querySelectorAll('.btn-danger');
+
+deliveredButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const lat = parseFloat(button.closest('.delivery-point').querySelector('[data-lat]').getAttribute('data-lat'));
+        const lng = parseFloat(button.closest('.delivery-point').querySelector('[data-lng]').getAttribute('data-lng'));
+        mapView.removeMarker(lat, lng);
+        console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+    });
+});
+
+noAnswerButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const lat = parseFloat(button.closest('.delivery-point').querySelector('[data-lat]').getAttribute('data-lat'));
+        const lng = parseFloat(button.closest('.delivery-point').querySelector('[data-lng]').getAttribute('data-lng'));
+        mapView.fetchDeliveryPoint(lat, lng);
+    });
+});
+
 
 // Call the function after the HTML content has finished loading
 document.addEventListener('DOMContentLoaded', function() {
