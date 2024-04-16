@@ -105,3 +105,15 @@
     min-width: 140px;
 }
 
+.alert .bi {
+    font-size: 3rem;
+    cursor: pointer;
+    position: absolute;
+    top: 0rem;
+    right: 0.5rem;
+}
+
+
+
+
+

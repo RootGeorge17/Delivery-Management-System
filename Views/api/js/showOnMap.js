@@ -12,10 +12,18 @@ function addShowOnMapEventListeners() {
                     if (li) {
                         li.textContent = "Open the map first!";
                         alertDiv.classList.remove('hide');
+                        console.log(alertDiv);
 
-                        setTimeout(() => {
+                        // Add close icon dynamically
+                        const closeIcon = document.createElement('span');
+                        closeIcon.className = 'bi bi-x';
+                        li.appendChild(closeIcon);
+
+                        // Add event listener to close icon
+                        closeIcon.addEventListener('click', function() {
                             alertDiv.classList.add('hide');
-                        }, 5000);
+                            console.log(alertDiv);
+                        });
                     }
                 }
             }
