@@ -100,6 +100,12 @@ class Livesearch extends Ajax {
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `<a class="dropdown-item" href="/?parcel=${results[i].id}">ID: ${results[i].id}, Name: ${results[i].name}, Address: ${results[i].address_1} ${results[i].address_2}, Postcode: ${results[i].postcode}</a>`;
                 this.resultsDropdown.appendChild(listItem);
+
+                if (i < results.length - 1) {
+                    const divider = document.createElement('hr');
+                    divider.classList.add('dropdown-divider', 'bg-black');
+                    this.resultsDropdown.appendChild(divider);
+                }
             }
 
             this.resultsDropdown.style.display = 'block';

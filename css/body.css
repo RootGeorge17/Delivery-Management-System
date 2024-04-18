@@ -101,6 +101,47 @@
     text-align: center;
 }
 
+.user-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-card-header {
+    background-color: #343a40;
+    color: #fff;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-card-header h5 {
+    margin: 0;
+}
+
+.user-card-header .status {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.user-card-header .status.Manager {
+    background-color: #17a2b8;
+}
+
+.user-card-header .status.Deliverer {
+    background-color: #28a745;
+}
+
+.user-card-body {
+    padding: 15px;
+}
+
 .leaflet-popup-content-wrapper {
     min-width: 140px;
 }
