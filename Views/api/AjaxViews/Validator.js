@@ -7,7 +7,6 @@ class Validator {
             if (li) {
                 li.textContent = response;
                 alertDiv.classList.remove('hide');
-                console.log(alertDiv);
 
                 // Add close icon dynamically
                 const closeIcon = document.createElement('span');
@@ -17,7 +16,6 @@ class Validator {
                 // Add event listener to close icon
                 closeIcon.addEventListener('click', function() {
                     alertDiv.classList.add('hide');
-                    console.log(alertDiv);
                 });
             }
         }

@@ -171,8 +171,10 @@ deliveredButtons.forEach(button => {
     button.addEventListener('click', () => {
         const lat = parseFloat(button.closest('.delivery-point').querySelector('[data-lat]').getAttribute('data-lat'));
         const lng = parseFloat(button.closest('.delivery-point').querySelector('[data-lng]').getAttribute('data-lng'));
-        mapView.removeMarker(lat, lng);
-        console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+        if(mapView.isMarkerPresent(lat, lng))
+        {
+            mapView.removeMarker(lat, lng);
+        }
     });
 });
 
@@ -180,7 +182,10 @@ noAnswerButtons.forEach(button => {
     button.addEventListener('click', () => {
         const lat = parseFloat(button.closest('.delivery-point').querySelector('[data-lat]').getAttribute('data-lat'));
         const lng = parseFloat(button.closest('.delivery-point').querySelector('[data-lng]').getAttribute('data-lng'));
-        mapView.fetchDeliveryPoint(lat, lng);
+        if(!mapView.isMarkerPresent(lat, lng))
+        {
+            mapView.fetchDeliveryPoint(lat, lng);
+        }
     });
 });
 
