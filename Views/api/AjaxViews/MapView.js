@@ -93,6 +93,15 @@ class MapView extends Ajax {
         });
     }
 
+    geolocationMarker(lat, lng) {
+        const marker = L.circleMarker([lat, lng], {
+            color: 'blue',
+            fillColor: '#00008b',
+            fillOpacity: 1,
+            radius: 10
+        }).addTo(this.map);
+    }
+
     removeMarker(lat, lng) {
         // Iterate through all layers on the map
         Object.values(this.map._layers).forEach(layer => {
@@ -121,6 +130,7 @@ class MapView extends Ajax {
                 (position) => {
                     const { latitude, longitude } = position.coords;
                     this.map.setView([latitude, longitude], 13);
+                    this.geolocationMarker(latitude, longitude);
                 },
                 (error) => {
                     this.renderAlert('Error getting user location. Follow this tutorial to allow your location to be shared: https://support.google.com/chrome/answer/142065?hl=en&co=GENIE.Platform%3DDesktop');
@@ -214,7 +224,7 @@ statusDropdownItems.forEach(item => {
             if(!mapView.isMarkerPresent(lat, lng))
             {
                 mapView.fetchDeliveryPoint(lat, lng);
-            }
+            } 
         }
     });
 });

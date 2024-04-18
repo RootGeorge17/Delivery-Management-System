@@ -66,6 +66,28 @@ class DeliveryStatusUpdate extends Ajax {
 
     renderResult(response, deliveryId) {
         const statusSpan = document.querySelector(`button#show-on-${deliveryId} + span.status`);
+        const statusDropdownItem = statusSpan.closest('.delivery-point').querySelector('.dropdown-status');
+
+        if(statusDropdownItem) {
+            const dropdownButton = statusDropdownItem.querySelector('.btn');
+
+            if (response === 'Status updated to "Out for delivery"') {
+                dropdownButton.textContent = "Out for delivery";
+                this.renderAlert(response);
+            } else if (response.includes('Status updated to "Delivered"')) {
+                dropdownButton.textContent = "Delivered";
+                this.renderAlert(response);
+            } else if(response === 'Status updated to "Shipped"') {
+                dropdownButton.textContent = "Shipped";
+                this.renderAlert(response);
+            } else if(response === 'Status updated to "Pending"') {
+                dropdownButton.textContent = "Pending";
+                this.renderAlert(response);
+            }
+        } else {
+            this.renderAlert(`Element with delivery ID ${deliveryId} not found.`)
+        }
+
         if (statusSpan) {
             if (response === 'Status updated to "Out for delivery"') {
                 statusSpan.textContent = "Out for delivery";
