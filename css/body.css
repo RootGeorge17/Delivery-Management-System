@@ -44,7 +44,7 @@
 }
 
 #loadMapButton {
-    background-color: #4CAF50; 
+    background-color: #4CAF50;
     border: none;
     color: white;
     padding: 15px 0;
@@ -130,12 +130,12 @@
     #resultsDropdown {
         width: 100%;
         left: 0 !important;
-        max-height: 300px;
-        overflow-y: auto;
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    #resultsDropdown .dropdown-item {
+        white-space: normal;
     }
 }
-
-
-
-
 
