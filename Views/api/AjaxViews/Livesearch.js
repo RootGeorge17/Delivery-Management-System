@@ -18,6 +18,21 @@ class Livesearch extends Ajax {
         this.checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', this.handleCheckboxChange.bind(this));
         });
+
+        document.addEventListener('click', this.handleDocumentClick.bind(this));
+    }
+
+    handleDocumentClick(event) {
+        // Check if the click target is outside of search input, results dropdown, and filter dropdown
+        if (!event.target.closest('#searchInputDeliveries') &&
+            !event.target.closest('#resultsDropdown') &&
+            !event.target.closest('.filter-dropdown')) {
+            // Clear the inner HTML of the results dropdown
+            this.resultsDropdown.style.display = 'none';
+        } else {
+            this.setMaxWidth();
+            this.resultsDropdown.style.display = 'block';
+        }
     }
 
     setMaxWidth() {
@@ -29,6 +44,7 @@ class Livesearch extends Ajax {
         const conditions = this.getCheckedConditions();
         this.keyword = this.searchInputDeliveries.value;
         this.currentPage = 1;
+        this.setMaxWidth();
         this.liveSearch(this.keyword, conditions);
     }
 

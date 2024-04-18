@@ -224,7 +224,9 @@ statusDropdownItems.forEach(item => {
             if(!mapView.isMarkerPresent(lat, lng))
             {
                 mapView.fetchDeliveryPoint(lat, lng);
-            } 
+            } else {
+                mapView.DoSetView([lat, lng], 15);
+            }
         }
     });
 });
