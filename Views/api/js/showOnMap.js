@@ -12,6 +12,7 @@ function addShowOnMapEventListeners() {
                     if (li) {
                         li.textContent = "Open the map first!";
                         alertDiv.classList.remove('hide');
+                        alertDiv.scrollIntoView({behavior: 'smooth', block: 'start'});
 
                         // Add close icon dynamically
                         const closeIcon = document.createElement('span');

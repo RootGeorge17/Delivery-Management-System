@@ -7,6 +7,7 @@ class Validator {
             if (li) {
                 li.textContent = response;
                 alertDiv.classList.remove('hide');
+                alertDiv.scrollIntoView({behavior: 'smooth', block: 'start'});
 
                 // Add close icon dynamically
                 const closeIcon = document.createElement('span');

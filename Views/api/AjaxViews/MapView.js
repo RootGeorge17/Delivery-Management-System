@@ -18,7 +18,7 @@ class MapView extends Ajax {
     }
 
     DoSetView([lat, lng], zoom) {
-        this.map.setView([lat, lng], zoom);
+        this.map.flyTo([lat, lng], zoom);
     }
 
     fetchDeliveryPoints() {
@@ -134,6 +134,7 @@ class MapView extends Ajax {
 
 // Instantiate the MapView class
 const mapView = new MapView();
+map = document.getElementById("map");
 
 // Function to add event listeners to "Show on Map" buttons
 function addShowOnMapEventListeners(mapView) {
@@ -147,6 +148,7 @@ function addShowOnMapEventListeners(mapView) {
             try {
                 if(mapView.isMarkerPresent(lat, lng))
                 {
+                    map.scrollIntoView({behavior: 'smooth', block: 'start'});
                     mapView.DoSetView([lat, lng], 15);
                 } else {
                     mapView.fetchDeliveryPoint(lat, lng);
@@ -191,6 +193,7 @@ noAnswerButtons.forEach(button => {
         const lng = parseFloat(button.closest('.delivery-point').querySelector('[data-lng]').getAttribute('data-lng'));
         if(!mapView.isMarkerPresent(lat, lng))
         {
+            document.getElementById("map").scrollIntoView({behavior: 'smooth'});
             mapView.fetchDeliveryPoint(lat, lng);
         }
     });
