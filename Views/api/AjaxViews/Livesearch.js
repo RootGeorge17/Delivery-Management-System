@@ -26,8 +26,7 @@ class Livesearch extends Ajax {
         // Check if the click target is outside of search input, results dropdown, and filter dropdown
         if (!event.target.closest('#searchInputDeliveries') &&
             !event.target.closest('#resultsDropdown') &&
-            !event.target.closest('.filter-dropdown')) {
-            // Clear the inner HTML of the results dropdown
+            !event.target.closest('#filterDropdown')) {
             this.resultsDropdown.style.display = 'none';
         } else {
             this.setMaxWidth();
