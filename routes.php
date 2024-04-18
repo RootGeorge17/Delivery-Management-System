@@ -13,7 +13,6 @@ if (authenticated()) {
         $router->get('/', 'Controllers/Managers/index.php');
         $router->post('/', 'Controllers/Managers/show.php');
         $router->edit('/', 'Controllers/Managers/edit.php');
-        $router->update('/', 'Controllers/Managers/update.php');;
         $router->delete('/', 'Controllers/Managers/delete.php');;
         $router->create('/', 'Controllers/Managers/create.php');;
         $router->search('/', 'Controllers/Managers/search.php');;
@@ -22,7 +21,6 @@ if (authenticated()) {
         $router->get('/users', 'Controllers/Managers/index.php');
         $router->post('/users', 'Controllers/Managers/show.php');
         $router->edit('/users', 'Controllers/Managers/edit.php');
-        $router->update('/users', 'Controllers/Managers/update.php');;
         $router->delete('/users', 'Controllers/Managers/delete.php');;
         $router->create('/users', 'Controllers/Managers/create.php');;
         $router->search('/users', 'Controllers/Managers/search.php');;
@@ -33,6 +31,7 @@ if (authenticated()) {
         $router->get('/map', 'Controllers/AjaxController/deliveryPoints.php');
         $router->get('/point', 'Controllers/AjaxController/deliveryPoint.php');
         $router->get('/point', 'Controllers/AjaxController/deliveryPoint.php');
+        $router->get('/update', 'Controllers/AjaxController/updateDeliveryStatus.php');
 
     } elseif ($_SESSION['user']['usertypename'] == "Deliverer") {
         // Routes for Deliverer role

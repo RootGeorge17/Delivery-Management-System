@@ -27,9 +27,11 @@
                 </ul>
             </div>
 
+            <?php if ($_SESSION['user']['currentTable'] == "Deliveries"): ?>
             <button id="loadMapButton">Press button to load the map with deliveries</button>
             <div id="map" class="hide"></div>
             <script src="Views/api/js/loadMap.js"></script>
+            <?php endif ?>
 
             <!-- Statistics Section -->
             <section id="statistics-section">
@@ -235,28 +237,28 @@
                                         <p>Only delivered parcels have pictures!</p>
                                     <?php endif; ?>
                                     <div class="d-flex justify-content-between mt-3">
-                                    <div class="dropdown">
+                                    <div class="dropdown-status">
                                         <button class="btn btn-primary dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                             <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?>
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="statusDropdown">
                                             <li>
-                                                <a class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#pendingModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                <a class="btn dropdown-item status-dropdown">
                                                     Mark as: Pending
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#shippedModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                <a class="btn dropdown-item status-dropdown">
                                                     Mark as: Shipped
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#outModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                <a class="btn dropdown-item status-dropdown">
                                                     Mark as: Out for delivery
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#deliveredModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
+                                                <a class="btn dropdown-item status-dropdown">
                                                     Mark as: Delivered
                                                 </a>
                                             </li>
@@ -291,164 +293,6 @@
                                                 </a>
                                             </li>
                                         </ul>
-                                    </div>
-
-
-                                    <!-- Pending Status Dynamic Modal -->
-                                    <div class="modal fade"
-                                         id="pendingModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                         tabindex="-1"
-                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                        <!-- Modal content for Pending -->
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <!-- Your modal content for "Pending" -->
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="statusModalLabel">Change
-                                                        Status</h5>
-                                                    <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <span>
-                                                          Are you sure you want to change the status of delivery item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>
-                                                          from: <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?> to Pending?
-                                                    </span>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
-                                                        <input type="hidden" name="_method" value="UPDATE">
-                                                        <input type="hidden" name="_id"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                        <input type="hidden" name="_status" value="Pending">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Close
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Confirm
-                                                            Change
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Shipped Status Dynamic Modal -->
-                                    <div class="modal fade"
-                                         id="shippedModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                         tabindex="-1"
-                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                        <!-- Modal content for Pending -->
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <!-- Your modal content for "Pending" -->
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="statusModalLabel">Change
-                                                        Status</h5>
-                                                    <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <span>
-                                                          Are you sure you want to change the status of delivery item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>
-                                                          from: <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?> to Shipped?
-                                                    </span>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
-                                                        <input type="hidden" name="_method" value="UPDATE">
-                                                        <input type="hidden" name="_id"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                        <input type="hidden" name="_status" value="Shipped">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Close
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Confirm
-                                                            Change
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Out for Delivery Status Dynamic Modal -->
-                                    <div class="modal fade"
-                                         id="outModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                         tabindex="-1"
-                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                        <!-- Modal content for Pending -->
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <!-- Your modal content for "Pending" -->
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="statusModalLabel">Change
-                                                        Status</h5>
-                                                    <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <span>
-                                                          Are you sure you want to change the status of delivery item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>
-                                                          from: <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?> to Out for delivery?
-                                                    </span>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
-                                                        <input type="hidden" name="_method" value="UPDATE">
-                                                        <input type="hidden" name="_id"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                        <input type="hidden" name="_status"
-                                                               value="Out for delivery">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Close
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Confirm
-                                                            Change
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Delivered Status Dynamic Modal -->
-                                    <div class="modal fade"
-                                         id="deliveredModal<?= htmlspecialchars($deliveryPointData->getPointId()) ?>"
-                                         tabindex="-1"
-                                         aria-labelledby="pendingModalLabel" aria-hidden="true">
-                                        <!-- Modal content for Pending -->
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <!-- Your modal content for "Pending" -->
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="statusModalLabel">Change
-                                                        Status</h5>
-                                                    <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <span>
-                                                          Are you sure you want to change the status of delivery item with ID: <?= htmlspecialchars($deliveryPointData->getPointId()) ?>
-                                                          from: <?= htmlspecialchars($deliveryPointData->getPointStatus()) ?> to Delivered?
-                                                    </span>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
-                                                        <input type="hidden" name="_method" value="UPDATE">
-                                                        <input type="hidden" name="_id"
-                                                               value="<?= htmlspecialchars($deliveryPointData->getPointId()) ?>">
-                                                        <input type="hidden" name="_status" value="Delivered">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Close
-                                                        </button>
-                                                        <button type="submit" class="btn btn-primary">Confirm
-                                                            Change
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     <!-- Assign Deliverer Dynamic Modal -->
@@ -648,9 +492,6 @@
 
                 <!-- Users Table -->
             <?php elseif ($_SESSION['user']['currentTable'] == "Users"): ?>
-                <div class="row">
-                    <?php require_once('Views/partials/searchForm.phtml') ?>
-                </div>
                 <?php require_once('Views/partials/pagination.phtml') ?>
                 <div class="table table-responsive">
                     <table class="table border-dark table-bordered table-grey table-striped">
@@ -808,3 +649,4 @@
 
 <?php require('Views/partials/footer.phtml') ?>
 <script src="Views/api/js/showOnMap.js"></script>
+<script src="Views/api/AjaxViews/DeliveryStatusUpdate.js"></script>

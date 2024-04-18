@@ -5,8 +5,9 @@ class DeliveryStatusUpdate extends Ajax {
     }
 
     initializeEventListeners() {
-        const deliveredButtons = document.querySelectorAll('.btn-primary');
-        const noAnswerButtons = document.querySelectorAll('.btn-danger');
+        const deliveredButtons = document.querySelectorAll('.delivered');
+        const noAnswerButtons = document.querySelectorAll('.no-answer');
+        const statusDropdownItems = document.querySelectorAll('.status-dropdown');
 
         deliveredButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -33,6 +34,20 @@ class DeliveryStatusUpdate extends Ajax {
                 }
             });
         });
+
+        statusDropdownItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const deliveryId = item.closest('.delivery-point').querySelector('p:first-child').textContent.split(':')[1].trim();
+                const currentStatus = item.closest('.delivery-point').querySelector('span.status').textContent.trim();
+                const newStatus = item.textContent.trim().slice(9);
+
+                if (currentStatus !== newStatus) {
+                    this.updateDeliveryStatus(newStatus, deliveryId);
+                } else {
+                    this.renderAlert("The status is already set to: " + newStatus);
+                }
+            });
+        });
     }
 
     updateDeliveryStatus(status, id) {
@@ -52,11 +67,17 @@ class DeliveryStatusUpdate extends Ajax {
     renderResult(response, deliveryId) {
         const statusSpan = document.querySelector(`button#show-on-${deliveryId} + span.status`);
         if (statusSpan) {
-            if (response === 'Status updated to "Out For Delivery"') {
+            if (response === 'Status updated to "Out for delivery"') {
                 statusSpan.textContent = "Out for delivery";
                 this.renderAlert(response);
             } else if (response.includes('Status updated to "Delivered"')) {
                 statusSpan.textContent = "Delivered";
+                this.renderAlert(response);
+            } else if(response === 'Status updated to "Shipped"') {
+                statusSpan.textContent = "Shipped";
+                this.renderAlert(response);
+            } else if(response === 'Status updated to "Pending"') {
+                statusSpan.textContent = "Pending";
                 this.renderAlert(response);
             }
         } else {

@@ -145,7 +145,13 @@ function addShowOnMapEventListeners(mapView) {
             var lng = parseFloat(this.dataset.lng);
 
             try {
-                mapView.fetchDeliveryPoint(lat, lng);
+                if(mapView.isMarkerPresent(lat, lng))
+                {
+                    mapView.DoSetView([lat, lng], 15);
+                } else {
+                    mapView.fetchDeliveryPoint(lat, lng);
+                }
+
             } catch (e) {
                 const alertDiv = document.querySelector('.alert.alert-danger');
                 if (alertDiv) {
@@ -164,8 +170,9 @@ function addShowOnMapEventListeners(mapView) {
     });
 }
 
-const deliveredButtons = document.querySelectorAll('.btn-primary');
-const noAnswerButtons = document.querySelectorAll('.btn-danger');
+const deliveredButtons = document.querySelectorAll('.delivered');
+const noAnswerButtons = document.querySelectorAll('.no-answer');
+const statusDropdownItems = document.querySelectorAll('.status-dropdown');
 
 deliveredButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -185,6 +192,26 @@ noAnswerButtons.forEach(button => {
         if(!mapView.isMarkerPresent(lat, lng))
         {
             mapView.fetchDeliveryPoint(lat, lng);
+        }
+    });
+});
+
+statusDropdownItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const lat = parseFloat(item.closest('.delivery-point').querySelector('[data-lat]').getAttribute('data-lat'));
+        const lng = parseFloat(item.closest('.delivery-point').querySelector('[data-lng]').getAttribute('data-lng'));
+        const newStatus = item.textContent.trim().slice(9);
+
+        if (newStatus === "Delivered") {
+            if(mapView.isMarkerPresent(lat, lng))
+            {
+                mapView.removeMarker(lat, lng);
+            }
+        } else {
+            if(!mapView.isMarkerPresent(lat, lng))
+            {
+                mapView.fetchDeliveryPoint(lat, lng);
+            }
         }
     });
 });
