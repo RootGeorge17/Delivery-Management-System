@@ -1,4 +1,6 @@
-
+/**
+ * @description Validator class for validating and displaying errors to the users.
+ */
 class Validator {
 
     /**
@@ -11,6 +13,7 @@ class Validator {
      */
     static validateString(value, min = 1, max = Infinity) {
         const stringValue = value.trim();
+        // Return true if the trimmed string length is between min and max (inclusive)
         return stringValue.length >= min && stringValue.length <= max;
     }
 
@@ -27,16 +30,24 @@ class Validator {
         }
 
         // Check if the value matches the pattern for integer or float
+        // The pattern matches positive/negative integers and floats
         return /^[+\-]?\d*\.?\d+$/.test(value);
     }
 
+    /**
+     * Renders an alert message with the provided response from the server / function returns
+     *
+     * @param {string} response The response message to be displayed in the alert.
+     */
     renderAlert(response) {
         const alertDiv = document.querySelector('.alert.alert-danger');
         if (alertDiv) {
             const li = alertDiv.querySelector('li');
             if (li) {
                 li.textContent = response;
+                // Remove the "hide" class from the alert div to make it visible
                 alertDiv.classList.remove('hide');
+                // Scroll the alert div into view smoothly
                 alertDiv.scrollIntoView({behavior: 'smooth', block: 'start'});
 
                 // Add close icon dynamically
@@ -51,7 +62,6 @@ class Validator {
             }
         }
     }
-
 }
 
 

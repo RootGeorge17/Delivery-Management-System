@@ -34,6 +34,11 @@ class DeliveryUserData implements JsonSerializable
         $this->usertype = $dbRow['usertype'];
     }
 
+    /**
+     * Serializes the object to JSON.
+     *
+     * @return array The serialized data.
+     */
     public function jsonSerialize() : array
     {
         return [

@@ -181,6 +181,12 @@ class TableData
         return $this->currentPage;
     }
 
+    /**
+     * Display Parcel based on specified ID and search term.
+     *
+     * @param int $delivererId The ID of the parcel.
+     * @param string $searchTerm The term to search for.
+     */
     public function displayParcelById($searchTerm, $delivererId)
     {
         $deliveryPointDataSet = new DeliveryPointDataSet();

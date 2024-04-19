@@ -28,6 +28,11 @@ class DeliveryPointData implements JsonSerializable
         $this->del_photo = $dbRow['del_photo'];
     }
 
+    /**
+     * Serializes the object to JSON.
+     *
+     * @return array The serialized data.
+     */
     public function jsonSerialize() : array
     {
         return [

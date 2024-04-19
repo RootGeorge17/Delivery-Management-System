@@ -308,6 +308,11 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    /**
+     * Fetch all delivery points for displaying on a map.
+     *
+     * @return array An array of DeliveryPointData objects.
+     */
     public function fetchAllDeliveryPointsForMap()
     {
         $sqlQuery = 'SELECT dp.*, du.username AS deliverer_username 
@@ -329,6 +334,13 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    /**
+     * Fetch a delivery point by latitude and longitude.
+     *
+     * @param float $lat The latitude.
+     * @param float $lng The longitude.
+     * @return mixed The delivery point data or null if not found.
+     */
     public function fetchDeliveryPointByLatLng($lat, $lng)
     {
         $sqlQuery = "
@@ -346,6 +358,13 @@ class DeliveryPointDataSet
         return $point;
     }
 
+    /**
+     * Fetch a delivery point by its ID and deliverer ID.
+     *
+     * @param int $id The ID of the delivery point.
+     * @param int $delivererId The ID of the deliverer.
+     * @return array An array of DeliveryPointData objects.
+     */
     public function fetchDeliveryPointById($id, $delivererId)
     {
         $sqlQuery = 'SELECT * FROM delivery_point
@@ -365,6 +384,12 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    /**
+     * Fetch a delivery point by its ID for managers.
+     *
+     * @param int $id The ID of the delivery point.
+     * @return array An array of DeliveryPointData objects.
+     */
     public function fetchDeliveryPointByIdForManagers($id)
     {
         $sqlQuery = 'SELECT * FROM delivery_point
@@ -382,6 +407,12 @@ class DeliveryPointDataSet
         return $dataSet;
     }
 
+    /**
+     * Check if a delivery is already completed.
+     *
+     * @param array $delivery The delivery information.
+     * @return mixed True if delivery is not completed, otherwise false or an error message.
+     */
     public function isDelivered($delivery)
     {
         $sqlQuery = "SELECT * FROM delivery_point WHERE id = :delivery";
@@ -391,7 +422,6 @@ class DeliveryPointDataSet
 
         $deliveryPoint = $statement->fetch(PDO::FETCH_ASSOC);
 
-        // Assuming 'status' is the column that indicates delivery status
         if ($deliveryPoint && $deliveryPoint['status'] != 4) {
             return $deliveryPoint; // Return the delivery point if it's not delivered
         } elseif ($deliveryPoint && $deliveryPoint['status'] == 4) {
@@ -400,7 +430,4 @@ class DeliveryPointDataSet
             return 'Delivery point not found'; // Return an error if the delivery point doesn't exist
         }
     }
-
-
-
 }
