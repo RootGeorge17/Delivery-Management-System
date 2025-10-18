@@ -2,8 +2,8 @@
 
 return [
     'database' => [
-        'host' => 'poseidon.salford.ac.uk', // Database host
-        'dbname' => 'sgc017', // Database name
+        'host' => 'DB_HOST', // Database host
+        'dbname' => 'DB_NAME', // Database name
         'charset' => 'utf8mb4' // Character set for the database connection
     ],
 ];
