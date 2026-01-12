@@ -14,7 +14,7 @@ The system is structured using the MVC design pattern and OOP principles, facili
     *   A custom routing system handles incoming HTTP requests, providing user-friendly URLs.
 
 *   **User & Session Management:**
-    *   Secure user authentication with encrypted password storage (BCRYPT).
+    *   Secure user authentication with encrypted password storage.
     *   Role-based authorization (**Manager**, **Deliverer**) to secure access to different pages and features.
     *   Anti-spam protection on the login form.
 
@@ -39,7 +39,7 @@ The system is structured using the MVC design pattern and OOP principles, facili
 ## Technologies Used
 
 *   **Backend:** PHP
-*   **Frontend:** HTML, CSS, JavaScript, Bootstrap 5
+*   **Frontend:** JavaScript, HTML, CSS, Bootstrap 5
 *   **Database:** MySQL
 *   **JavaScript Libraries:**
     *   **Leaflet.js:** For interactive maps.
@@ -87,7 +87,7 @@ The system is structured using the MVC design pattern and OOP principles, facili
 
 ## Usage Guide
 
-*   **Login:** Access the application through your server's URL. You can log in as either a Manager or a Deliverer. User accounts must be created in the database first, with passwords hashed using BCRYPT.
+*   **Login:** Access the application through your server's URL. You can log in as either a Manager or a Deliverer.
 
 *   **Manager Role:**
     *   After logging in, you are directed to the Admin Panel.
